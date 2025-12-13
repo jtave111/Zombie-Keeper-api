@@ -1,6 +1,6 @@
 body {
-    background-color: #0d1117;
-    color: #58a6ff;
+    background-color: #000000;
+    color: red;
     font-family: 'Courier New', Courier, monospace;
     display: flex;
     flex-direction: column;
@@ -15,18 +15,18 @@ h1 {
     font-size: 3rem;
     border-bottom: 2px solid #30363d;
     padding-bottom: 10px;
-    text-shadow: 0 0 10px rgba(88, 166, 255, 0.5);
+    text-shadow: 0 0 10px  red;;
 }
 
 p {
     font-size: 1.2rem;
-    color: #8b949e;
+    color: red;;
 }
 
 .button {
     background-color: transparent;
-    color: #58a6ff;
-    border: 2px solid #58a6ff;
+    color: red;;
+    border: 2px solid  red;;
     padding: 15px 30px;
     text-decoration: none;
     font-weight: bold;
@@ -38,15 +38,15 @@ p {
 
 .button:hover{
 
-    background-color: #58a6ff;
+    background-color:  red;;
     color: #0d1117;
-    box-shadow: 0 0 15px #58a6ff;
+    box-shadow: 0 0 15px  red;;
     cursor: pointer;
 }
 
 .table-container {
-    margin-top: 50px;       /* Mais espaço entre o botão voltar e a tabela */
-    width: 90%;             /* Aumentei a largura total para caber o espaçamento extra */
+    margin-top: 50px;      
+    width: 90%;            
     border: 1px solid #30363d;
     border-radius: 10px;
     overflow: hidden;
@@ -67,7 +67,7 @@ th, td {
 
 th {
     background-color: #161b22;
-    color: #58a6ff;
+    color:  red;;
     text-transform: uppercase;
     font-size: 0.95rem;
     letter-spacing: 2px;
@@ -76,7 +76,7 @@ th {
 
 td {
     font-size: 1.1rem;
-    color: #c9d1d9;
+    color:  red;;
 }
 
 tr:hover {
