@@ -4,10 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>login</title>
+   
 </head>
 <body>
+ 
+    <div class="containner-login "> 
 
-    <h1> Teste </h1>
-    
+        <div class="wrp-login">
+
+            <form class="form-login" id="loginForm" action="/login" method="post">
+                
+                <div class=" username ">
+                    <input class="input_username" type="text" name="username">
+                    <span class="focus_input" data-placeholder="username" ></span>
+                </div>
+
+                <div class="password">
+                    c<input class="input_password" type="password" name="password">
+                    <span class="focus_inp_password" data-placeholder= "Password" ></span>
+                </div>
+                
+                <div class="container-login-form-btn">
+                    <button type="submit" class="login-form-btn">
+                    Login
+                    </button>
+                </div>
+
+            </form>
+
+
+        </div>
+
+    </div>
+    <script src="/js/login.js"></script>
 </body>
 </html>
