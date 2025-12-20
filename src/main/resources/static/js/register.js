@@ -10,7 +10,7 @@ registerForm.addEventListener('submit', async function (event) {
     const roleValue = document.querySelector('#role').value;
     const passwordValue = document.querySelector('.input_password').value;
     const repeetPasswordValue = document.querySelector('.input_repeetPassword').value;
-    const endpoint = 'http://localhost:8080/apir';
+    const endpoint = 'http://localhost:8080/auth/register';
         
     if(passwordValue != repeetPasswordValue){
         console.error("the passwords don't match");
