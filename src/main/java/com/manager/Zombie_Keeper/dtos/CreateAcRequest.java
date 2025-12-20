@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 public class CreateAcRequest {
 
    @NotBlank(message = "not balank field")
-   private String Name;
+   private String name;
    @NotBlank(message = "not balank field")
    private String username;
    @NotBlank(message = "not balank field")
@@ -13,12 +13,22 @@ public class CreateAcRequest {
    @NotBlank(message = "not balank field")
    private String role;
 
+   @NotBlank(message = "not balank field")
+   private String repeetPassword;
 
+
+
+   public String getRepeetPassword() {
+      return repeetPassword;
+   }
+   public void setRepeetPassword(String repeetPassword) {
+      this.repeetPassword = repeetPassword;
+   }
    public String getName() {
-    return Name;
+    return name;
    }
    public void setName(String name) {
-    Name = name;
+    this.name = name;
    }
    public String getUsername() {
     return username;

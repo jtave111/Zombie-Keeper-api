@@ -1,11 +1,10 @@
 package com.manager.Zombie_Keeper.controller;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,12 +19,11 @@ import com.manager.Zombie_Keeper.repository.UserRepository;
 import com.manager.Zombie_Keeper.service.AuthService;
 
 import jakarta.validation.Valid;
-/* 
-@RestController()
-@RequestMapping("/auth")
-*/
-public class CreateAcController {
-   /*
+
+@RestController
+@RequestMapping
+public class ApiRegister {
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -33,7 +31,7 @@ public class CreateAcController {
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
-    public CreateAcController(UserRepository userRepository, PasswordEncoder encoder, RoleRepository roleRepository){
+    public ApiRegister(UserRepository userRepository, PasswordEncoder encoder, RoleRepository roleRepository){
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.roleRepository = roleRepository;
@@ -42,17 +40,18 @@ public class CreateAcController {
     @Autowired
     AuthService authService;
 
+    @PostMapping("/apir")
     
-    @PostMapping("/register")
-    public ResponseEntity<String> createAccount(@RequestBody @Valid CreateAcRequest dto){
-        System.out.println("Requisição chegou");
+    public ResponseEntity<String> createAc(
+        @RequestBody @Valid CreateAcRequest dto
+    ){
         User user = authService.getAuthUser();
-        
-        if(!"ADMIN".equals(user.getRole().getType())){
-            
-            throw new AccessDeniedException(null, null);
-            
-        }
+      
+         System.out.println("Requisição chegou");
+            System.out.println("User: " + user.getName());
+            System.out.println("Role obj: " + user.getRole());
+
+      
 
         System.out.println("User: " + user.getName() + " role: " + user.getRole().getType());
                 
@@ -77,9 +76,6 @@ public class CreateAcController {
         
               
         return ResponseEntity.status(401).body("User not created");
-
     }
-
- */
-
+    
 }

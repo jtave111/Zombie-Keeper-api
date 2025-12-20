@@ -15,6 +15,7 @@ loginForm.addEventListener('submit', async function(event){
         const response  = await fetch(endpoint, {
             method: 'POST',
             headers:{
+
                 'Content-Type':'application/json'
             },
             credentials: 'include',

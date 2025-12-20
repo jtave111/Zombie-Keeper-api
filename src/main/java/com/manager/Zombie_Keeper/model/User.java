@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
@@ -33,6 +34,7 @@ public class User implements UserDetails {
     private String username;
 
     @NotBlank
+    @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(length = 500, nullable = false, unique = true)
     private String password;
