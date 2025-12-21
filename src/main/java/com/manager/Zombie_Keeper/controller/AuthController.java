@@ -15,7 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +26,6 @@ import com.manager.Zombie_Keeper.model.Role;
 import com.manager.Zombie_Keeper.model.User;
 import com.manager.Zombie_Keeper.repository.RoleRepository;
 import com.manager.Zombie_Keeper.repository.UserRepository;
-import com.manager.Zombie_Keeper.service.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -41,8 +39,6 @@ public class AuthController {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder encoder;
-    @Autowired
-    AuthService authService;
     @Autowired
     private RoleRepository roleRepository;
 
@@ -94,18 +90,23 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> createAccount(@RequestBody @Valid CreateAcRequest dto) throws AccessDeniedException{
-        System.out.println("Requisição chegou aqui, passo antes da verificacao");
-        
-        String roleLogged = userLogged.getRole().getType();
+        //Acesso ao contexto de usuario que foi salvo no login
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+        if(auth == null || !auth.isAuthenticated()){
 
-            if (!roleLogged.equals("ADMIN")) {
-                throw new AccessDeniedException("Access denied");                
-            }
+            throw new AccessDeniedException("Not authenticated");
+        
+        }
 
+        User userSec  = (User) auth.getPrincipal();
         
-        System.out.println("User logado que pediu a request " + userLogged.getName() + " role do user: " + userLogged.getRole().getType());
-        
+
+        String roleLogged = userSec.getRole().getType();
+        if (!roleLogged.equals("ADMIN")) {
+            throw new AccessDeniedException("Access denied");                
+        }
+    
         
         if(!dto.getPassword().equals(dto.getRepeetPassword())) return ResponseEntity.status(400).body("Passwords do not know");
 
@@ -121,7 +122,6 @@ public class AuthController {
             
             userRepository.save(userRegister);
             
-            System.out.println("Requisição chegou ao final ");
             return ResponseEntity.status(HttpStatus.CREATED).body(" User created");
         }         
         
