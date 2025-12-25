@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.manager.Zombie_Keeper.model.User;
-import com.manager.Zombie_Keeper.service.AuthService;
 
 
 @SpringBootApplication

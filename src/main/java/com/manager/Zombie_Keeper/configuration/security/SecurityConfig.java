@@ -1,4 +1,4 @@
-package com.manager.Zombie_Keeper.configuration;
+package com.manager.Zombie_Keeper.configuration.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

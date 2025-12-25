@@ -1,49 +1,59 @@
-const loginForm = document.getElementById("loginForm")
-
-loginForm.addEventListener('submit', async function(event){
 
 
-    event.preventDefault();
+async function login() {
 
-    const usernameValue = document.querySelector('.input_username').value;  
-    const passwordValue = document.querySelector('.input_password').value;
+    const loginForm = document.getElementById("loginForm")
 
-    const endpoint = 'http://localhost:8080/auth/login';
+    loginForm.addEventListener('submit', async function(event){
 
 
-    try{
-        const response  = await fetch(endpoint, {
-            method: 'POST',
-            headers:{
+        event.preventDefault();
 
-                'Content-Type':'application/json'
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-                username: usernameValue,
-                password: passwordValue
-            })
+        const usernameValue = document.querySelector('.input_username').value;  
+        const passwordValue = document.querySelector('.input_password').value;
 
-        });
+        const endpoint = '/auth/login';
 
-        if(response.ok){
 
-            const mensage = await response.text();
-            console.log("Authorized", mensage);
-            alert("Authorized");
-           window.location.href = "/";
+        try{
+            const response  = await fetch(endpoint, {
+                method: 'POST',
+                headers:{
 
-        }else{
-            const errorMessage = await response.text();
-            alert("Error");
+                    'Content-Type':'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    username: usernameValue,
+                    password: passwordValue
+                })
 
+            });
+
+            if(response.ok){
+
+                const mensage = await response.text();
+                console.log("Authorized", mensage);
+                alert("Authorized");
+            window.location.href = "/";
+
+            }else{
+                const errorMessage = await response.text();
+                alert("Error");
+
+            }
+
+        }catch(error){
+            console.error("Connection refused ", error);
+            alert("Connection refused");
+        
         }
 
-    }catch(error){
-        console.error("Connection refused ", error);
-        alert("Connection refused");
+
+    });
     
-    }
+
+}
 
 
-});
+login();

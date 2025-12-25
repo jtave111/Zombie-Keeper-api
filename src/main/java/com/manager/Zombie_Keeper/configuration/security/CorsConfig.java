@@ -1,4 +1,4 @@
-package com.manager.Zombie_Keeper.configuration;
+package com.manager.Zombie_Keeper.configuration.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

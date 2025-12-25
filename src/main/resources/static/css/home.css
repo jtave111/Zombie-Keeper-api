@@ -1,0 +1,35 @@
+
+.home-title {
+    margin-left: 20px;
+    font-size: 3rem;
+    border-bottom: 2px solid #30363d;
+    padding-bottom: 10px;
+    text-shadow: 0 0 10px red;
+}
+
+.status-box {
+    margin-top: 30px;
+    margin-left: 20px;
+    padding: 20px 30px;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    background-color: #0d1117;
+    width: fit-content;
+}
+
+.status-box p {
+    margin: 5px 0;
+    font-size: 1.1rem;
+}
+
+.home-actions {
+    margin-top: 40px;
+    margin-left: 20px;
+}
+
+.home-footer {
+    margin-top: 50px;
+    margin-left: 20px;
+    font-size: 0.8rem;
+    opacity: 0.8;
+}

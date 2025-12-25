@@ -21,6 +21,10 @@ public class Agent {
     @OneToMany(mappedBy = "agent", cascade = CascadeType.ALL)
     private List<Loot> loots = new ArrayList<>();
 
+    private String ip;
+
+   
+
     public Agent(){
 
     }
@@ -30,7 +34,14 @@ public class Agent {
         this.lastSeen =LocalDateTime.now();
         this.status = "ONLINE";
     }
+    
+    public String getIp() {
+        return ip;
+    }
 
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
     public UUID getId() {
         return id;
