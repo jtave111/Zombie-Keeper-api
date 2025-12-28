@@ -23,6 +23,8 @@ public class AgentController {
     @PostMapping("/register")
     public Agent registerAgent(@RequestBody Agent newAgent){
         return agentRepository.save(newAgent);
+
+        
     }
     @PutMapping("/{id}/ping")
     public Agent pingAgent(@PathVariable UUID id){
