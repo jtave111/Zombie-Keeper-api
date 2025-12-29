@@ -1,3 +1,4 @@
+
 package com.manager.Zombie_Keeper.model;
 
 import jakarta.persistence.*;
