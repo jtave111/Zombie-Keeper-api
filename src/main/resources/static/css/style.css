@@ -20,24 +20,3 @@ p {
     font-size: 1.2rem;
     color: red;
 }
-
-/* Botão padrão do sistema */
-.button {
-    background-color: transparent;
-    color: red;
-    border: 2px solid red;
-    padding: 15px 30px;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 1.2rem;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-.button:hover {
-    background-color: red;
-    color: #0d1117;
-    box-shadow: 0 0 15px red;
-    cursor: pointer;
-}

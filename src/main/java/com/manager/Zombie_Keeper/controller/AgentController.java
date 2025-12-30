@@ -1,5 +1,6 @@
 package com.manager.Zombie_Keeper.controller;
 
+import com.manager.Zombie_Keeper.exception.DuplicateAgentException;
 import com.manager.Zombie_Keeper.model.Agent;
 import com.manager.Zombie_Keeper.repository.AgentRepository;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +23,32 @@ public class AgentController {
 
     @PostMapping("/register")
     public Agent registerAgent(@RequestBody Agent newAgent){
-        return agentRepository.save(newAgent);
+        /*
+            Criar ---> >>  >> 
 
+            Criar novo fluxo futuramente 
+            Agent registra
+            Backend retorna agentId
+            Agent salva localmente (arquivo / registry)
+            
+            para os proximos registros usarem o memso id
+            resolve:
+            IP dinâmico
+            reinstalação
+            reboot
+            NAT
+            
+        */
+
+        if(! ( agentRepository.findByIp(newAgent.getIp()) != null ) ){
+
+             return agentRepository.save(newAgent);
+
+
+        }
+
+        throw new DuplicateAgentException("Agent duplicate.");
+       
         
     }
     @PutMapping("/{id}/ping")
