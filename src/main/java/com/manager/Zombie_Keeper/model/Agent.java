@@ -6,7 +6,14 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+
+import com.manager.Zombie_Keeper.model.enums.Flags;
+import com.manager.Zombie_Keeper.model.enums.Tags;
+
+
+
 
 @Entity
 public class Agent {
@@ -16,15 +23,21 @@ public class Agent {
     private UUID id;
 
     private String hostname;
+
     private String os;
+
     private LocalDateTime lastSeen;
-    private String status;
+
     @OneToMany(mappedBy = "agent", cascade = CascadeType.ALL)
     private List<Loot> loots = new ArrayList<>();
 
     private String ip;
 
-   
+    @Column(length = 500)
+    private Set<Flags> flags;
+    
+    @Column(length = 500)
+    private Set<Tags> tags;
 
     public Agent(){
 
@@ -33,7 +46,26 @@ public class Agent {
     @PrePersist
     public void onCreate(){
         this.lastSeen =LocalDateTime.now();
-        this.status = "ONLINE";
+        
+    }
+
+    public Set<Tags> getTags(){
+        return tags;
+    }
+
+    public void setTgas(Set<Tags> tags){
+
+        this.tags = tags;
+
+    }
+
+    public Set<Flags> getFlags(){
+       
+        return flags;
+    }
+
+    public void setFlags(Set<Flags> flags){
+        this.flags = flags;
     }
     
     public String getIp() {
@@ -74,14 +106,6 @@ public class Agent {
 
     public void setLastSeen(LocalDateTime lastSeen) {
         this.lastSeen = lastSeen;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public List<Loot> getLoots() {

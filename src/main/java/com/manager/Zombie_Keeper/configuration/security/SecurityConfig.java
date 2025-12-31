@@ -11,12 +11,12 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
-    
+    ///REfatorar segurança 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         
         httpSecurity.csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(auth -> auth.requestMatchers("/login", "/css/**", "/js/**", "/auth/login", "/imgs/login/**", "/c2-server/agents/register").permitAll().anyRequest().authenticated())
+        .authorizeHttpRequests(auth -> auth.requestMatchers("/login", "/css/**", "/js/**", "/auth/login", "/imgs/login/**", "/c2-server/agents/register", "/c2-server/agents/**").permitAll().anyRequest().authenticated())
         
         .formLogin(form -> form
             .loginPage("/login")

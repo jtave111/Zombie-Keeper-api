@@ -40,9 +40,9 @@ public class AgentController {
             
         */
 
-        if(! ( agentRepository.findByIp(newAgent.getIp()) != null ) ){
+        if(( agentRepository.findByIp(newAgent.getIp()).isEmpty()) ){
 
-             return agentRepository.save(newAgent);
+            return agentRepository.save(newAgent);
 
 
         }
@@ -62,6 +62,26 @@ public class AgentController {
         }
         return null;
     }
+
+    @PutMapping("/{id}/delete")
+    public void deleteAgent(@PathVariable UUID id){
+
+        Agent agent = agentRepository.findById(id).orElse(null);
+
+
+        if(agent != null){
+
+            agentRepository.delete(agent);
+        }else{
+
+            System.out.println("Id " + id + " invalid");
+
+        }
+
+        
+
+    }
+
 
     @GetMapping
     public List<Agent> getAllAgents(){

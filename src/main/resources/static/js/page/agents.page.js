@@ -32,7 +32,6 @@ const data = await response.json();
                 <td>${agent.hostname}</td>
                 <td>${agent.os}</td>
                 <td>${agent.ip}</td>
-                <td>${agent.status}</td>
                 <td>${agent.lastSeen}}</td>    
             `;
 
