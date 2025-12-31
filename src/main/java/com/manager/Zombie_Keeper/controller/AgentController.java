@@ -3,6 +3,8 @@ package com.manager.Zombie_Keeper.controller;
 import com.manager.Zombie_Keeper.exception.DuplicateAgentException;
 import com.manager.Zombie_Keeper.model.Agent;
 import com.manager.Zombie_Keeper.repository.AgentRepository;
+import com.manager.Zombie_Keeper.service.AgentsService;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -16,9 +18,11 @@ import java.util.UUID;
 public class AgentController {
 
     private final AgentRepository agentRepository;
+    private final AgentsService agentsService;
 
-    public AgentController(AgentRepository agentRepository) {
+    public AgentController(AgentRepository agentRepository, AgentsService agentsService) {
         this.agentRepository = agentRepository;
+        this.agentsService = agentsService;
     }
 
     @PostMapping("/register")
@@ -40,8 +44,11 @@ public class AgentController {
             
         */
 
+            
+        
         if(( agentRepository.findByIp(newAgent.getIp()).isEmpty()) ){
-
+            
+            newAgent = agentsService.setPreInformation(newAgent);
             return agentRepository.save(newAgent);
 
 

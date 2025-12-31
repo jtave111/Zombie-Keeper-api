@@ -1,8 +1,7 @@
 package com.manager.Zombie_Keeper.model.enums;
 
 public enum Tags {
-    WINDOWS_10,
-    WINDOWS_11,
+    WINDOWS,
     MAC,
     WINDOWS_SERVER,
     LINUX,
