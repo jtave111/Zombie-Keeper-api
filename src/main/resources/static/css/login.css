@@ -125,7 +125,7 @@
 
 
 .login-logo {
-    width: min(500px, 80vw);   
+    width: min(350px, 80vw);   
     max-width: 500px;
     margin-bottom: 30px;
     display: block;

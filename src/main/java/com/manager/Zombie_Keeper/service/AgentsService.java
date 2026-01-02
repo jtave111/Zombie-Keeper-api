@@ -1,12 +1,10 @@
 package com.manager.Zombie_Keeper.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+
 import java.util.Map;
 import java.util.Set;
-
 import org.springframework.stereotype.Service;
 
 import com.manager.Zombie_Keeper.model.Agent;
@@ -18,15 +16,22 @@ public class AgentsService {
 
     public Agent setPreInformation(Agent agent){
         
-        Set<Tags> set = new HashSet<>();
-        
+        Set<Tags> tags = new HashSet<>();
+        //Os tags 
         if(isWin(agent.getOs())){
-            set.add(Tags.WINDOWS);
+            tags.add(Tags.WINDOWS);
 
-            agent.setTgas(set);
+        }else if(isLinux(agent.getOs())){
+            tags.add(Tags.LINUX);
+
+        }else if(isMac(agent.getOs())){
+
+            tags.add(Tags.MAC);
         }
-
         
+
+
+        agent.setTgas(tags);
 
         return agent;
     }
