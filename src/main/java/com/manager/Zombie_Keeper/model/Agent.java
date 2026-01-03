@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.manager.Zombie_Keeper.model.enums.Flags;
 import com.manager.Zombie_Keeper.model.enums.Tags;
@@ -21,6 +22,10 @@ public class Agent {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+
+    
+    @Column(unique = true, nullable = false, updatable = false)
+    private Long publicId;
 
     private String hostname;
 
@@ -45,8 +50,27 @@ public class Agent {
 
     @PrePersist
     public void onCreate(){
-        this.lastSeen =LocalDateTime.now();
-        
+
+        if(this.publicId == null){
+
+            this.publicId = ThreadLocalRandom.current().nextLong(10000000, 99999999);
+        }
+
+        if(this.lastSeen == null){           
+            
+            this.lastSeen =LocalDateTime.now();
+            
+        }
+    }
+
+    
+    public Long getPublicId(){
+        return publicId;
+    }
+
+    public void setPublicId(Long publicId){
+
+        this.publicId = publicId;
     }
 
     public Set<Tags> getTags(){
