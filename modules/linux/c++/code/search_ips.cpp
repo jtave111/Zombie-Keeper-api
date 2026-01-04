@@ -245,6 +245,8 @@ std::vector<std::string> makeIpList( std::string comand){
     return ipList;
 } 
 
+
+
 int main( int argc, char* argv[]){
 
 
@@ -272,5 +274,8 @@ int main( int argc, char* argv[]){
 
     json j = create_json(ipList, "hosts");
 
+    //Print para captura 
+    std::cout << j.dump() << std::endl;
 
+    
 }

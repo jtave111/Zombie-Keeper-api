@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.manager.Zombie_Keeper.model.Agent;
 import com.manager.Zombie_Keeper.model.enums.Tags;
+
 @Service
 public class AgentsService {
   
@@ -38,7 +39,7 @@ public class AgentsService {
 
 
 
-    public static Boolean isWin(String os){
+    public Boolean isWin(String os){
         
         if (!os.contains("w") || !os.contains("i") || !os.contains("n")) {
             return false;
@@ -88,7 +89,7 @@ public class AgentsService {
         return  false;
     }
 
-    public static Boolean isLinux(String os) {
+    public Boolean isLinux(String os) {
         os = os.toLowerCase().replaceAll("\\s", "");
         
         if (os.length() < 3) return false;
@@ -126,7 +127,7 @@ public class AgentsService {
     }
  
 
-    public static Boolean isMac(String os) {
+    public Boolean isMac(String os) {
         os = os.toLowerCase().replaceAll("\\s", "");
         
         if (os.length() < 3) return false;
