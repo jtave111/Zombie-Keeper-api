@@ -1,8 +1,8 @@
 package com.manager.Zombie_Keeper.controller;
 
 
-import com.manager.Zombie_Keeper.model.Agent;
-import com.manager.Zombie_Keeper.model.Loot;
+import com.manager.Zombie_Keeper.model.entity.Agent;
+import com.manager.Zombie_Keeper.model.entity.Loot;
 import com.manager.Zombie_Keeper.repository.AgentRepository;
 import com.manager.Zombie_Keeper.repository.LootRepository;
 import org.springframework.web.bind.annotation.*;

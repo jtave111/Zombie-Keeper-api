@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import org.springframework.stereotype.Service;
 
-import com.manager.Zombie_Keeper.model.Agent;
-import com.manager.Zombie_Keeper.model.enums.Tags;
+import com.manager.Zombie_Keeper.model.entity.Agent;
+import com.manager.Zombie_Keeper.model.enums.agents.Tags;
 
 @Service
 public class AgentsService {

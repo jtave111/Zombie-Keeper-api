@@ -1,7 +1,7 @@
 package com.manager.Zombie_Keeper.controller;
 
 import com.manager.Zombie_Keeper.exception.DuplicateAgentException;
-import com.manager.Zombie_Keeper.model.Agent;
+import com.manager.Zombie_Keeper.model.entity.Agent;
 import com.manager.Zombie_Keeper.repository.AgentRepository;
 import com.manager.Zombie_Keeper.service.AgentsService;
 

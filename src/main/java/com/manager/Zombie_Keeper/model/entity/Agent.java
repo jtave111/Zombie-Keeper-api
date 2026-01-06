@@ -1,5 +1,5 @@
 
-package com.manager.Zombie_Keeper.model;
+package com.manager.Zombie_Keeper.model.entity;
 
 import jakarta.persistence.*;
 
@@ -10,8 +10,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.manager.Zombie_Keeper.model.enums.Flags;
-import com.manager.Zombie_Keeper.model.enums.Tags;
+import com.manager.Zombie_Keeper.model.enums.agents.Flags;
+import com.manager.Zombie_Keeper.model.enums.agents.Tags;
 
 
 

@@ -1,4 +1,4 @@
-package com.manager.Zombie_Keeper.model;
+package com.manager.Zombie_Keeper.model.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

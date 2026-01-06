@@ -1,7 +1,8 @@
 package com.manager.Zombie_Keeper.repository;
 
-import com.manager.Zombie_Keeper.model.Loot;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.manager.Zombie_Keeper.model.entity.Loot;
 
 import java.util.UUID;
 

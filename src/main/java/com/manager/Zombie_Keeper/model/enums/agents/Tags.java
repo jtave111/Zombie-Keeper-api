@@ -1,4 +1,4 @@
-package com.manager.Zombie_Keeper.model.enums;
+package com.manager.Zombie_Keeper.model.enums.agents;
 
 public enum Tags {
     WINDOWS,

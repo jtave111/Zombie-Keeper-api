@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.manager.Zombie_Keeper.dtos.CreateAcRequest;
 import com.manager.Zombie_Keeper.dtos.LoginRequest;
-import com.manager.Zombie_Keeper.model.Role;
-import com.manager.Zombie_Keeper.model.User;
+import com.manager.Zombie_Keeper.model.entity.Role;
+import com.manager.Zombie_Keeper.model.entity.User;
 import com.manager.Zombie_Keeper.repository.RoleRepository;
 import com.manager.Zombie_Keeper.repository.UserRepository;
 
