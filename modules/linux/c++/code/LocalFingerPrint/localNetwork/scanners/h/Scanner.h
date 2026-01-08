@@ -1,7 +1,7 @@
 #pragma once
+#include <thread>
 #include "ping/h/Ping.h"
 
-class Ping ping;
 
 
 class Scanner
@@ -9,10 +9,12 @@ class Scanner
 
 private:
 
+    Ping ping;
 
 public:
 
 
+    bool openPort(std::string ip, int port);
 
 
 };

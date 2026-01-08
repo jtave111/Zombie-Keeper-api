@@ -27,6 +27,8 @@ uint32_t FingerprintNodes::iptStrToInt(std::string ip){
 
 
 
+
+
 std::mutex list_mutex;
 
 void addIps(std::string ip, std::vector<std::string>& listIps ){
@@ -50,22 +52,25 @@ void addIps(std::string ip, std::vector<std::string>& listIps ){
     std::string netIp = fingerSession.getNetworkIp_module1();
 */
 
-std::vector<std::string> FingerprintNodes::makeIpList(std::string ipNet, int cidr){
+std::vector<std::string> FingerprintNodes::makeIpList(std::string gateway, int cidr){
 
     std::vector<std::thread> th;
 
     std::vector<std::string> listIps;
     
+    uint32_t gatewayInt = FingerprintNodes::iptStrToInt(gateway);
+
     uint32_t mask =  0xFFFFFFFF << (32 - cidr);
-    uint32_t network = FingerprintNodes::iptStrToInt(ipNet);
+
+    uint32_t network = gatewayInt & mask;
 
     uint32_t broadcast = network | ~mask;
 
 
     for(int i = network; i < broadcast; i++){
 
-
         th.emplace_back(addIps, FingerprintNodes::ipIntToStr(i), std::ref(listIps));
+
     }
 
 

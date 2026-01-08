@@ -27,6 +27,7 @@ public:
     ~Session();
 
     void addNode(const Node& node);
+    void addNodes(const std::vector<Node>& nodes);
     void addPort(const Port& port);
     std::string toJson() const;
 

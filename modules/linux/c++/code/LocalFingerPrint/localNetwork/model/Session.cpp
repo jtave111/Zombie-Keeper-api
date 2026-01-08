@@ -14,28 +14,27 @@ void Session::addNode(const Node& node) {
     this->nodes.push_back(node);
 }
 
-
 /*
 std::string Session::toJson() const {
     std::stringstream ss;
     ss << "{";
     
-    // Dados Primitivos
+    
     ss << "\"networkIdentifier\": \"" << networkIdentifier << "\",";
     ss << "\"gatewayIp\": \"" << gatewayIp << "\",";
     ss << "\"subnetMask\": \"" << subnetMask << "\",";
     ss << "\"cidr\": \"" << cidr << "\",";
 
-    // Array de Nodes
+    
     ss << "\"nodes\": [";
     for (size_t i = 0; i < nodes.size(); ++i) {
-        // AQUI ESTÁ O TRUQUE: Chama o toJson() da classe Node
+        
         ss << nodes[i].toJson(); 
         if (i < nodes.size() - 1) ss << ",";
     }
     ss << "],";
 
-    // Array de Portas (se aplicável)
+    
     ss << "\"ports\": [";
     for (size_t i = 0; i < ports.size(); ++i) {
         ss << ports[i].toJson();
