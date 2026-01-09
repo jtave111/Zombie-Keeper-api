@@ -1,5 +1,6 @@
 #include "h/FingerprintSession.h"
 
+
 std::string FingerprintSession::comand_exec(std::string comand ){
 
     char buffer [255];
@@ -162,4 +163,72 @@ std::string FingerprintSession::makeIdentifierCombination_module1(){
     std::string BSSID = getBSSID_module1();
 
     return SSID + "-" + BSSID; 
+}
+
+
+
+// MAC 
+
+std::string FingerprintSession::getMacAddress_module1(std::string ip){
+    Ping ping;   
+
+    if(!ping.ping(ip.c_str())) return "NULL";
+
+    std::string command = "awk -v ip=\"" + ip + "\" '$1==ip {print $4}' /proc/net/arp";
+
+    std::string result = FingerprintSession::comand_exec(command);
+
+    return command;
+
+}
+
+
+//Nodes 
+
+std::mutex list_mutex;
+void addIps(std::string ip, std::vector<std::string>& listIps ){
+      
+    Ping ping;    
+
+
+    if(ping.ping(ip.c_str()) != false){
+
+        std::lock_guard<std::mutex> lock(list_mutex);
+        listIps.emplace_back(ip);
+    
+    }
+    
+
+}
+
+
+std::vector<std::string> FingerprintSession::discoverNodes(std::string gateway, int cidr){
+
+    std::vector<std::thread> th;
+
+    std::vector<std::string> listIps;
+    
+    uint32_t gatewayInt = FingerprintSession::iptStrToInt(gateway);
+
+    uint32_t mask =  0xFFFFFFFF << (32 - cidr);
+
+    uint32_t network = gatewayInt & mask;
+
+    uint32_t broadcast = network | ~mask;
+
+
+    for(uint32_t i = network + 1; i < broadcast; i++){
+
+        th.emplace_back(addIps, FingerprintSession::ipIntToStr(i), std::ref(listIps));
+
+    }
+
+
+    for(auto& t: th){
+
+        if(t.joinable()) t.join();
+    }
+
+    return listIps;
+
 }

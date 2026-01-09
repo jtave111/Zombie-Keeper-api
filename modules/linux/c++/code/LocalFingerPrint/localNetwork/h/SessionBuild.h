@@ -5,21 +5,21 @@
 #include "localNetwork/model/h/Node.h"
 
 #include "FingerprintSession.h"
-#include "FingerprintNodes.h"
 
 
-class LocalBuild
+
+class SessionBuild
 {
 private:
-    FingerprintNodes fingerprintNodes;
     FingerprintSession fingerprintSession;
+    Ping ping;
 public:
 
     Session buildSession();
     void buildNodes(std::string gateway, int cidr, Session & session);
 
-    LocalBuild() = default;
-    ~LocalBuild() = default;
+    SessionBuild() = default;
+    ~SessionBuild() = default;
 
 };
 

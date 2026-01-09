@@ -11,10 +11,8 @@ std::string Ports::toJson() const {
     std::stringstream ss;
     ss << "{";
     
-    // Inteiro não leva aspas
     ss << "\"number\": " << number << ",";
     
-    // Strings levam aspas escapadas (\")
     ss << "\"protocol\": \"" << protocol << "\",";
     ss << "\"service\": \"" << service << "\",";
     ss << "\"banner\": \"" << banner << "\"";

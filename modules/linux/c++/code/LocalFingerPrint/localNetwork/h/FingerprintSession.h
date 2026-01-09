@@ -2,10 +2,16 @@
 #include <string>
 #include <sstream>
 #include <cstdio>
+#include <vector>
+#include <thread>
+#include <mutex>
+#include "ping/h/Ping.h"
+
 class FingerprintSession
 {
 private:
-    /* data */
+
+
 public:
 
 //Comand exec 
@@ -29,6 +35,19 @@ std::string getNetworkIp_module1();
 std::string getSSID_module1();
 std::string getBSSID_module1();
 std::string makeIdentifierCombination_module1();
+
+
+
+//Mac from ip
+std::string getMacAddress_module1(std::string ip);
+
+
+
+//Nodes 
+std::vector<std::string> discoverNodes(std::string ipNet, int cidr);
+void addIps(std::string ip, std::vector<std::string>& listIps ); 
+
+
 
 };
 

@@ -21,6 +21,7 @@ private:
     std::vector<Vulnerability> vulnerabilities;
 
     Session* session = nullptr; 
+    
 
 public:
     Node() = default;
@@ -53,6 +54,7 @@ public:
     void setSession(Session* s) { this->session = s; }
 
     const std::vector<Port>& getOpenPorts() const { return openPorts; }
+    std::vector<Port>& getmMutablesPorts() {return openPorts}
     void setOpenPorts(const std::vector<Port>& ports) { this->openPorts = ports; }
 
     const std::vector<Vulnerability>& getVulnerabilities() const { return vulnerabilities; }

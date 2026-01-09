@@ -29,7 +29,6 @@ std::string Node::toJson() const {
     ss << "\"vendor\": \"" << vendor << "\",";
     ss << "\"vulnerabilityScore\": " << vulnerabilityScore << ",";
 
-    // Só imprimimos o ID da sessão para evitar loop infinito no JSON
     if (session != nullptr) {
         ss << "\"sessionId\": \"" << session->getNetworkIdentifier() << "\",";
     } else {

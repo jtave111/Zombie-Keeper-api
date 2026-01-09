@@ -28,7 +28,7 @@ public:
 
     void addNode(const Node& node);
     void addNodes(const std::vector<Node>& nodes);
-    void addPort(const Port& port);
+    
     std::string toJson() const;
 
     const std::string& getNetworkIdentifier() const { return networkIdentifier; }
@@ -37,6 +37,7 @@ public:
     const std::string& getCidr() const { return cidr; }
     
     const std::vector<Node>& getNodes() const { return nodes; }
+    std::vector<Node>& getMutableNodes() {return nodes;}
     
     void setNetworkIdentifier(const std::string& id) { this->networkIdentifier = id; }
     void setGatewayIp(const std::string& ip) { this->gatewayIp = ip; }

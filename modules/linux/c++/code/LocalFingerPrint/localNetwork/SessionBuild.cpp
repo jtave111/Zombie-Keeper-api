@@ -1,4 +1,4 @@
-#include "h/LocalBuild.h"
+#include "h/SessionBuild.h"
 #include <cstdio>
 #include <iostream>
 #include <sstream>
@@ -6,7 +6,7 @@
 #include <array>
 
 
-Session LocalBuild::buildSession(){
+Session SessionBuild::buildSession(){
 
     Session localSession;
     
@@ -36,17 +36,22 @@ Session LocalBuild::buildSession(){
 
 }
 
-void LocalBuild::buildNodes(std::string gateway, int cidr, Session & session){
+void SessionBuild::buildNodes(std::string gateway, int cidr, Session & session){
 
 
-    std::vector<std::string> ipList = fingerprintNodes.makeIpList(gateway, cidr);
+    std::vector<std::string> ipList = fingerprintSession.discoverNodes(gateway, cidr);
 
 
     for(int i = 0; i < ipList.size(); i++){        
         
-        Node actualNode; 
-        actualNode.setIpAddress(ipList[i]);
+        Node actualNode;         
         actualNode.setSession(&session);
+        std::string nodeIp = ipList[i];
+        std::string nodeMac = fingerprintSession.getMacAddress_module1(ipList[i]);
+        
+        
+        actualNode.setIpAddress(nodeIp);
+        actualNode.setMacAddress(nodeMac);
 
         
         session.addNode(actualNode);
