@@ -9,8 +9,7 @@
   [![Command](https://img.shields.io/badge/Command-Spring%20Boot-green?logo=spring&style=for-the-badge)](https://spring.io/)
   [![Exploration](https://img.shields.io/badge/Exploration-C%2B%2B-00599C?logo=c%2B%2B&style=for-the-badge)](https://isocpp.org/)
   [![Comms](https://img.shields.io/badge/Comms-Raw%20Sockets-red?style=for-the-badge)](/)
-  [![Phase](https://img.shields.io/badge/Phase-Incubation-orange?style=for-the-badge)](/)
-  
+ 
 </div>
 
 ---
