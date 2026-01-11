@@ -31,7 +31,7 @@ public:
 
     //TCP_Aux
     void aux_allNode_TcpPorts(const std::string* ip, Node* node);
-    void aux_get_banner(char *buffer , std::string ip, Port *port);
+    void aux_get_banner( std::string ip, Port *port);
 
     
 

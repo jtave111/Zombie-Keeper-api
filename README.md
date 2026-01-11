@@ -2,7 +2,7 @@
 
   <img src="https://capsule-render.vercel.app/api?type=waving&color=333333&height=220&section=header&text=Zombie%20Keeper&fontSize=80&fontColor=ff0000&animation=fadeIn&fontAlign=50" alt="Zombie Keeper Header" />
 
-  # 💀  Zombie Keeper Framework
+  # 💀 Zombie Keeper – Command & Control System
    
   **Dual-Purpose Command & Control: Infrastructure Monitoring & Offensive Operations**
 

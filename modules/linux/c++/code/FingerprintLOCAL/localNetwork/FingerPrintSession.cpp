@@ -1,6 +1,6 @@
 #include "h/FingerprintSession.h"
 
-
+#include <mutex>
 std::string FingerprintSession::comand_exec(std::string comand ){
 
     char buffer [255];
@@ -178,19 +178,19 @@ std::string FingerprintSession::getMacAddress_module1(std::string ip){
 
     std::string result = FingerprintSession::comand_exec(command);
 
-    return command;
+    return result;
 
 }
 
 
 //Nodes 
 
-std::mutex list_mutex;
-void addIps(std::string ip, std::vector<std::string>& listIps ){
+void  FingerprintSession::addIps(std::string ip, std::vector<std::string>& listIps ){
       
     Ping ping;    
 
 
+    static std::mutex list_mutex;
     if(ping.ping(ip.c_str()) != false){
 
         std::lock_guard<std::mutex> lock(list_mutex);
@@ -219,8 +219,7 @@ std::vector<std::string> FingerprintSession::discoverNodes(std::string gateway, 
 
     for(uint32_t i = network + 1; i < broadcast; i++){
 
-        th.emplace_back(addIps, FingerprintSession::ipIntToStr(i), std::ref(listIps));
-
+      th.emplace_back(&FingerprintSession::addIps, this, FingerprintSession::ipIntToStr(i), std::ref(listIps));
     }
 
 

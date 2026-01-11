@@ -4,9 +4,9 @@
 
 
 //---- Aux functions 
-std::mutex mutex;
-void Scanner::aux_allNode_TcpPorts(const std::string* ip, Node* node_ptr){
 
+void Scanner::aux_allNode_TcpPorts(const std::string* ip, Node* node_ptr){
+   static std::mutex mutex;
     for(int i = 1; i < 65536; i ++){
 
         if(Scanner::openPort_tcp(*ip, i)){
@@ -22,14 +22,23 @@ void Scanner::aux_allNode_TcpPorts(const std::string* ip, Node* node_ptr){
     }
 }
 
-void aux_get_banner(char *buffer , std::string ip, Port *port){
-    mutex.lock();
+void Scanner::aux_get_banner( std::string ip, Port *port){
+   
+    char buffer[1024];
+    memset(buffer, 0, sizeof(buffer));
+
     int sock = socket(AF_INET, SOCK_STREAM, 0);
 
     if(sock < 0){
-        port->setBanner("unknown"); 
+         
         return;
     } 
+
+    struct timeval timeout;
+    timeout.tv_sec = 2; 
+    timeout.tv_usec = 0;
+    setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof timeout);
+    setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout, sizeof timeout);
 
     int port_int = port->getNumber();
 
@@ -51,20 +60,23 @@ void aux_get_banner(char *buffer , std::string ip, Port *port){
         }
 
         int bytes = recv(sock, buffer, 1023, 0);
+
+        static std::mutex banner_mtx;
+        std::lock_guard<std::mutex> lock(banner_mtx);
         
         if(bytes > 0){
 
-            port->setBanner(buffer);
+           port->setBanner(std::string(buffer));
         
         }else{
 
-            port->setBanner("unknown");
+            port->setBanner("Open(unknown)");
         }
     }
 
     close(sock);
 
-    mutex.unlock();
+
 
 }
 
@@ -141,19 +153,22 @@ void Scanner::banner_grabbing_tcp(Session &session ){
         int size_ports = ports_ptr->size();
 
 
-        for(int k = 0; k < size_ports; i ++){
+        for(int k = 0; k < size_ports; k ++){
 
             
-            char buffer [1024];
-            memset(buffer, 0, sizeof(buffer));
 
-            Port * port_ptr = &ports_ptr->at(i);
-            std::string  ip_str = node_ptr->getIpAddress();
-            
-            threads.emplace_back(&Scanner::aux_get_banner, this, buffer, ip_str, port_ptr);
+            Port * port_ptr = &ports_ptr->at(k);
+           std::string ip_str = node_ptr->getIpAddress();
+
+            threads.emplace_back(&Scanner::aux_get_banner, this, ip_str, port_ptr);
 
         }
-                   
+        
+        for(auto& t : threads){
+        if(t.joinable()){
+            t.join();
+        }
+    }
     }
     
 }
