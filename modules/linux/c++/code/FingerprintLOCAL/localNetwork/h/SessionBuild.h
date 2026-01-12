@@ -15,7 +15,7 @@ private:
     Ping ping;
 public:
 
-    Session buildSession();
+    void buildSession(Session& targetSession);
     void buildNodes(std::string gateway, int cidr, Session & session);
 
     SessionBuild() = default;

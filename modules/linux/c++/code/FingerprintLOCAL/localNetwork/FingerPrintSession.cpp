@@ -1,6 +1,12 @@
 #include "h/FingerprintSession.h"
 
 #include <mutex>
+#include <algorithm>
+auto cleanString = [](std::string &s) {
+    s.erase(std::remove(s.begin(), s.end(), '\n'), s.end());
+    s.erase(std::remove(s.begin(), s.end(), '\r'), s.end());    
+};
+
 std::string FingerprintSession::comand_exec(std::string comand ){
 
     char buffer [255];
@@ -27,6 +33,7 @@ std::string FingerprintSession::comand_exec(std::string comand ){
         
     }
     
+    cleanString(result);
 
     return result;
 }

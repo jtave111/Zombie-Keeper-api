@@ -11,11 +11,11 @@ private:
     
     Session session;
     Scanner scanner;
-    SessionBuild sessionBuild;
+    SessionBuild builder;
 public:
     
 
-    Session creatSession();
+    void createSession(Session &session);
     void scannSession(Session *ptr_session);
 
 };

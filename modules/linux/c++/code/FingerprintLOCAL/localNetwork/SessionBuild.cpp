@@ -6,27 +6,16 @@
 #include <array>
 #include <algorithm>
 
-auto cleanString = [](std::string &s) {
-    s.erase(std::remove(s.begin(), s.end(), '\n'), s.end());
-    s.erase(std::remove(s.begin(), s.end(), '\r'), s.end());    
-};
 
 
-Session SessionBuild::buildSession(){
+void SessionBuild::buildSession(Session& targetSession){
 
-    Session localSession;
-    
-   
 
     std::string rawNetIdentfier = fingerprintSession.makeIdentifierCombination_module1();
     std::string rawGatewayIp = fingerprintSession.gatewayIp_module1();
     std::string rawSubnetMask = fingerprintSession.getSubmask_module1();
     std::string rawCidr = fingerprintSession.getCidr_module1();
 
-    cleanString(rawNetIdentfier);
-    cleanString(rawGatewayIp);
-    cleanString(rawSubnetMask);
-    cleanString(rawCidr);
 
     // Retirar
     std::cout << "\n";
@@ -40,10 +29,10 @@ Session SessionBuild::buildSession(){
     std::cout << "=============================================" << std::endl;
     std::cout << "\n";
 
-    localSession.setNetworkIdentifier(rawNetIdentfier);
-    localSession.setGatewayIp(rawGatewayIp);
-    localSession.setSubnetMask(rawSubnetMask);
-    localSession.setCidr(rawCidr);
+    targetSession.setNetworkIdentifier(rawNetIdentfier);
+    targetSession.setGatewayIp(rawGatewayIp);
+    targetSession.setSubnetMask(rawSubnetMask);
+    targetSession.setCidr(rawCidr);
 
     
     //------ Build nodes 
@@ -52,10 +41,10 @@ Session SessionBuild::buildSession(){
     int cidr = std::stoi(rawCidr);
     std::vector<Node> nodes;
 
-    buildNodes(gateway, cidr, localSession);
+    buildNodes(gateway, cidr, targetSession);
 
-
-    return localSession;
+    std::cout << "Fim do build nodes da session";
+   
 
 }
 
@@ -72,8 +61,6 @@ void SessionBuild::buildNodes(std::string gateway, int cidr, Session & session){
         std::string nodeIp = ipList[i];
         std::string nodeMac = fingerprintSession.getMacAddress_module1(ipList[i]);
        
-        cleanString(nodeIp);
-        cleanString(nodeMac);
         // Retirar
         std::cout << "[+] Node Found: " << nodeIp << " \t MAC: " << nodeMac << std::endl;
         actualNode.setIpAddress(nodeIp);
@@ -83,5 +70,8 @@ void SessionBuild::buildNodes(std::string gateway, int cidr, Session & session){
         session.addNode(actualNode);
     }
 
+    //remover 
+
+    std::cout << "Fim do for do build de nodes " << std::endl;
 
 }

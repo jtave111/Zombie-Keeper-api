@@ -2,16 +2,16 @@
 #include <iostream>
 
 
-Session App::creatSession(){
+void App::createSession(Session &session){
     
-    Session session = sessionBuild.buildSession();
+    builder.buildSession(session);
     
     Session * ptr_session = &session;
 
-    scannSession(ptr_session);
+   
 
     std::cout << "Chegou antes de  retornar a session" << std::endl;
-    return session;
+    
 }
 
 

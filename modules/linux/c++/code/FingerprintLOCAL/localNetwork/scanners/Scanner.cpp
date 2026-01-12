@@ -1,23 +1,37 @@
 #include "h/Scanner.h"
 #include "localNetwork/model/h/Session.h"
+#include <iostream>
 
-
-
+#include <fcntl.h>      
+#include <sys/select.h> 
+#include <errno.h>      
+#include <cstring>
 //---- Aux functions 
 
 void Scanner::aux_allNode_TcpPorts(const std::string* ip, Node* node_ptr){
-   static std::mutex mutex;
+ 
+   static std::mutex print_mutex; 
+
     for(int i = 1; i < 65536; i ++){
 
+        
+        if (i % 1000 == 0) { 
+            std::lock_guard<std::mutex> lock(print_mutex);
+            std::cout << "[SCAN] " << *ip << " .. checando porta " << i << "\r" << std::flush;
+        }
+        // --- FIM DO DEBUG ---
+
         if(Scanner::openPort_tcp(*ip, i)){
-            mutex.lock();
+            
+            
+            {
+                std::lock_guard<std::mutex> lock(print_mutex);
+                std::cout << "\n[+] ABERTA: " << *ip << ":" << i << "          " << std::endl;
+            }
 
             Port actualPort;
             actualPort.setNumber(i);
             node_ptr->addPort(actualPort);
-
-            mutex.unlock();
-
         }
     }
 }
@@ -85,10 +99,9 @@ void Scanner::aux_get_banner( std::string ip, Port *port){
 
 //--- Core functions 
 bool Scanner::openPort_tcp(std::string ip, int port){
-
-
-    if(!ping.ping(ip.c_str())) return false;
-
+  
+   
+    ////// CONFIGURAR O TIMEOUT 
 
     int sock = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -116,16 +129,16 @@ void Scanner::scan_all_TcpNodePorts(Session &session){
 
     std::vector<std::thread> threads;
 
-    std::vector<Node> * ptr_session_nodes = &session.getMutableNodes();
-    int sizeNodes = ptr_session_nodes->size();
+    std::vector<Node> &nodes = session.getMutableNodes();
+   
 
-    for( int i = 0; i < sizeNodes; i ++ ){
+    for( int i = 0; i < nodes.size(); i ++ ){
 
-        Node * node_ptr = &ptr_session_nodes->at(i);
+        Node* node_ptr = &nodes[i];
 
-        const std::string* actual_ip_ptr = &ptr_session_nodes->at(i).getIpAddress();
+        const std::string* ip_ptr = &node_ptr->getIpAddress();
       
-        threads.emplace_back(&Scanner::aux_allNode_TcpPorts, this, actual_ip_ptr,  node_ptr);
+        threads.emplace_back(&Scanner::aux_allNode_TcpPorts, this, ip_ptr, node_ptr);
 
     }
 
