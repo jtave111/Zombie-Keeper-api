@@ -1,7 +1,7 @@
 #pragma once
 #include <thread>
 #include <mutex>
-#include "ping/h/Ping.h"
+#include "Ping.h"
 #include "localNetwork/model/h/Port.h"
 #include <vector>
 #include "localNetwork/model/h/Node.h"
@@ -23,14 +23,14 @@ public:
     
 
     //TCP
-    bool openPort_tcp(std::string ip, int port);
+    bool openPort_tcp(std::string ip, int port, long timeout_sec, long timeout_usec);
     
     
     void scan_all_TcpNodePorts(Session &session);
-    void banner_grabbing_tcp(Session &session);
+    void aux_allNode_TcpPorts(const std::string* ip, Node* node, long timeout_sec, long timeout_usec);
+    
 
-    //TCP_Aux
-    void aux_allNode_TcpPorts(const std::string* ip, Node* node);
+    void banner_grabbing_tcp(Session &session);
     void aux_get_banner( std::string ip, Port *port);
 
     

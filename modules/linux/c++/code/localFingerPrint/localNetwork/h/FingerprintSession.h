@@ -5,7 +5,7 @@
 #include <vector>
 #include <thread>
 #include <mutex>
-#include "ping/h/Ping.h"
+#include "Ping.h"
 
 class FingerprintSession
 {
