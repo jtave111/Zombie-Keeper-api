@@ -20,10 +20,10 @@ int main(int argc, char* argv[]){
     std::cout << "[*] Iniciando Scan de Portas..." << std::endl;
     sc.scan_all_TcpNodePorts(session);
     std::cout << "[*] Iniciando Scan de Portas..." << std::endl;
-    sc.scan_all_TcpNodePorts(session);
+    sc.scan_any_TcpNodePorts(session);
 
     
-    std::string target = "192.168.5.227"; 
+    std::string target = "192.168.5.157"; 
     bool found = false;
 
     auto& nodes = session.getMutableNodes(); 

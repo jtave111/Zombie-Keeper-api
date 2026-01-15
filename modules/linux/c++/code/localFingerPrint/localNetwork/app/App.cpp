@@ -9,8 +9,6 @@ void App::createSession(Session &session){
     Session * ptr_session = &session;
 
    
-
-    std::cout << "Chegou antes de  retornar a session" << std::endl;
     
 }
 

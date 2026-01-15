@@ -115,9 +115,9 @@ void Scanner::scan_all_TcpNodePorts(Session &session){
     }
 
 }
-// Call threads 
 void Scanner::aux_allNode_TcpPorts(const std::string* ip, Node* node_ptr, long timeout_sec, long timeout_usec){
-    
+    long sec = 0;
+    long usec = 200000;
     
 
     static std::mutex print_mutex; 
@@ -136,6 +136,52 @@ void Scanner::aux_allNode_TcpPorts(const std::string* ip, Node* node_ptr, long t
 
 
 
+
+//Make scann any ports 
+void Scanner::scan_any_TcpNodePorts(Session &session){
+    long sec = 0;
+    long usec = 200000;
+    
+    
+    std::vector<std::thread> threads;
+
+    std::vector<Node> &nodes = session.getMutableNodes();
+
+    for(int i = 0; i < nodes.size(); i ++){
+
+        Node * node_ptr = &nodes[i];
+
+        const std::string * ipPtr = &(node_ptr->getIpAddress());
+
+        threads.emplace_back(&Scanner::aux_any_TcpNodePorts, this, ipPtr, node_ptr, sec, usec);
+    }
+
+    for(auto& t: threads){
+        if(t.joinable() ) t.join();
+    }
+
+}
+void Scanner::aux_any_TcpNodePorts(const std::string* ip, Node * node, long timeout_sec, long timeout_usec){
+
+    std::vector <int> taticalPorts = Scanner::getTacticalTcpPorts();
+    
+    for(int i = 0; i < taticalPorts.size(); i ++){
+
+        if(Scanner::openPort_tcp(*ip, taticalPorts[i], timeout_sec, timeout_usec )){
+
+            Port actualPort;
+
+            actualPort.setNumber(taticalPorts[i]);
+
+            node->addPort(actualPort);
+
+        }
+
+    }
+
+
+
+}
 
 
 
