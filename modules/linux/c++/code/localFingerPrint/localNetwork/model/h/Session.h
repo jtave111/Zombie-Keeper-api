@@ -39,6 +39,8 @@ public:
     const std::vector<Node>& getNodes() const { return nodes; }
     std::vector<Node>& getMutableNodes() {return nodes;}
     
+    Node* getOneMutableNode(std::string ip);
+    
     void setNetworkIdentifier(const std::string& id) { this->networkIdentifier = id; }
     void setGatewayIp(const std::string& ip) { this->gatewayIp = ip; }
     void setSubnetMask(const std::string& mask) { this->subnetMask = mask; }

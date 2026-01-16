@@ -1,11 +1,5 @@
 #include "h/Scanner.h"
 #include "localNetwork/model/h/Session.h"
-#include <iostream>
-
-#include <fcntl.h>      
-#include <sys/select.h> 
-#include <errno.h>      
-#include <cstring>
 
 
 /**
@@ -13,7 +7,7 @@
  * * This function initiates a TCP 3-Way Handshake without blocking the execution thread.
  * It uses 'select()' to multiplex the I/O and wait for the connection result within a specific timeout.
  */
-bool Scanner::openPort_tcp(std::string ip, int port,long timeout_sec, long timeout_usec){
+bool Scanner::portScan_tcp(std::string ip, int port,long timeout_sec, long timeout_usec){
 
     int sock = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -68,6 +62,9 @@ bool Scanner::openPort_tcp(std::string ip, int port,long timeout_sec, long timeo
 
                 //accept
                 if(so_error == 0){
+
+
+
                     close(sock);
                     return true;
                 }
@@ -88,9 +85,92 @@ bool Scanner::openPort_tcp(std::string ip, int port,long timeout_sec, long timeo
 
 }
 
+//Overload 
+bool Scanner::portScan_tcp(Port *port_ptr, std::string ip, int port, long timeout_sec, long timeout_usec){
+
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+
+    if(sock < 0) {
+        close(sock);
+        return false;
+    }
+
+    int flags = fcntl(sock, F_GETFL, 0);
+    fcntl(sock, F_SETFL, flags | O_NONBLOCK);
+
+    struct sockaddr_in target {};
+    target.sin_family = AF_INET;
+    target.sin_port = htons(port);
+
+    if(inet_pton(AF_INET, ip.c_str(), &target.sin_addr) <= 0){
+        close(sock);
+        return false;
+    }
+
+    int res = connect(sock, (sockaddr*)&target, sizeof(target));
+
+    if(res < 0){
+
+        if(errno == EINPROGRESS){
+
+            fd_set myset;
+            FD_ZERO(&myset);
+            FD_SET(sock, &myset);
+
+            struct timeval tv {};
+            tv.tv_sec = timeout_sec;
+            tv.tv_usec = timeout_usec;
+
+            res = select (sock + 1, NULL, &myset, NULL, &tv);
+
+            if(res > 0){
+
+                int so_error; 
+                socklen_t len = sizeof(so_error);
+
+                if(getsockopt(sock,SOL_SOCKET, SO_ERROR, &so_error, &len)  < 0){
+                    close(sock);
+                    return false;
+                }
+
+                if(so_error == 0){
+
+                    char buffer[1024];
+                    memset(buffer, 0, sizeof(buffer));
+
+                    if(port == 80 || port == 443 || port == 8080){
+                        const char *req = "HEAD / HTTP/1.0\r\n\r\n";
+                        send(sock, req, strlen(req), 0);
+                    }
+
+                    int bytes = recv(sock, buffer, sizeof(buffer), 0);
+
+                    const std::string banner (buffer);
+
+                    port_ptr->setBanner(banner);
+
+                    close(sock);
+                    return true;
+                }
+
+            }
+
+        }
+    }
+    else{
+
+        close(sock);
+        return false;
+    }
+    
+    close(sock);
+    return false;
+
+}
 
 
-//Make scan ALL ports 
+
+//Make scan ALL ports --All ports all nodes
 void Scanner::scan_all_TcpNodePorts(Session &session){
     long sec = 0;
     long usec = 200000;
@@ -125,7 +205,7 @@ void Scanner::aux_allNode_TcpPorts(const std::string* ip, Node* node_ptr, long t
     for(int i = 1; i < 65536; i ++){
 
         
-        if(Scanner::openPort_tcp(*ip, i,timeout_sec, timeout_usec)){
+        if(Scanner::portScan_tcp(*ip, i,timeout_sec, timeout_usec)){
          
             Port actualPort;
             actualPort.setNumber(i);
@@ -137,7 +217,7 @@ void Scanner::aux_allNode_TcpPorts(const std::string* ip, Node* node_ptr, long t
 
 
 
-//Make scann any ports 
+//Make scan any ports --Any ports all nodes 
 void Scanner::scan_any_TcpNodePorts(Session &session){
     long sec = 0;
     long usec = 200000;
@@ -167,7 +247,7 @@ void Scanner::aux_any_TcpNodePorts(const std::string* ip, Node * node, long time
     
     for(int i = 0; i < taticalPorts.size(); i ++){
 
-        if(Scanner::openPort_tcp(*ip, taticalPorts[i], timeout_sec, timeout_usec )){
+        if(Scanner::portScan_tcp(*ip, taticalPorts[i], timeout_sec, timeout_usec )){
 
             Port actualPort;
 
@@ -178,12 +258,27 @@ void Scanner::aux_any_TcpNodePorts(const std::string* ip, Node * node, long time
         }
 
     }
-
-
-
 }
 
 
+
+
+//Make scan all or any --One node all ports or any ports - use flag ALL for all ports or use ANY for tatical tcp ports  
+void Scanner::scan_OneNode_Tcp(Session &session, std::string ip_node, std::string flag){
+
+    Node* node_ptr = session.getOneMutableNode(ip_node);
+
+    if(node_ptr == nullptr) {
+        std::cerr << "Node not found" << std::endl;
+
+        return;
+    }
+
+    if(!ping.ping(ip_node.c_str())){
+        std::cerr << "Host closed " <<  std::endl;
+    }
+
+}
 
 void Scanner::banner_grabbing_tcp(Session &session ){
     std::vector<std::thread> threads;

@@ -5,6 +5,11 @@
 #include "localNetwork/model/h/Port.h"
 #include <vector>
 #include "localNetwork/model/h/Node.h"
+#include <iostream>
+#include <fcntl.h>      
+#include <sys/select.h> 
+#include <errno.h>      
+#include <cstring>
 
 
 class Session; 
@@ -23,17 +28,27 @@ public:
 
 
     //TCP
-    bool openPort_tcp(std::string ip, int port, long timeout_sec, long timeout_usec);
+    bool portScan_tcp(std::string ip, int port, long timeout_sec, long timeout_usec);
+    //Overload
+    bool portScan_tcp( Port *port_ptr, std::string ip, int port, long timeout_sec, long timeout_usec);
     
     
+    //All ports all nodes
     void scan_all_TcpNodePorts(Session &session);
     void aux_allNode_TcpPorts(const std::string* ip, Node* node, long timeout_sec, long timeout_usec);
     
+    //Any ports all nodes 
     void scan_any_TcpNodePorts(Session &session);
     void aux_any_TcpNodePorts(const std::string* ip, Node * node, long timeout_sec, long timeout_usec);
 
+    //One node all ports or any ports - use flag ALL for all ports or use ANY for tatical tcp ports 
+    void scan_OneNode_Tcp(Session &session, std::string ip_node, std::string flag);
+
+
+    //Banner grabbing
     void banner_grabbing_tcp(Session &session);
     void aux_get_banner( std::string ip, Port *port);
+
 
     
 
@@ -76,7 +91,7 @@ std::vector<int> getTacticalTcpPorts() {
         2121, // CCProxy / Custom FTP
         3632, // Distcc (Remote Code Execution)
         5900, // VNC (Acesso visual remoto)
-        6000, // X11 (Keylogging remoto se aberto)
+        6000, // X11 (Keylogging )
         6667, // IRC (Backdoors / Botnets)
         
         512,  // exec (R-Service)
