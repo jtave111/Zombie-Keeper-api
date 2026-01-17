@@ -46,8 +46,7 @@ public:
 
 
     //Banner grabbing
-    void banner_grabbing_tcp(Session &session);
-    void aux_get_banner( std::string ip, Port *port);
+    void one_banner_grabbing(const char *ip, Port *port, long timeout_sec, long timeout_usec);
 
 
     
