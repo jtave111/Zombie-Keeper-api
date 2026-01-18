@@ -30,10 +30,11 @@ public:
 
     ~Node();
 
-    void addPort(const Port& port);
+    void addPort(const Port& port_num);
     void addVulnerability(const Vulnerability& vuln);
     std::string toJson() const;
 
+    Port* getOneMutablePort(Node &node, int port);
     
     const std::string& getIpAddress() const { return ipAddress; }
     void setIpAddress(const std::string& ip) { this->ipAddress = ip; }

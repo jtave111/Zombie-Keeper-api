@@ -2,6 +2,7 @@
 
 #include <mutex>
 #include <algorithm>
+
 auto cleanString = [](std::string &s) {
     s.erase(std::remove(s.begin(), s.end(), '\n'), s.end());
     s.erase(std::remove(s.begin(), s.end(), '\r'), s.end());    
@@ -184,6 +185,18 @@ std::string FingerprintSession::getMacAddress_module1(std::string ip){
     std::string command = "awk -v ip=\"" + ip + "\" '$1==ip {print $4}' /proc/net/arp";
 
     std::string result = FingerprintSession::comand_exec(command);
+
+    if(!result.empty() && result.back() == '\n') result.pop_back();
+
+
+    if(!result.empty() && result != "00:00:00:00:00:00") return result;
+
+
+    std::string commandLocal = "ip -o addr show | grep \"inet " + ip + "/\" | awk '{print $2}' | xargs -I {} cat /sys/class/net/{}/address";
+    result = FingerprintSession::comand_exec(commandLocal);
+    
+    if(result.empty()) return "unknown";
+
 
     return result;
 

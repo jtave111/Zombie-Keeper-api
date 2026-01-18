@@ -23,11 +23,12 @@ private:
     
     Session* session = nullptr;
 
+    Node* node = nullptr;
 
 public:
 
 
-    //TCP
+    // port scan TCP
     bool portScan_tcp(std::string ip, int port, long timeout_sec, long timeout_usec);
     //Overload
     bool portScan_tcp( Port *port_ptr, std::string ip, int port, long timeout_sec, long timeout_usec);
@@ -46,7 +47,7 @@ public:
 
 
     //Banner grabbing
-    void one_banner_grabbing(const char *ip, Port *port, long timeout_sec, long timeout_usec);
+    void one_banner_grabbing(std::string ip, int port, long timeout_sec, long timeout_usec);
 
 
     
@@ -54,6 +55,10 @@ public:
     //Referenciar na chamada 
     void setSession(Session* s){
         this->session = s;
+    }
+
+    void setNode(Node * n){
+        this->node = n;
     }
 
 

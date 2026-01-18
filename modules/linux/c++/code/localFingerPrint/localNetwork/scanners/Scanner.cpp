@@ -29,7 +29,6 @@ bool Scanner::portScan_tcp(std::string ip, int port,long timeout_sec, long timeo
         return false;
     }
 
-    
     //Send syn packet 
     int res = connect(sock, (sockaddr*)&target, sizeof(target));
 
@@ -109,53 +108,61 @@ bool Scanner::portScan_tcp(Port *port_ptr, std::string ip, int port, long timeou
 
     int res = connect(sock, (sockaddr*)&target, sizeof(target));
 
-    if(res < 0){
+    if( res < 0 && errno == EINPROGRESS){
 
-        if(errno == EINPROGRESS){
+        fd_set myset;
+        FD_ZERO(&myset);
+        FD_SET(sock, &myset);
 
-            fd_set myset;
+        struct timeval tv {timeout_sec, timeout_usec};
+
+        res = select (sock + 1, NULL, &myset, NULL, &tv);
+
+        if(res > 0){
+
+            int so_error; 
+            socklen_t len = sizeof(so_error);
+
+            if(getsockopt(sock,SOL_SOCKET, SO_ERROR, &so_error, &len)  < 0){
+                close(sock);
+                return false;
+            }   
+
+            if(so_error != 0){
+                close(sock);
+                return false;
+            }
+
+
+            if(port == 80 || port == 443 || port == 8080){
+                const char *req = "HEAD / HTTP/1.0\r\n\r\n";
+                send(sock, req, strlen(req), 0);
+            }
+            
             FD_ZERO(&myset);
             FD_SET(sock, &myset);
+            tv.tv_sec = 0; 
+            tv.tv_usec = 500000;
+            
+            res = select(sock + 1, &myset, NULL, NULL, &tv);
 
-            struct timeval tv {};
-            tv.tv_sec = timeout_sec;
-            tv.tv_usec = timeout_usec;
-
-            res = select (sock + 1, NULL, &myset, NULL, &tv);
 
             if(res > 0){
 
-                int so_error; 
-                socklen_t len = sizeof(so_error);
+                char buffer[1024];
+                memset(buffer, 0, sizeof(buffer));
 
-                if(getsockopt(sock,SOL_SOCKET, SO_ERROR, &so_error, &len)  < 0){
-                    close(sock);
-                    return false;
-                }
+                size_t bytes = recv(sock, buffer, sizeof(buffer) -1, 0);
 
-                if(so_error == 0){
-
-                    char buffer[1024];
-                    memset(buffer, 0, sizeof(buffer));
-
-                    if(port == 80 || port == 443 || port == 8080){
-                        const char *req = "HEAD / HTTP/1.0\r\n\r\n";
-                        send(sock, req, strlen(req), 0);
-                    }
-
-                    int bytes = recv(sock, buffer, sizeof(buffer), 0);
-
-                    const std::string banner (buffer);
-
-                    port_ptr->setBanner(banner);
-
-                    close(sock);
-                    return true;
-                }
+                if(bytes > 0) port_ptr->setBanner(std::string (buffer));
 
             }
 
+            close(sock);
+            return true;
+        
         }
+    
     }
     else{
 
@@ -173,7 +180,7 @@ bool Scanner::portScan_tcp(Port *port_ptr, std::string ip, int port, long timeou
 //Make scan ALL ports --All ports all nodes
 void Scanner::scan_all_TcpNodePorts(Session &session){
     long sec = 0;
-    long usec = 200000;
+    long usec = 300000;
     
     std::vector<std::thread> threads;
 
@@ -196,18 +203,13 @@ void Scanner::scan_all_TcpNodePorts(Session &session){
 
 }
 void Scanner::aux_allNode_TcpPorts(const std::string* ip, Node* node_ptr, long timeout_sec, long timeout_usec){
-    long sec = 0;
-    long usec = 200000;
     
-
-    static std::mutex print_mutex; 
-
     for(int i = 1; i < 65536; i ++){
 
-        
-        if(Scanner::portScan_tcp(*ip, i,timeout_sec, timeout_usec)){
+        Port actualPort;
+        Port * port_ptr = &actualPort;
+        if(Scanner::portScan_tcp(port_ptr, *ip, i,timeout_sec, timeout_usec)){
          
-            Port actualPort;
             actualPort.setNumber(i);
             node_ptr->addPort(actualPort);
         }
@@ -220,7 +222,7 @@ void Scanner::aux_allNode_TcpPorts(const std::string* ip, Node* node_ptr, long t
 //Make scan any ports --Any ports all nodes 
 void Scanner::scan_any_TcpNodePorts(Session &session){
     long sec = 0;
-    long usec = 200000;
+    long usec = 500000;
     
     
     std::vector<std::thread> threads;
@@ -247,9 +249,10 @@ void Scanner::aux_any_TcpNodePorts(const std::string* ip, Node * node, long time
     
     for(int i = 0; i < taticalPorts.size(); i ++){
 
-        if(Scanner::portScan_tcp(*ip, taticalPorts[i], timeout_sec, timeout_usec )){
+        Port actualPort;
+        Port * port_ptr = & actualPort;
+        if(Scanner::portScan_tcp(port_ptr, *ip, taticalPorts[i], timeout_sec, timeout_usec )){
 
-            Port actualPort;
 
             actualPort.setNumber(taticalPorts[i]);
 
@@ -259,7 +262,6 @@ void Scanner::aux_any_TcpNodePorts(const std::string* ip, Node * node, long time
 
     }
 }
-
 
 
 
@@ -281,12 +283,9 @@ void Scanner::scan_OneNode_Tcp(Session &session, std::string ip_node, std::strin
 }
 
 
-//Call threads
-void Scanner::one_banner_grabbing( const char *ip, Port *port, long timeout_sec, long timeout_usec){
-   
-    char buffer[1024];
-    memset(buffer, 0, sizeof(buffer));
 
+void Scanner::one_banner_grabbing( std::string ip, int port, long timeout_sec, long timeout_usec){
+ 
     int sock = socket(AF_INET, SOCK_STREAM, 0);
 
     if(sock < 0){
@@ -298,74 +297,95 @@ void Scanner::one_banner_grabbing( const char *ip, Port *port, long timeout_sec,
     fcntl(sock, F_SETFL, flags | O_NONBLOCK);
 
     
+    Node *node_ptr = session->getOneMutableNode(ip);
+    if(node_ptr == nullptr) {
+        close(sock);
+        return;
+    }
+    
+    Port * port_ptr = node->getOneMutablePort(*node_ptr, port);
+    if(port_ptr == nullptr){
+        close(sock);
+        return;
+    }
 
-    int port_int = port->getNumber();
+    int port_int = port_ptr->getNumber();
     struct sockaddr_in target {};
     target.sin_family = AF_INET;
     target.sin_port = htons(port_int);
 
     
-    if(inet_pton(AF_INET, ip, &target.sin_addr) < 0){
+    if(inet_pton(AF_INET, ip.c_str(), &target.sin_addr) < 0){
         close(sock);
         return;
     }
 
-
     int res = connect(sock,(struct sockaddr*)&target, sizeof(target));
 
-    if(res < 0){
+    if(res < 0 && res == EINPROGRESS){
 
-        if(res == EINPROGRESS){
+        fd_set myset;
+        FD_ZERO(&myset);
+        FD_SET(sock, &myset);
+        
+        struct timeval tv{ timeout_sec,timeout_usec};
 
-            fd_set myset;
+        res = select(sock + 1, NULL, &myset, NULL, &tv);
+
+        if(res > 0){
+
+            int so_error;
+            socklen_t len = sizeof(so_error);
+
+            if(getsockopt(sock, SOL_SOCKET, SO_ERROR, &so_error, &len) < 0){
+                close(sock);
+                return;
+            }
+
+        
+            if(so_error != 0){
+                close(sock);
+                return;
+            }
+            
+            if(port_int == 80 || port_int == 443 || port_int == 8080){
+            
+                const char* req = "HEAD / HTTP/1.0\r\n\r\n";
+                send(sock, req, strlen(req), 0);
+            
+            }
+            
             FD_ZERO(&myset);
             FD_SET(sock, &myset);
-            
-            struct timeval tv;
-            tv.tv_sec = timeout_sec;
-            tv.tv_usec = timeout_usec;
+            tv.tv_sec = 0; 
+            tv.tv_usec = 500000;
+            res = select(sock + 1, &myset, NULL, NULL, &tv);
 
-            res = select(sock + 1, NULL, &myset, NULL, &tv);
 
             if(res > 0){
+  
+                char buffer[1024];
+                memset(buffer, 0, sizeof(buffer));
 
-                int so_error;
-                socklen_t len = sizeof(so_error);
+                int bytes = recv(sock, buffer, 1023, 0);
+                
+                if(bytes > 0){
 
-                if(getsockopt(sock, SOL_SOCKET, SO_ERROR, &so_error, &len) < 0){
+                    port_ptr->setBanner(std::string(buffer));
                     close(sock);
                     return;
+
+                }else{
+                    port_ptr->setBanner("Open(unknown)");
+                    close(sock);
+                    return;
+                    
                 }
-
-                if(so_error == 0){
-
-                    if(port_int == 80 || port_int == 443 || port_int == 8080){
-                    
-                        const char* req = "HEAD / HTTP/1.0\r\n\r\n";
-                        send(sock, req, strlen(req), 0);
-                    
-                    }
-
-                    int bytes = recv(sock, buffer, 1023, 0);
-                    
-                    if(bytes > 0){
-
-                        port->setBanner(std::string(buffer));
-                        close(sock);
-                        return;
-
-                    }else{
-                        
-                        port->setBanner("Open(unknown)");
-                        close(sock);
-                        return;
-                        
-                    }
-
-                }
-
             }
-   
+            
+        }else{
+            close(sock);
+            return;
         }
 
     }else{

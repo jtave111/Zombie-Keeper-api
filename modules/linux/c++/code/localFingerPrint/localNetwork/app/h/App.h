@@ -15,8 +15,8 @@ private:
 public:
     
 
-    void createSession(Session &session);
-    void scannSession(Session *ptr_session);
+    void createSession(Session *session, std::string flags);
+    void scannSession(Session *ptr_session, std::string flags);
 
 };
 

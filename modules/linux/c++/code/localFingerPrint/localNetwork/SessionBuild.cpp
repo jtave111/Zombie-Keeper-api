@@ -17,18 +17,6 @@ void SessionBuild::buildSession(Session& targetSession){
     std::string rawCidr = fingerprintSession.getCidr_module1();
 
 
-    // Retirar
-    std::cout << "\n";
-    std::cout << "=============================================" << std::endl;
-    std::cout << "   NETWORK CONFIGURATION DEBUG             " << std::endl;
-    std::cout << "=============================================" << std::endl;
-    std::cout << " [>] Interface Identifier : " << rawNetIdentfier << std::endl;
-    std::cout << " [>] Gateway IP           : " << rawGatewayIp << std::endl;
-    std::cout << " [>] Subnet Mask          : " << rawSubnetMask << std::endl;
-    std::cout << " [>] CIDR                 : /" << rawCidr << std::endl;
-    std::cout << "=============================================" << std::endl;
-    std::cout << "\n";
-
     targetSession.setNetworkIdentifier(rawNetIdentfier);
     targetSession.setGatewayIp(rawGatewayIp);
     targetSession.setSubnetMask(rawSubnetMask);
@@ -42,8 +30,6 @@ void SessionBuild::buildSession(Session& targetSession){
     std::vector<Node> nodes;
 
     buildNodes(gateway, cidr, targetSession);
-
-    std::cout << "Fim do build nodes da session";
    
 
 }
@@ -62,7 +48,6 @@ void SessionBuild::buildNodes(std::string gateway, int cidr, Session & session){
         std::string nodeMac = fingerprintSession.getMacAddress_module1(ipList[i]);
        
         // Retirar
-        std::cout << "[+] Node Found: " << nodeIp << " \t MAC: " << nodeMac << std::endl;
         actualNode.setIpAddress(nodeIp);
         actualNode.setMacAddress(nodeMac);
 
@@ -70,8 +55,6 @@ void SessionBuild::buildNodes(std::string gateway, int cidr, Session & session){
         session.addNode(actualNode);
     }
 
-    //remover 
-
-    std::cout << "Fim do for do build de nodes " << std::endl;
-
+ 
+ 
 }

@@ -26,35 +26,3 @@ Node* Session::getOneMutableNode(std::string  ip){
     return nullptr;
 }
 
-/*
-std::string Session::toJson() const {
-    std::stringstream ss;
-    ss << "{";
-    
-    
-    ss << "\"networkIdentifier\": \"" << networkIdentifier << "\",";
-    ss << "\"gatewayIp\": \"" << gatewayIp << "\",";
-    ss << "\"subnetMask\": \"" << subnetMask << "\",";
-    ss << "\"cidr\": \"" << cidr << "\",";
-
-    
-    ss << "\"nodes\": [";
-    for (size_t i = 0; i < nodes.size(); ++i) {
-        
-        ss << nodes[i].toJson(); 
-        if (i < nodes.size() - 1) ss << ",";
-    }
-    ss << "],";
-
-    
-    ss << "\"ports\": [";
-    for (size_t i = 0; i < ports.size(); ++i) {
-        ss << ports[i].toJson();
-        if (i < ports.size() - 1) ss << ",";
-    }
-    ss << "]";
-
-    ss << "}";
-    return ss.str();
-}
-*/

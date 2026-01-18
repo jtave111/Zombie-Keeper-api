@@ -2,23 +2,28 @@
 #include <iostream>
 
 
-void App::createSession(Session &session){
+void App::createSession(Session *session, std::string flags){
     
-    builder.buildSession(session);
+    builder.buildSession(*session);
     
-    Session * ptr_session = &session;
-
-   
-    
+     
 }
 
 
-void App::scannSession(Session *ptr_session){
+void App::scannSession(Session *ptr_session, std::string flags){
+
 
     scanner.setSession(ptr_session);
 
 
-    scanner.scan_all_TcpNodePorts( *ptr_session);
-    scanner.banner_grabbing_tcp(*ptr_session);
+    if(flags == "-all-ports"){
+        
+        scanner.scan_all_TcpNodePorts( *ptr_session);
+       
+    }else if(flags == "any-ports"){
+
+        scanner.scan_any_TcpNodePorts( *ptr_session);
+    
+    }
 
 }

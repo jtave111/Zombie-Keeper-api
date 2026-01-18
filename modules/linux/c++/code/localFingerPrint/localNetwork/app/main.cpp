@@ -2,74 +2,102 @@
 #include <iostream>
 #include "Scanner.h"
 #include <iomanip>
+#include <cctype>
 #include <algorithm>
 
-int main(int argc, char* argv[]){
-   
-    Session session; 
-    App app;
 
-    Scanner sc;
+void printSessionJson(Session * session){
 
-    std::cout << "[*] Iniciando construção da sessão..." << std::endl;
-    
-  
-    app.createSession(session); 
-    sc.setSession(&session); 
+    std::cout << "["; 
 
-    std::cout << "[*] Iniciando Scan de Portas..." << std::endl;
-    sc.scan_all_TcpNodePorts(session);
-    std::cout << "[*] Iniciando Scan de Portas..." << std::endl;
-    sc.scan_any_TcpNodePorts(session);
-
-    
-    std::string target = "192.168.5.157"; 
-    bool found = false;
-
-    auto& nodes = session.getMutableNodes(); 
-
-    std::cout << "\n\n"; 
+    auto& nodes = session->getMutableNodes();
+    bool firstNode = true;
 
     for (auto& node : nodes) {
-        if (node.getIpAddress() == target) {
-            found = true;
-
-            std::cout << "################################################" << std::endl;
-            std::cout << "# Info of host: " << target << std::endl;
-            std::cout << "################################################" << std::endl;
-    
-            std::cout << std::left 
-                      << std::setw(10) << "PORT" 
-                      << std::setw(10) << "PROTO" 
-                      << "STATUS" << std::endl;
-            
-            std::cout << "--------------------------------" << std::endl;
-            std::vector<Port> openPorts = node.getOpenPorts();
-            std::sort(openPorts.begin(), openPorts.end(), 
-                [](const Port& a, const Port& b) {
-                    return a.getNumber() < b.getNumber();
-                });
-
-            if (openPorts.empty()) {
-                std::cout << "Nothing" << std::endl;
-            } else {
-                for (auto& p : openPorts) {
-                    std::cout << std::left 
-                              << std::setw(10) << p.getNumber() 
-                              << std::setw(10) << "tcp" 
-                              << "\033[1;32mOPEN\033[0m" << std::endl;
-                }
-            }
-            std::cout << "################################################" << std::endl;
-            
-            break; 
+        
+      
+        if (!firstNode) {
+            std::cout << ",";
         }
+        firstNode = false;
+        
+        std::cout << "{";
+        std::cout << "\"ip\": \"" << node.getIpAddress() << "\",";
+        
+
+        std::string mac = node.getMacAddress();
+        if(mac.empty()) mac = "unknown";
+        std::cout << "\"mac\": \"" << mac << "\",";
+        
+        std::cout << "\"ports\": [";
+        
+        auto ports = node.getOpenPorts();
+        bool firstPort = true;
+
+        for (auto& p : ports) {
+            if (!firstPort) {
+                std::cout << ",";
+            }
+            firstPort = false;
+    
+            std::string banner = p.getBanner();
+            
+            
+            std::replace(banner.begin(), banner.end(), '\n', ' ');
+            std::replace(banner.begin(), banner.end(), '\r', ' ');
+            
+            
+            std::replace(banner.begin(), banner.end(), '"', '\'');
+            
+            
+            std::replace(banner.begin(), banner.end(), '\\', '/');
+
+            
+            banner.erase(std::remove_if(banner.begin(), banner.end(), 
+                         [](unsigned char c){ return !std::isprint(c); }), banner.end());
+
+            if(banner.empty()) banner = "unknown";
+
+            
+            std::cout << "{";
+            std::cout << "\"number\": " << p.getNumber() << ",";
+            std::cout << "\"proto\": \"tcp\","; 
+            std::cout << "\"banner\": \"" << banner << "\""; 
+            std::cout << "}";
+        }
+
+        std::cout << "]"; 
+        std::cout << "}"; 
     }
 
-    if (!found) {
-        std::cout << "[-] Error: node " << target << " not found." << std::endl;
-    }
     
+    std::cout << "]" << std::endl;
+}
+
+
+int main(int argc, char* argv[]){
+
+    App appInit;
+
+   // "./Binary --create_session '-all-ports' or 'any-ports' "
+    std::string command = argv[1];
+
+    if(command == "--create_session"){
+
+        std::string scan_opt_flags = argv[2];
+        Session session;
+
+        Session *ptr_session = &session;
+
+        appInit.createSession(ptr_session, scan_opt_flags);
+
+        appInit.scannSession(ptr_session, scan_opt_flags);
+
+        printSessionJson(ptr_session);
+
+    }
+
     return 0;
+   
 }
 

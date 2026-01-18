@@ -11,6 +11,24 @@ Node::~Node()
 {
 }
 
+Port * Node::getOneMutablePort(Node &node, int port_num){
+
+    std::vector<Port> &ports = (node.getmMutablesPorts());
+
+    for(size_t i = 0; i < ports.size();  i ++){
+
+        if(ports[i].getNumber() == port_num ) {
+            
+            Port * port_ptr =  &ports[i];
+
+            return port_ptr;
+         
+        }
+    }
+
+    return nullptr;
+}
+
 void Node::addPort(const Port& port) {
     this->openPorts.push_back(port);
 }
@@ -18,38 +36,3 @@ void Node::addPort(const Port& port) {
 void Node::addVulnerability(const Vulnerability& vuln) {
     this->vulnerabilities.push_back(vuln);
 }
-/*
-std::string Node::toJson() const {
-    std::stringstream ss;
-    ss << "{";
-    
-    ss << "\"ipAddress\": \"" << ipAddress << "\",";
-    ss << "\"macAddress\": \"" << macAddress << "\",";
-    ss << "\"hostname\": \"" << hostname << "\",";
-    ss << "\"vendor\": \"" << vendor << "\",";
-    ss << "\"vulnerabilityScore\": " << vulnerabilityScore << ",";
-
-    if (session != nullptr) {
-        ss << "\"sessionId\": \"" << session->getNetworkIdentifier() << "\",";
-    } else {
-        ss << "\"sessionId\": null,";
-    }
-
-    ss << "\"openPorts\": [";
-    for (size_t i = 0; i < openPorts.size(); ++i) {
-        ss << openPorts[i].toJson();
-        if (i < openPorts.size() - 1) ss << ",";
-    }
-    ss << "],";
-
-    ss << "\"vulnerabilities\": [";
-    for (size_t i = 0; i < vulnerabilities.size(); ++i) {
-        ss << vulnerabilities[i].toJson();
-        if (i < vulnerabilities.size() - 1) ss << ",";
-    }
-    ss << "]";
-
-    ss << "}";
-    return ss.str();
-}
-*/

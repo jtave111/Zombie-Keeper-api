@@ -6,18 +6,3 @@ Port::Port(int number, std::string protocol, std::string service, std::string ba
 
 
 
-/*
-std::string Ports::toJson() const {
-    std::stringstream ss;
-    ss << "{";
-    
-    ss << "\"number\": " << number << ",";
-    
-    ss << "\"protocol\": \"" << protocol << "\",";
-    ss << "\"service\": \"" << service << "\",";
-    ss << "\"banner\": \"" << banner << "\"";
-    
-    ss << "}";
-    return ss.str();
-}
-*/
