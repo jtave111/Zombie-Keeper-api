@@ -15,7 +15,6 @@ void printSessionJson(Session * session){
 
     for (auto& node : nodes) {
         
-      
         if (!firstNode) {
             std::cout << ",";
         }
@@ -24,7 +23,6 @@ void printSessionJson(Session * session){
         std::cout << "{";
         std::cout << "\"ip\": \"" << node.getIpAddress() << "\",";
         
-
         std::string mac = node.getMacAddress();
         if(mac.empty()) mac = "unknown";
         std::cout << "\"mac\": \"" << mac << "\",";
@@ -42,16 +40,10 @@ void printSessionJson(Session * session){
     
             std::string banner = p.getBanner();
             
-            
             std::replace(banner.begin(), banner.end(), '\n', ' ');
             std::replace(banner.begin(), banner.end(), '\r', ' ');
-            
-            
             std::replace(banner.begin(), banner.end(), '"', '\'');
-            
-            
             std::replace(banner.begin(), banner.end(), '\\', '/');
-
             
             banner.erase(std::remove_if(banner.begin(), banner.end(), 
                          [](unsigned char c){ return !std::isprint(c); }), banner.end());
@@ -59,9 +51,16 @@ void printSessionJson(Session * session){
             if(banner.empty()) banner = "unknown";
 
             
+            std::string serviceName = p.getService();
+            if(serviceName.empty()) serviceName = "unknown";
+
+            std::string protocolName = p.getProtocol();
+            if(protocolName.empty()) protocolName = "tcp"; 
+
             std::cout << "{";
             std::cout << "\"number\": " << p.getNumber() << ",";
-            std::cout << "\"proto\": \"tcp\","; 
+            std::cout << "\"proto\": \"" << protocolName << "\",";  
+            std::cout << "\"service\": \"" << serviceName << "\","; 
             std::cout << "\"banner\": \"" << banner << "\""; 
             std::cout << "}";
         }
@@ -70,8 +69,7 @@ void printSessionJson(Session * session){
         std::cout << "}"; 
     }
 
-    
-    std::cout << "]" << std::endl;
+    std::cout << "]" << std::endl; 
 }
 
 

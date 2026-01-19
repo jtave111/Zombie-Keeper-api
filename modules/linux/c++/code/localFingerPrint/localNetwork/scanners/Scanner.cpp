@@ -1,5 +1,6 @@
 #include "h/Scanner.h"
 #include "localNetwork/model/h/Session.h"
+#include <netdb.h>
 
 
 /**
@@ -211,6 +212,20 @@ void Scanner::aux_allNode_TcpPorts(const std::string* ip, Node* node_ptr, long t
         if(Scanner::portScan_tcp(port_ptr, *ip, i,timeout_sec, timeout_usec)){
          
             actualPort.setNumber(i);
+
+            struct servent *service;
+            service = getservbyport(htons(i), "tcp");
+        
+            if(service != nullptr) { 
+            
+                actualPort.setService(service->s_name); 
+                actualPort.setProtocol(service->s_proto); 
+            } else { 
+            
+                actualPort.setService("unknown"); 
+                actualPort.setProtocol("tcp"); 
+            }
+        
             node_ptr->addPort(actualPort);
         }
     }
@@ -255,6 +270,21 @@ void Scanner::aux_any_TcpNodePorts(const std::string* ip, Node * node, long time
 
 
             actualPort.setNumber(taticalPorts[i]);
+
+            struct servent *service;
+            service = getservbyport(htons(taticalPorts[i]), "tcp");
+
+          
+            if(service != nullptr) { 
+            
+                actualPort.setService(service->s_name); 
+                actualPort.setProtocol(service->s_proto); 
+            } else { 
+            
+                actualPort.setService("unknown"); 
+                actualPort.setProtocol("tcp"); 
+            }
+        
 
             node->addPort(actualPort);
 
