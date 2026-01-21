@@ -3,7 +3,7 @@ package com.manager.Zombie_Keeper.controller.agent;
 import com.manager.Zombie_Keeper.exception.DuplicateAgentException;
 import com.manager.Zombie_Keeper.model.entity.agent.Agent;
 import com.manager.Zombie_Keeper.repository.agent.AgentRepository;
-import com.manager.Zombie_Keeper.service.AgentsService;
+import com.manager.Zombie_Keeper.service.agents.AgentsService;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +14,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/c2-server/agents")
-
 public class AgentController {
 
     private final AgentRepository agentRepository;

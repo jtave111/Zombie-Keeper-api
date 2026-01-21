@@ -179,10 +179,12 @@ bool Scanner::portScan_tcp(Port *port_ptr, std::string ip, int port, long timeou
 
 
 //Make scan ALL ports --All ports all nodes
-void Scanner::scan_all_TcpNodePorts(Session &session){
+void Scanner::scan_all_TcpNodePorts(Session &session, long sec, long usec){
+    
+    /*
     long sec = 0;
     long usec = 300000;
-    
+    */
     std::vector<std::thread> threads;
 
     std::vector<Node> &nodes = session.getMutableNodes();
@@ -235,10 +237,12 @@ void Scanner::aux_allNode_TcpPorts(const std::string* ip, Node* node_ptr, long t
 
 
 //Make scan any ports --Any ports all nodes 
-void Scanner::scan_any_TcpNodePorts(Session &session){
+void Scanner::scan_any_TcpNodePorts(Session &session, long sec, long usec){
+ 
+    /*
     long sec = 0;
     long usec = 500000;
-    
+    */
     
     std::vector<std::thread> threads;
 

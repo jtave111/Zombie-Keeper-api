@@ -77,19 +77,23 @@ int main(int argc, char* argv[]){
 
     App appInit;
 
-   // "./Binary --create_session '-all-ports' or 'any-ports' "
+   // "./Binary --create_session '-all-ports' or 'any-ports' 0 200000 "
     std::string command = argv[1];
 
     if(command == "--create_session"){
 
         std::string scan_opt_flags = argv[2];
+
+        int sec = std::stoi(argv[3]);
+        int usec = std::stoi(argv[4]);
+
         Session session;
 
         Session *ptr_session = &session;
 
         appInit.createSession(ptr_session, scan_opt_flags);
 
-        appInit.scannSession(ptr_session, scan_opt_flags);
+        appInit.scannSession(ptr_session, scan_opt_flags, sec, usec);
 
         printSessionJson(ptr_session);
 

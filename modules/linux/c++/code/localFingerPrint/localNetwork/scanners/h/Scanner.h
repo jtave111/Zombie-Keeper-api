@@ -35,11 +35,11 @@ public:
     
     
     //All ports all nodes
-    void scan_all_TcpNodePorts(Session &session);
+    void scan_all_TcpNodePorts(Session &session, long sec, long usec);
     void aux_allNode_TcpPorts(const std::string* ip, Node* node, long timeout_sec, long timeout_usec);
     
     //Any ports all nodes 
-    void scan_any_TcpNodePorts(Session &session);
+    void scan_any_TcpNodePorts(Session &session, long sec, long usec);
     void aux_any_TcpNodePorts(const std::string* ip, Node * node, long timeout_sec, long timeout_usec);
 
     //One node all ports or any ports - use flag ALL for all ports or use ANY for tatical tcp ports 

@@ -16,7 +16,7 @@ public:
     
 
     void createSession(Session *session, std::string flags);
-    void scannSession(Session *ptr_session, std::string flags);
+    void scannSession(Session *ptr_session, std::string flags, long sec, long usec);
 
 };
 

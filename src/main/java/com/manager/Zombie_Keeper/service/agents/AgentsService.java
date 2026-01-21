@@ -1,4 +1,4 @@
-package com.manager.Zombie_Keeper.service;
+package com.manager.Zombie_Keeper.service.agents;
 
 import java.util.HashMap;
 import java.util.HashSet;

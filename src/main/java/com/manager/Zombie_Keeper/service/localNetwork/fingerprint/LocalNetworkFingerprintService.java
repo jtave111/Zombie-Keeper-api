@@ -3,6 +3,8 @@ package com.manager.Zombie_Keeper.service.localNetwork.fingerprint;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.boot.system.ApplicationHome;
@@ -11,20 +13,51 @@ import org.springframework.stereotype.Service;
 @Service
 public class LocalNetworkFingerprintService {
     
-    public File getRootPath(){
+    private String extractJson(String rawOutput){
+        if (rawOutput == null || rawOutput.isEmpty()) {
+            return "[]"; 
+        }
 
-        return new ApplicationHome(getClass()).getDir();
+        
+        int startIndex = rawOutput.indexOf("[");
+        int endIndex = rawOutput.lastIndexOf("]");
+
+        
+        if (startIndex != -1 && endIndex != -1 && endIndex > startIndex) {
+            return rawOutput.substring(startIndex, endIndex + 1);
+        }
+
+        
+        return rawOutput.startsWith("ERRO") ? rawOutput : "[]";
+    }
+
+    
+
+    public File getRootPath(){
+        File currentDir = new File(System.getProperty("user.dir"));
+
+        File modulesFolder = new File(currentDir, "modules");
+
+        if (modulesFolder.exists() && modulesFolder.isDirectory()) {
+         
+            return currentDir;
+        }
+
+      return new ApplicationHome(getClass()).getDir();
         
     }
 
-    public String execScannLocalIps(String binaryName){
+    // "./Binary --create_session '-all-ports' or 'any-ports' "
+    public String excLocalNetFingerPrint(String binaryName, String flag, String sec, String usec){
 
+        List<String> command = new ArrayList<>();
+        
         StringBuilder output = new StringBuilder();
 
         try {
-
+            
             File root = getRootPath();          
-            File binaryFile = new File(root, "modules/linx/elf" + binaryName );
+            File binaryFile = new File(root, "modules/linux/c++/code/localFingerPrint/" + binaryName );
 
             if(!binaryFile.exists()){
 
@@ -36,11 +69,28 @@ public class LocalNetworkFingerprintService {
                 binaryFile.setExecutable(true);
             }
 
+            command.add(binaryFile.getAbsolutePath());
 
+            if(flag.equalsIgnoreCase("all")) {
+                command.add("--create_session");
+                command.add("-all-ports");
+            } else if(flag.equalsIgnoreCase("any")) {
+                command.add("--create_session");
+                command.add("-any-ports");
+            }
 
-            ProcessBuilder pb = new ProcessBuilder();
+            command.add(sec);
+            command.add(usec);
+            
+        } catch (Exception e) {
+            
+            System.out.println(e.getMessage());
+        }
 
-            pb.command(binaryFile.getAbsolutePath());
+        try {
+
+            ProcessBuilder pb = new ProcessBuilder(command);
+
             pb.redirectErrorStream(true);
 
 
@@ -52,6 +102,7 @@ public class LocalNetworkFingerprintService {
                 String line;
 
                 while ((line = buffer.readLine())  != null) {
+
                     output.append(line).append("\n");
                 }
             } 
@@ -72,6 +123,6 @@ public class LocalNetworkFingerprintService {
         }
 
 
-        return output.toString();
+        return extractJson(output.toString()) ;
     }
 }
