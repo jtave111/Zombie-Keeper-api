@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.manager.Zombie_Keeper.service.localNetwork.fingerprint.LocalNetworkFingerprintService;
 
 @RestController
-@RequestMapping("/c2-server/local-network/Recon")
+@RequestMapping("/c2-server/local-network/recon")
 public class ReconController {
 
     LocalNetworkFingerprintService localNetFp;
@@ -17,12 +17,15 @@ public class ReconController {
         this.localNetFp = localNetFp;
     }
     
-    @GetMapping(produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping( value = "/nodes",  produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getCompleteRecom(){
         // --> sec, usec for struct timeval(c++) non-bloking io configuration
-        String reconSession = localNetFp.excLocalNetFingerPrint("LocalFingerPrint", "all", "0", "300000");
+        String reconSession = localNetFp.excLocalNetFingerPrint("LocalFingerPrint", "any", "0", "300000");
         
+        System.out.println("====JSON Output: " + reconSession + " ====");
         return ResponseEntity.ok(reconSession);
     }
+
+
 
 }

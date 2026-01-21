@@ -20,7 +20,7 @@ void App::scannSession(Session *ptr_session, std::string flags, long sec, long u
         
         scanner.scan_all_TcpNodePorts( *ptr_session,  sec,  usec);
        
-    }else if(flags == "any-ports"){
+    }else if(flags == "-any-ports"){
 
         scanner.scan_any_TcpNodePorts( *ptr_session, sec, usec);
     

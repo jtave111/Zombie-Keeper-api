@@ -15,12 +15,12 @@ public class LocalNetworkFingerprintService {
     
     private String extractJson(String rawOutput){
         if (rawOutput == null || rawOutput.isEmpty()) {
-            return "[]"; 
+            return "{}"; 
         }
 
         
-        int startIndex = rawOutput.indexOf("[");
-        int endIndex = rawOutput.lastIndexOf("]");
+        int startIndex = rawOutput.indexOf("{");
+        int endIndex = rawOutput.lastIndexOf("}");
 
         
         if (startIndex != -1 && endIndex != -1 && endIndex > startIndex) {
@@ -28,7 +28,7 @@ public class LocalNetworkFingerprintService {
         }
 
         
-        return rawOutput.startsWith("ERRO") ? rawOutput : "[]";
+        return rawOutput.startsWith("ERRO") ? rawOutput : "{}]";
     }
 
     
