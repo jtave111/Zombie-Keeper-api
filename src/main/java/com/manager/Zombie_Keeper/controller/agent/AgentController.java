@@ -42,8 +42,6 @@ public class AgentController {
             NAT
             
         */
-
-            
         
         if(( agentRepository.findByIp(newAgent.getIp()).isEmpty()) ){
             
