@@ -3,6 +3,9 @@ package com.manager.Zombie_Keeper.model.entity.localNetwork;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 
@@ -15,10 +18,17 @@ public class NetworkNode {
 
     private String ipAddress;
     private String macAddress;
+
+    @Column(nullable = true)
     private String hostname;
+    @Column(nullable = true)
     private String vendor;
 
+    @Column(nullable = true)
+    private String os;
+    @Column(nullable = true)
     private boolean isTrusted;
+    @Column(nullable = true)
     private int vunerabilityScore;
     
     @OneToMany(mappedBy = "node", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -29,6 +39,7 @@ public class NetworkNode {
 
     @ManyToOne
     @JoinColumn(name = "network_id")
+    @JsonIgnore
     private NetworkSession network;
 
 
@@ -53,6 +64,8 @@ public class NetworkNode {
         vuln.setNode(null);
     }
 
+
+
     public Long getId() {
         return id;
     }
@@ -60,6 +73,15 @@ public class NetworkNode {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    
+    public String getOs(){
+        return this.os;
+    }
+
+    public void setOs(String os ){
+        this.os = os;
     }
 
     public List<Port> getOpenPorts() {

@@ -1,4 +1,4 @@
-package com.manager.Zombie_Keeper.dtos;
+package com.manager.Zombie_Keeper.dtos.auth;
 
 import jakarta.validation.constraints.NotBlank;
 

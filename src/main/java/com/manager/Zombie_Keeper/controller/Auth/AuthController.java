@@ -1,27 +1,22 @@
 package com.manager.Zombie_Keeper.controller.Auth;
 
-import java.nio.file.AccessDeniedException;
-import java.util.Collection;
-import java.util.Optional;
-
+import org.springframework.context.annotation.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize; // Importante
+import org.springframework.web.bind.annotation.*;
 
-import com.manager.Zombie_Keeper.dtos.CreateAcRequest;
-import com.manager.Zombie_Keeper.dtos.LoginRequest;
+import com.manager.Zombie_Keeper.dtos.auth.CreateAcRequest;
+import com.manager.Zombie_Keeper.dtos.auth.LoginRequest;
 import com.manager.Zombie_Keeper.model.entity.auth.Role;
 import com.manager.Zombie_Keeper.model.entity.auth.User;
 import com.manager.Zombie_Keeper.repository.auth.RoleRepository;
@@ -30,23 +25,49 @@ import com.manager.Zombie_Keeper.repository.auth.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
+    @Lazy
+    private AuthenticationManager authenticationManager; 
+    
+    @Autowired
     private UserRepository userRepository;
+    
     @Autowired
     private PasswordEncoder encoder;
+    
     @Autowired
     private RoleRepository roleRepository;
-
-    User userLogged;
+ 
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody @Valid LoginRequest dto, HttpServletRequest request){
+    public ResponseEntity<?> login(@RequestBody @Valid LoginRequest dto, HttpServletRequest request){
        
+        try {
+                
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
+            
+            Authentication authentication = authenticationManager.authenticate(authenticationToken);
+
+            SecurityContext context = SecurityContextHolder.createEmptyContext();
+            context.setAuthentication(authentication);
+            SecurityContextHolder.setContext(context);
+
+            HttpSession session = request.getSession(true);
+            session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);      
+            
+            return ResponseEntity.ok("AUTHORIZED");
+
+        } catch (AuthenticationException e) {
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User or Password invalid");
+            
+        }
+
+        /*
        Optional<User> userOptional = userRepository.findByUsername(dto.getUsername());
        
        System.out.println(">>> Requeste for user: " + dto.getUsername());
@@ -82,52 +103,39 @@ public class AuthController {
             }
 
         }
-
-       
-        return ResponseEntity.status(401).body("User or Password invalid");        
+        */      
     } 
 
 
     @PostMapping("/register")
-    public ResponseEntity<String> createAccount(@RequestBody @Valid CreateAcRequest dto) throws AccessDeniedException{
-        //Acesso ao contexto de usuario que foi salvo no login
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if(auth == null || !auth.isAuthenticated()){
-
-            throw new AccessDeniedException("Not authenticated");
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> createAccount(@RequestBody @Valid CreateAcRequest dto){
         
+        if (!dto.getPassword().equals(dto.getRepeetPassword())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Passwords do not match");
         }
-
-        User userSec  = (User) auth.getPrincipal();
         
+        if(userRepository.findByUsername(dto.getUsername()).isPresent()){
 
-        String roleLogged = userSec.getRole().getType();
-        if (!roleLogged.equals("ADMIN")) {
-            throw new AccessDeniedException("Access denied");                
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists");
         }
-    
         
-        if(!dto.getPassword().equals(dto.getRepeetPassword())) return ResponseEntity.status(400).body("Passwords do not know");
-
-        String passEncod = encoder.encode(dto.getPassword());
-        User  userRegister = new User();
         Role role = roleRepository.findByType(dto.getRole());
-        
-        if(role != null){
-            userRegister.setName(dto.getName());
-            userRegister.setUsername(dto.getUsername());
-            userRegister.setPassword(passEncod);
-            userRegister.setRole(role);
-            
-            userRepository.save(userRegister);
-            
-            return ResponseEntity.status(HttpStatus.CREATED).body(" User created");
-        }         
-        
-              
-        return ResponseEntity.status(401).body("User not created");
+        if (role == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Role not found");
+        }
 
+        User  userRegister = new User();
+        
+        userRegister.setName(dto.getName());
+        userRegister.setUsername(dto.getUsername());
+        userRegister.setPassword(encoder.encode(dto.getPassword()));
+        userRegister.setRole(role);
+
+        userRepository.save(userRegister);
+        return ResponseEntity.status(HttpStatus.CREATED).body(" User created");
+                
+        
     }
 
 

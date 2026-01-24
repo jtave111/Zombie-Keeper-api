@@ -10,6 +10,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import com.manager.Zombie_Keeper.model.enums.agent.Flags;
 import com.manager.Zombie_Keeper.model.enums.agent.Tags;
 
@@ -21,6 +24,7 @@ public class Agent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID id;
 
     

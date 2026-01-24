@@ -1,5 +1,7 @@
 package com.manager.Zombie_Keeper.model.entity.localNetwork;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -18,6 +20,7 @@ public class Port {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "node_id")
+    @JsonIgnore
     NetworkNode node;
 
     private int number;
