@@ -8,6 +8,8 @@ import java.util.UUID;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,7 +37,8 @@ public class NetworkSession {
     private LocalDateTime firstSeen; 
     private LocalDateTime lastSeen;
 
-    @OneToMany(mappedBy = "network", cascade = CascadeType.ALL, orphanRemoval = true)   
+    @OneToMany(mappedBy = "network", cascade = CascadeType.ALL, orphanRemoval = true)  
+    @JsonProperty("nodes") 
     private List<NetworkNode> devices = new ArrayList<>();
 
 
