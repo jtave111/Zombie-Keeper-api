@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class LocalNetworkFingerprintService {
     
@@ -47,6 +48,35 @@ public class LocalNetworkFingerprintService {
         
     }
 
+    public String excLocalNodeFingerPrint(String binaryName, String networkIdentfier, String id,  String flag, String sec, String usec ){
+
+        List<String> comand = new ArrayList<>();
+        StringBuilder output = new StringBuilder();
+
+        try {
+            
+            File root = getRootPath();
+            File binaryFile = new File(root, "modules/linux/c++/code/localFingerPrint/" + binaryName);
+
+
+            if(!binaryFile.exists()){
+
+                return "ERROR fileNotFound " + binaryFile.getAbsolutePath();
+            }
+
+            if(!binaryFile.canExecute()){
+                binaryFile.setExecutable(true);
+            }
+
+            //Continue 
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
+        return " ";
+    }
+
     // "./Binary --create_session '-all-ports' or 'any-ports' "
     public String excLocalNetFingerPrint(String binaryName, String flag, String sec, String usec){
 
@@ -56,12 +86,13 @@ public class LocalNetworkFingerprintService {
 
         try {
             
-            File root = getRootPath();          
+            File root = getRootPath();     
+            //Path for binary     
             File binaryFile = new File(root, "modules/linux/c++/code/localFingerPrint/" + binaryName );
 
             if(!binaryFile.exists()){
 
-                return "ERRO fileNotFund " + binaryFile.getAbsolutePath();
+                return "ERROR fileNotFound " + binaryFile.getAbsolutePath();
 
             }
 

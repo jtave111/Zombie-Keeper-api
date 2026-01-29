@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+
 
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ import com.manager.Zombie_Keeper.service.localNetwork.fingerprint.LocalNetworkFi
 import jakarta.transaction.Transactional;
 
 @Service
-public class NetworkAuxsService {
+public class LocalNetworkDatabaseManagerService {
 
     LocalNetworkFingerprintService localNetFp;
     NetworkSessionRepository sessionRepository;
@@ -30,7 +30,7 @@ public class NetworkAuxsService {
     VulnerabilityRepository vulnerabilityRepository;
 
 
-    public NetworkAuxsService(LocalNetworkFingerprintService localNetFp, NetworkSessionRepository sessionRepository,
+    public LocalNetworkDatabaseManagerService(LocalNetworkFingerprintService localNetFp, NetworkSessionRepository sessionRepository,
         PortRepository portRepository, NetworkNodeRepository networkNodeRepository,
         VulnerabilityRepository vulnerabilityRepository
     ){
@@ -72,7 +72,7 @@ public class NetworkAuxsService {
 
     //for update
     @Transactional 
-    public NetworkSession dbaManegNetworkSession( NetworkSession sessionJSON){
+    public NetworkSession updateCompleteSession( NetworkSession sessionJSON){
         NetworkSession sessionDBA = new NetworkSession();
         
         sessionJSON = this.linkigNodesInSession(sessionJSON);
@@ -95,7 +95,7 @@ public class NetworkAuxsService {
             sessionDBA.setLastSeen(LocalDateTime.now());
             sessionDBA.setGatewayIp(sessionJSON.getGatewayIp());
            
-            //for para os nodes da session
+            
             for(NetworkNode n: nodesJSON){
 
                 String macNodeJSON = n.getMacAddress();
@@ -116,8 +116,7 @@ public class NetworkAuxsService {
                     List<Port> portsUpdateDBA = nodeUpdateDBA.getOpenPorts();
                     List<Port> portsUpdateJSON = n.getOpenPorts();
                     for(Port p: portsUpdateDBA){mapNodesPortsDBA.put(p.getNumber(), p);}
-                    
-                    //for para as portas dos nodes                   
+            
                     for(Port p: portsUpdateJSON){
                         Integer portNumberJSON = p.getNumber();
 
@@ -125,6 +124,10 @@ public class NetworkAuxsService {
 
                             Port portUpdateDBA =  mapNodesPortsDBA.get(portNumberJSON);
                             
+                            //Para atualizar portas que foram fechadas
+                            mapNodesPortsDBA.remove(portNumberJSON);
+
+
                             portUpdateDBA.setProtocol(p.getProtocol());
                             portUpdateDBA.setService(p.getService());
                             portUpdateDBA.setBanner(p.getBanner());
@@ -139,13 +142,15 @@ public class NetworkAuxsService {
                     }
 
 
+                    //Para atualizar portas que foram fechadas
+                    nodeUpdateDBA.getOpenPorts().removeAll(mapNodesPortsDBA.values());
+
                     Map<String, Vulnerability> mapNodesVulnerability = new HashMap<>();
                     List<Vulnerability> vulnerabilitiesUpdateDBA = nodeUpdateDBA.getVulnerabilitys();
                     List<Vulnerability> vulnerabilitiesUpdateJSON = n.getVulnerabilitys();
                     for(Vulnerability v: vulnerabilitiesUpdateDBA){mapNodesVulnerability.put(v.getCve(), v);}
 
 
-                    //For da vulns
                     for(Vulnerability v: vulnerabilitiesUpdateJSON){
 
                         String cveJSON = v.getCve();
@@ -154,6 +159,10 @@ public class NetworkAuxsService {
                         if(mapNodesVulnerability.containsKey(cveJSON)){
                             
                             Vulnerability vulnerabilityUpdateDBA = mapNodesVulnerability.get(cveJSON);
+
+                            //Para atualizar vunl  que foram tratadas
+                            mapNodesVulnerability.remove(cveJSON);
+
 
                             vulnerabilityUpdateDBA.setName(v.getName());
                             vulnerabilityUpdateDBA.setTitle(v.getTitle());
@@ -167,6 +176,9 @@ public class NetworkAuxsService {
                         }
                         
                     }
+                    
+                    //Para atualizar vunl  que foram tratadas
+                    nodeUpdateDBA.getVulnerabilitys().removeAll(mapNodesVulnerability.values());
 
                 }else{
 
@@ -175,7 +187,6 @@ public class NetworkAuxsService {
                 }
 
             }
-
         
         }
         else{

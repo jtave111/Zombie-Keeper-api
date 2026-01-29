@@ -43,7 +43,7 @@ public:
     void aux_any_TcpNodePorts(const std::string* ip, Node * node, long timeout_sec, long timeout_usec);
 
     //One node all ports or any ports - use flag ALL for all ports or use ANY for tatical tcp ports 
-    void scan_OneNode_Tcp(Session &session, std::string ip_node, std::string flag);
+    void scan_OneNode_Tcp(Node &node, std::string flag, long sec, long usec);
 
 
     //Banner grabbing

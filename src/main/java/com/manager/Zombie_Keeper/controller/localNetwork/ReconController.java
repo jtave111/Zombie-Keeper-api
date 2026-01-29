@@ -6,15 +6,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
-
 import org.springframework.http.MediaType;
 
-import com.manager.Zombie_Keeper.model.entity.localNetwork.NetworkNode;
 import com.manager.Zombie_Keeper.model.entity.localNetwork.NetworkSession;
-import com.manager.Zombie_Keeper.model.entity.localNetwork.Port;
+
 import com.manager.Zombie_Keeper.repository.localNetwork.NetworkSessionRepository;
-import com.manager.Zombie_Keeper.service.localNetwork.aux.NetworkAuxsService;
+import com.manager.Zombie_Keeper.service.localNetwork.aux.LocalNetworkDatabaseManagerService;
 import com.manager.Zombie_Keeper.service.localNetwork.fingerprint.LocalNetworkFingerprintService;
 
 import tools.jackson.databind.ObjectMapper;
@@ -25,10 +22,10 @@ public class ReconController {
 
     LocalNetworkFingerprintService localNetFp;
     NetworkSessionRepository sessionRepository;
-    NetworkAuxsService auxNetworkAuxsService;
+    LocalNetworkDatabaseManagerService auxNetworkAuxsService;
 
 
-    public ReconController(LocalNetworkFingerprintService localNetFp, NetworkSessionRepository sessionRepository,  NetworkAuxsService auxNetworkAuxsService ){
+    public ReconController(LocalNetworkFingerprintService localNetFp, NetworkSessionRepository sessionRepository,  LocalNetworkDatabaseManagerService auxNetworkAuxsService ){
         this.localNetFp = localNetFp;
         this.sessionRepository = sessionRepository;
         this.auxNetworkAuxsService = auxNetworkAuxsService;
@@ -39,7 +36,8 @@ public class ReconController {
     *  Ex: "LocalFingerPrint", "all or any ", "0", "300000"
     */
     @GetMapping(value = "/session/{binaryName}/{flag}/{sec}/{usec}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> sessionRecon(@PathVariable String binaryName, @PathVariable String flag, @PathVariable String sec, @PathVariable String usec){
+    public ResponseEntity<String> sessionRecon(@PathVariable String binaryName, @PathVariable String flag, 
+        @PathVariable String sec, @PathVariable String usec){
 
         String json = localNetFp.excLocalNetFingerPrint(binaryName, flag, sec, usec);
 
@@ -52,7 +50,7 @@ public class ReconController {
 
             NetworkSession sessionEntity = mapper.readValue(json, NetworkSession.class);
             
-            sessionEntity = auxNetworkAuxsService.dbaManegNetworkSession(sessionEntity);
+            sessionEntity = auxNetworkAuxsService.updateCompleteSession(sessionEntity);
 
             sessionRepository.save(sessionEntity);
             
@@ -60,10 +58,19 @@ public class ReconController {
         } catch (Exception e) {
 
             System.out.println("Error " +  e.getMessage());
-            // TODO: handle exception
         }
 
         return ResponseEntity.ok(json);
     }  
+
+    @GetMapping(value = "/node/{binaryName}/{networkIdentfier}/{id}/{flag}/{sec}/{usec}" )
+    public ResponseEntity<String> nodeRecon(@PathVariable String binaryName, @PathVariable String networkIdentfier, 
+        @PathVariable String id, @PathVariable String flag, @PathVariable String sec, @PathVariable String usec
+    ){
+    
+        String json =new String();
+        
+        return ResponseEntity.ok(json);
+    }
 
 }

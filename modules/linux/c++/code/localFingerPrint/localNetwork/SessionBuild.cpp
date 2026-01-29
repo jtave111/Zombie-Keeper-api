@@ -5,6 +5,7 @@
 #include <memory>
 #include <array>
 #include <algorithm>
+#include <vector>
 
 
 
@@ -34,6 +35,19 @@ void SessionBuild::buildSession(Session& targetSession){
 
 }
 
+void SessionBuild::searchNode(Session &session, Node* node_aloc_ptr, std::string ip, std::string mac ){
+
+    std::vector<Node> &nodes = session.getMutableNodes();
+
+    for(int i = 0; i < nodes.size(); i++ ){
+
+        if(nodes[i].getIpAddress() == ip && nodes[i].getMacAddress() == mac) node_aloc_ptr = &nodes[i];
+
+    }
+
+
+}
+
 void SessionBuild::buildNodes(std::string gateway, int cidr, Session & session){
 
 
@@ -54,7 +68,20 @@ void SessionBuild::buildNodes(std::string gateway, int cidr, Session & session){
         
         session.addNode(actualNode);
     }
+  
+}
 
- 
- 
+void SessionBuild::buildSessionHeader(Session & targetSession){
+
+    std::string rawNetIdentfier = fingerprintSession.makeIdentifierCombination_module1();
+    std::string rawGatewayIp = fingerprintSession.gatewayIp_module1();
+    std::string rawSubnetMask = fingerprintSession.getSubmask_module1();
+    std::string rawCidr = fingerprintSession.getCidr_module1();
+
+
+    targetSession.setNetworkIdentifier(rawNetIdentfier);
+    targetSession.setGatewayIp(rawGatewayIp);
+    targetSession.setSubnetMask(rawSubnetMask);
+    targetSession.setCidr(rawCidr);
+
 }

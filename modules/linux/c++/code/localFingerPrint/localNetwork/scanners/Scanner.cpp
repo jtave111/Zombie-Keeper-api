@@ -235,15 +235,10 @@ void Scanner::aux_allNode_TcpPorts(const std::string* ip, Node* node_ptr, long t
 
 
 
-
 //Make scan any ports --Any ports all nodes 
 void Scanner::scan_any_TcpNodePorts(Session &session, long sec, long usec){
  
-    /*
-    long sec = 0;
-    long usec = 500000;
-    */
-    
+
     std::vector<std::thread> threads;
 
     std::vector<Node> &nodes = session.getMutableNodes();
@@ -300,20 +295,57 @@ void Scanner::aux_any_TcpNodePorts(const std::string* ip, Node * node, long time
 
 
 //Make scan all or any --One node all ports or any ports - use flag ALL for all ports or use ANY for tatical tcp ports  
-void Scanner::scan_OneNode_Tcp(Session &session, std::string ip_node, std::string flag){
+void Scanner::scan_OneNode_Tcp(Node &node, std::string flag, long sec, long usec){
+std::vector<std::thread> threads;
+    std::string ip = node.getIpAddress();
+    std::mutex mutex; 
+    std::vector<int> targetPorts;
 
-    Node* node_ptr = session.getOneMutableNode(ip_node);
-
-    if(node_ptr == nullptr) {
-        std::cerr << "Node not found" << std::endl;
-
-        return;
+   
+    if (flag == "all") {
+        targetPorts.reserve(65536);
+        for (int i = 0; i < 65536; i++) targetPorts.push_back(i);
+    } else if (flag == "any") {
+        targetPorts = Scanner::getTacticalTcpPorts();
     }
 
-    if(!ping.ping(ip_node.c_str())){
-        std::cerr << "Host closed " <<  std::endl;
+    int max_concurrent_threads = 100;
+
+    for (int portInt : targetPorts) {
+
+        if (threads.size() >= max_concurrent_threads) {
+            for (auto &t : threads) {
+                if (t.joinable()) {
+                    t.join();
+                }
+            }
+            threads.clear(); 
+        }
+
+       
+        threads.emplace_back([this, &node, &mutex, ip, portInt, sec, usec]() {
+            
+            Port localPort;
+            
+            this->portScan_tcp(&localPort, ip, portInt, sec, usec);
+
+            
+            if (!localPort.getService().empty() || localPort.getNumber() != 0) {
+                
+                std::lock_guard<std::mutex> lock(mutex);
+                
+            
+                node.addPort(localPort);
+            }
+        });
     }
 
+    for (auto &t : threads) {
+        if (t.joinable()) {
+            t.join();
+        }
+    }
+    
 }
 
 
