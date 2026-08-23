@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,6 +53,9 @@ public class User implements UserDetails {
         this.password = password;
         this.name = name;
         this.role = role;
+    }
+
+    public User(String adminName, @Nullable String encode, Role adminRole) {
     }
 
     public Long getId() { return this.id; }

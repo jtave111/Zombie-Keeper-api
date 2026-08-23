@@ -1,8 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "model/Session.h"
-#include "model/Node.h"
+#include "../model/Model.h"
 
 #include "FingerprintSession.h"
 

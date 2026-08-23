@@ -66,15 +66,12 @@ endif()
 # Fontes do executável
 # -----------------------------------------------------------------------------
 add_executable(LocalFingerPrint
-    src/main.cpp
-    src/App.cpp
-    src/FingerprintSession.cpp
-    src/SessionBuild.cpp
-    src/Scanner.cpp
-    src/model/Node.cpp
-    src/model/Port.cpp
-    src/model/Session.cpp
-    src/model/Vulnerability.cpp
+        src/runtime/main.cpp
+        src/runtime/App.cpp
+        src/runtime/FingerprintSession.cpp
+        src/runtime/SessionBuild.cpp
+        src/runtime/Scanner.cpp
+    src/model/Model.cpp
 )
 
 # -----------------------------------------------------------------------------

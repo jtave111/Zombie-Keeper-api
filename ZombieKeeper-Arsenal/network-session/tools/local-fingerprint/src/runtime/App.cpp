@@ -1,4 +1,4 @@
-#include "App.h"
+#include "../../include/runtime/App.h"
 #include <iostream>
 
 
@@ -59,9 +59,9 @@ void App::test_scan_udp(std::string ip, long timeout_sec, long timeout_usec){
 
         threads.emplace_back([this, ip, i, timeout_sec, timeout_usec]() {
 
-            Port port_test;
+            port_node port_test;
             port_test.setNumber(i);
-            Port *port_ptr = &port_test;
+            port_node *port_ptr = &port_test;
 
             int result = this->scanner.portScan_udp(port_ptr, ip, i, timeout_sec, timeout_usec);
 
@@ -72,7 +72,7 @@ void App::test_scan_udp(std::string ip, long timeout_sec, long timeout_usec){
                 std::cout << "=====================================" << std::endl;
                 std::cout << "RESULT INFOS" << std::endl;
                 std::cout << "Result port scan: " << result << std::endl;
-                std::cout << "Port: " << port_test.getNumber() << std::endl;
+                std::cout << "port_node: " << port_test.getNumber() << std::endl;
                 std::cout << "Banner: " << port_test.getBanner() << std::endl;
                 std::cout << "Service: " << port_test.getService() << std::endl;
                 std::cout << "Proto: " << port_test.getProtocol() << std::endl;

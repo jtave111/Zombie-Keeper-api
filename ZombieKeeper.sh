@@ -1,16 +1,30 @@
-#!/bin/bash
-# ZombieKeeper — thin wrapper → delegates to launcher.py
-set -e
-DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+#!/usr/bin/env bash
 
-if ! command -v python3 &>/dev/null; then
-    echo "[-] python3 not found. Install Python 3.10+." >&2
-    exit 1
-fi
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-if ! python3 -c "from rich.console import Console" 2>/dev/null; then
-    echo "[*] Installing rich..."
-    pip install rich --break-system-packages -q 2>/dev/null || pip install rich -q
-fi
+cleanup() {
+    kill "$API_PID" "$CLIENT_PID" 2>/dev/null
+}
 
-exec python3 "$DIR/launcher.py" "$@"
+trap cleanup EXIT INT TERM
+
+echo "Iniciando API..."
+(cd "$ROOT_DIR/ZombieKeeper-Api" && \
+    mvn spring-boot:run -Dspring-boot.run.jvmArguments=--enable-preview) &
+API_PID=$!
+
+echo "Aguardando API na porta 8080..."
+until curl --silent http://localhost:8080/actuator/health >/dev/null; do
+    if ! kill -0 "$API_PID" 2>/dev/null; then
+        echo "A API falhou ao iniciar."
+        exit 1
+    fi
+    sleep 1
+done
+
+echo "Iniciando cliente..."
+(cd "$ROOT_DIR/ZombieKeeper-Client" && npm run tauri dev) &
+CLIENT_PID=$!
+
+echo "ZombieKeeper iniciado. Use Ctrl+C para encerrar."
+wait

@@ -2,9 +2,8 @@
 #include <thread>
 #include <mutex>
 #include "Ping.h"
-#include "model/Port.h"
+#include "../model/Model.h"
 #include <vector>
-#include "model/Node.h"
 #include <iostream>
 #include <fcntl.h>
 #include <sys/select.h>
@@ -12,16 +11,9 @@
 #include <cstring>
 
 
-class Session;
+struct Session;
 
-enum port_status{
 
-    CLOSED = 0,
-    OPEN = 1,
-    FILTERED = 2,
-    OPEN_FILTERED = 3,
-    INTERNAL_ERROR = 4
-};
 
 class Scanner
 {
@@ -68,7 +60,7 @@ public:
     // port scan TCP
     port_status portScan_tcp(std::string ip, int port, long timeout_sec, long timeout_usec);
     //Overload
-    port_status portScan_tcp( Port *port_ptr, std::string ip, int port, long timeout_sec, long timeout_usec);
+    port_status portScan_tcp(port_node *port_ptr, std::string ip, int port, long timeout_sec, long timeout_usec);
 
     //All ports all nodes
     void scan_all_TcpNodePorts(Session &session, long sec, long usec);
@@ -129,11 +121,10 @@ public:
 
     int portScan_udp(std::string ip, int port, long timeout_sec, long timeout_usec);
     //OVerload
-    port_status portScan_udp(Port *port_ptr, std::string ip, int port, long timeout_sec, long timeout_usec);
+    port_status portScan_udp(port_node *port_node_ptr, std::string ip, int port, long timeout_sec, long timeout_usec);
 
     void scan_all_UdpNodePorts(Session &session, long sec, long usec);
     void scan_any_UdpNodePorts(Session &session, long sec, long usec);
-
     void defineUDP_payload(int port, const char* &payload, int &payload_len);
 
 

@@ -2,12 +2,10 @@
 #pragma once
 
 #include "Scanner.h"
-#include "model/Session.h"
 #include "SessionBuild.h"
 
 class App
 {
-private:
 
     Session session;
     Scanner scanner;

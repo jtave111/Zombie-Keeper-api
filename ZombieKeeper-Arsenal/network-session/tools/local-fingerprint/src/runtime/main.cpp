@@ -1,6 +1,6 @@
-    #include "App.h"
-    #include "Scanner.h"
-    #include <iostream>
+    #include "../../include/runtime/App.h"
+#include "../../include/runtime/Scanner.h"
+#include <iostream>
     #include <iomanip>
     #include <cctype>
     #include <algorithm>
@@ -281,7 +281,7 @@
                 if (appInit.scanPort(ip, port, sec, usec)) {
                     return 0; // Success
                 } else {
-                    return 2; // Port scan failed/closed
+                    return 2; // port_node scan failed/closed
                 }
 
             } catch (const std::exception& e) {

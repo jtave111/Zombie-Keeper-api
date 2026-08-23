@@ -56,6 +56,7 @@ $(BUILD_NS)/CMakeCache.txt:
 		-S network-session/tools/local-fingerprint \
 		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) \
 		-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+	@cp $(BUILD_NS)/compile_commands.json compile_commands.json
 
 # ─── Go ──────────────────────────────────────────────────────────────────────
 go:

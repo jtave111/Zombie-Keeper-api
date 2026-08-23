@@ -1,4 +1,4 @@
-package com.manager.Zombie_Keeper.service.localNetwork.aux;
+package com.manager.Zombie_Keeper.service.networkSession.aux;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,24 +21,24 @@ import com.manager.Zombie_Keeper.repository.localNetwork.NetworkNodeRepository;
 import com.manager.Zombie_Keeper.repository.localNetwork.NetworkSessionRepository;
 import com.manager.Zombie_Keeper.repository.localNetwork.PortRepository;
 import com.manager.Zombie_Keeper.repository.localNetwork.VulnerabilityRepository;
-import com.manager.Zombie_Keeper.service.localNetwork.fingerprint.LocalNetworkFingerprintService;
+import com.manager.Zombie_Keeper.service.networkSession.fingerprint.NetworkSessionFingerprintService;
 
 import jakarta.transaction.Transactional;
 
 @Service 
-public class LocalNetworkDatabaseManagerService {
+public class NetworkSessionDatabaseManagerService {
 
-    private static final Logger logger = LoggerFactory.getLogger(LocalNetworkDatabaseManagerService.class);
+    private static final Logger logger = LoggerFactory.getLogger(NetworkSessionDatabaseManagerService.class);
 
-    private final LocalNetworkFingerprintService localNetFp;
+    private final NetworkSessionFingerprintService localNetFp;
     private final NetworkSessionRepository sessionRepository;
     private final PortRepository portRepository;
     private final NetworkNodeRepository networkNodeRepository;
     private final VulnerabilityRepository vulnerabilityRepository;
     private final AgentRepository agentRepository; 
 
-    public LocalNetworkDatabaseManagerService(
-            LocalNetworkFingerprintService localNetFp, 
+    public NetworkSessionDatabaseManagerService(
+            NetworkSessionFingerprintService localNetFp,
             NetworkSessionRepository sessionRepository,
             PortRepository portRepository, 
             NetworkNodeRepository networkNodeRepository,

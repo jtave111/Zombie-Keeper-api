@@ -1,5 +1,4 @@
-#include "Scanner.h"
-#include "model/Session.h"
+#include "../../include/runtime/Scanner.h"
 #include <netdb.h>
 #include <poll.h>
 #include <atomic>
@@ -166,13 +165,13 @@ int Scanner::portScan_udp(std::string ip, int port, long timeout_sec, long timeo
 
     if(sock < 0) return 4;
 
-    struct sockaddr_in target;
+    struct sockaddr_in target {};
     memset(&target, 0, sizeof(target));
     target.sin_family =  AF_INET;
     target.sin_port = htons(port);
     inet_pton(AF_INET, ip.c_str(), &target.sin_addr);
 
-    if (connect(sock, (struct sockaddr*)&target, sizeof(target)) < 0) {
+    if (connect(sock, reinterpret_cast<struct sockaddr*>(&target), sizeof(target)) < 0) {
         close(sock);
         return 4;
     }
@@ -197,14 +196,11 @@ int Scanner::portScan_udp(std::string ip, int port, long timeout_sec, long timeo
     tv.tv_usec = timeout_usec;
 
 
-    int res = select(sock + 1, &read_fds, NULL, NULL, &tv);
-
-    if(res > 0){
+    if( int res= select(sock + 1, &read_fds, nullptr, nullptr, &tv) > 0){
 
         char buffer[1024];
-        int recv_len = recv(sock, buffer, sizeof(buffer), 0);
 
-        if(recv_len < 0){
+        if(recv(sock, buffer, sizeof(buffer), 0 ) < 0){
 
             if(errno == ECONNREFUSED){
                 close(sock);
@@ -236,25 +232,27 @@ int Scanner::portScan_udp(std::string ip, int port, long timeout_sec, long timeo
     INTERNAL_ERROR = 4
 */
 //TODO MELHOR A PRECISAO DO FILTERED = 2 OPEN_FILTERED = 3, INTERNAL_ERROR = 4
-port_status Scanner::portScan_udp(Port *port_ptr, std::string ip, int port, long timeout_sec, long timeout_usec){
+port_status Scanner::portScan_udp(port_node *port_node_ptr, std::string ip, int port, long timeout_sec, long timeout_usec){
 
     int sock = socket(AF_INET, SOCK_DGRAM, 0);
 
     if (sock < 0){
-        port_ptr->setStatus(std::to_string(port_status::INTERNAL_ERROR));
+
+        port_node_ptr->status = (std::to_string(port_status::INTERNAL_ERROR));
+
         return port_status::INTERNAL_ERROR ;
     }
 
-    struct sockaddr_in target;
+    struct sockaddr_in target {};
     memset(&target, 0, sizeof(target));
     target.sin_family = AF_INET;
     target.sin_port = htons(port);
     inet_pton(AF_INET, ip.c_str(), &target.sin_addr);
 
 
-    if(connect(sock, (struct sockaddr*)&target, sizeof(target)) < 0){
+    if(connect(sock, reinterpret_cast<struct sockaddr*>(&target), sizeof(target)) < 0){
         close(sock);
-        port_ptr->setStatus(std::to_string(port_status::INTERNAL_ERROR));
+        port_node_ptr->status = (std::to_string(port_status::INTERNAL_ERROR));
         return port_status::INTERNAL_ERROR;
     }
 
@@ -265,7 +263,7 @@ port_status Scanner::portScan_udp(Port *port_ptr, std::string ip, int port, long
 
     if(send(sock, payload, payload_len, 0) <= 0){
         close(sock);
-        port_ptr->setStatus(std::to_string(port_status::INTERNAL_ERROR));
+        port_node_ptr->status = (std::to_string(port_status::INTERNAL_ERROR));
         return port_status::INTERNAL_ERROR;
     }
 
@@ -277,10 +275,7 @@ port_status Scanner::portScan_udp(Port *port_ptr, std::string ip, int port, long
     tv.tv_sec = timeout_sec;
     tv.tv_usec = timeout_usec;
 
-    int res = select(sock + 1, &read_fds, NULL, NULL, &tv);
-
-
-    if(res > 0){
+    if( int res = select(sock + 1, &read_fds, nullptr, nullptr, &tv) > 0){
 
         char buffer[1024];
         memset(&buffer, 0, sizeof(buffer));
@@ -293,45 +288,45 @@ port_status Scanner::portScan_udp(Port *port_ptr, std::string ip, int port, long
             if(errno == ECONNREFUSED || errno == EWOULDBLOCK){
 
                 close(sock);
-                port_ptr->setStatus(std::to_string(port_status::CLOSED));
+                port_node_ptr->status = (std::to_string(port_status::CLOSED));
                 return port_status::CLOSED;
             }
 
             close(sock);
-            port_ptr->setStatus(std::to_string(port_status::FILTERED));
+            port_node_ptr->status = (std::to_string(port_status::FILTERED));
             return port_status::FILTERED;
         }
 
         buffer[recv_len] = '\0';
-        if(recv_len > 0) port_ptr->setBanner(std::string(buffer));
+        if(recv_len > 0) port_node_ptr->banner = (std::string(buffer));
 
 
         close(sock);
-        port_ptr->setStatus(std::to_string(port_status::OPEN));
+        port_node_ptr->status = (std::to_string(port_status::OPEN));
         return port_status::OPEN;
 
     }else if(res == 0){
 
         close(sock);
-        port_ptr->setStatus(std::to_string(port_status::OPEN_FILTERED));
+        port_node_ptr->status = std::to_string(port_status::OPEN_FILTERED));
         return port_status::OPEN_FILTERED;
     }
 
     close(sock);
-    port_ptr->setStatus(std::to_string(port_status::INTERNAL_ERROR));
+    port_node_ptr->status = (std::to_string(port_status::INTERNAL_ERROR));
     return port_status::INTERNAL_ERROR;
 
 }
 
 void Scanner::scan_all_UdpNodePorts(Session &session, long sec, long usec){
 
-    std::vector<Node> &nodes = session.getMutableNodes();
+    std::vector<Node> &nodes = session.nodes;
     if (nodes.empty()) return;
 
-    const int GLOBAL_WORKERS = 5000;
+    constexpr int GLOBAL_WORKERS = 5000;
     std::vector<std::thread> workers;
 
-    uint64_t total_nodes = nodes.size();
+    const uint64_t total_nodes = nodes.size();
     uint64_t total_tasks = total_nodes * 65535;
 
     std::atomic<uint64_t>current_task(0);
@@ -352,18 +347,18 @@ void Scanner::scan_all_UdpNodePorts(Session &session, long sec, long usec){
                 size_t node_index = task / 65535;
                 // o modulo define o reset das portas para os proximos dispositivos
                 size_t port = (task % 65535) + 1;
-
-                Node* node_ptr = &nodes[node_index];
-                std::string ip = node_ptr->getIpAddress();
-                Port actualPort;
-                Port* port_ptr = &actualPort;
+                //TODO: Pensar como ajustar isso daq para nova proposta de interfaces
+                struct Node* node_ptr = &nodes[node_index];
+                std::string ip = node_ptr->interfaces.;
+                port_node actualPort;
+                struct port_node* port_ptr = &actualPort;
 
                 port_status result_scan = this->portScan_udp(port_ptr, ip, port, sec, usec);
 
 
                 if(result_scan == port_status::OPEN){
-                    actualPort.setNumber(port);
-                    actualPort.setStatus(Scanner::setStatusToString(result_scan));
+                    actualPort.number = port;
+                    actualPort.status = (Scanner::setStatusToString(result_scan));
 
                     {
                         std::lock_guard<std::mutex> serv_lock(getserv_mutex);
@@ -430,8 +425,8 @@ void Scanner::scan_any_UdpNodePorts(Session &session, long sec, long usec){
                 std::string ip = node_ptr->getIpAddress();
                 int target_port = tacticalPorts[port_index];
 
-                Port actualPort;
-                Port* port_ptr = &actualPort;
+                struct port_node actualPort;
+                port_node* port_ptr = &actualPort;
 
                 port_status result_scan = this->portScan_udp(port_ptr, ip, target_port, sec, usec);
 
@@ -439,7 +434,7 @@ void Scanner::scan_any_UdpNodePorts(Session &session, long sec, long usec){
                     result_scan == port_status::FILTERED ||
                     result_scan == port_status::OPEN_FILTERED) {
 
-                    actualPort.setNumber(target_port);
+                    actualPort.number->target_port;
                     actualPort.setStatus(Scanner::setStatusToString(result_scan));
 
                     {
@@ -554,7 +549,7 @@ port_status Scanner::portScan_tcp(std::string ip, int port, long timeout_sec, lo
  * performs banner grabbing and service identification.
  * @return port_status Enum representing the final state (OPEN, CLOSED, FILTERED, etc.).
  */
-port_status Scanner::portScan_tcp(Port *port_ptr, std::string ip, int port, long timeout_sec, long timeout_usec) {
+port_status Scanner::portScan_tcp(port_node *port_ptr, std::string ip, int port, long timeout_sec, long timeout_usec) {
 
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if(sock < 0) {
@@ -682,8 +677,8 @@ void Scanner::scan_all_TcpNodePorts(Session &session, long sec, long usec) {
                 Node* node_ptr = &nodes[node_index];
                 std::string ip = node_ptr->getIpAddress();
 
-                Port actualPort;
-                Port* port_ptr = &actualPort;
+                port_node actualPort;
+                port_node* port_ptr = &actualPort;
 
                 port_status result_scan = this->portScan_tcp(port_ptr, ip, port, sec, usec);
 
@@ -751,8 +746,8 @@ void Scanner::scan_any_TcpNodePorts(Session &session, long sec, long usec) {
                 std::string ip = node_ptr->getIpAddress();
                 int target_port = tacticalPorts[port_index];
 
-                Port actualPort;
-                Port* port_ptr = &actualPort;
+                port_node actualPort;
+                port_node* port_ptr = &actualPort;
 
                 port_status result_scan = this->portScan_tcp(port_ptr, ip, target_port, sec, usec);
 
@@ -790,7 +785,7 @@ void Scanner::scan_any_TcpNodePorts(Session &session, long sec, long usec) {
 
 
 // Make scan all or any --One node all ports or any ports
-void Scanner::scan_OneNode_Tcp(Node &node, std::string flag, long sec, long usec) {
+void Scanner::scan_OneNode_Tcp(struct Node {} &node, std::string flag, long sec, long usec) {
     std::vector<std::thread> threads;
     std::string ip = node.getIpAddress();
     std::vector<int> targetPorts;
@@ -817,7 +812,7 @@ void Scanner::scan_OneNode_Tcp(Node &node, std::string flag, long sec, long usec
 
         threads.emplace_back([this, &node, ip, portInt, sec, usec]() {
 
-            Port localPort;
+            port_node localPort;
             port_status status_scan = this->portScan_tcp(&localPort, ip, portInt, sec, usec);
 
             if (status_scan == port_status::OPEN ||
@@ -852,13 +847,13 @@ void Scanner::one_banner_grabbing( std::string ip, int port, long timeout_sec, l
     fcntl(sock, F_SETFL, flags | O_NONBLOCK);
 
 
-    Node *node_ptr = session->getOneMutableNode(ip);
+    struct Node *node_ptr = session->getOneMutableNode(ip);
     if(node_ptr == nullptr) {
         close(sock);
         return;
     }
 
-    Port * port_ptr = node->getOneMutablePort(*node_ptr, port);
+    port_node * port_ptr = node->getOneMutablePort(*node_ptr, port);
     if(port_ptr == nullptr){
         close(sock);
         return;

@@ -1,5 +1,6 @@
 package com.manager.Zombie_Keeper.controller.localNetwork;
 
+import com.manager.Zombie_Keeper.service.networkSession.fingerprint.NetworkAutomationFingerprintService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +19,8 @@ import com.manager.Zombie_Keeper.model.entity.localNetwork.NetworkNode;
 import com.manager.Zombie_Keeper.model.entity.localNetwork.NetworkSession;
 import com.manager.Zombie_Keeper.repository.localNetwork.NetworkNodeRepository;
 import com.manager.Zombie_Keeper.repository.localNetwork.NetworkSessionRepository;
-import com.manager.Zombie_Keeper.service.localNetwork.aux.LocalNetworkDatabaseManagerService;
-import com.manager.Zombie_Keeper.service.localNetwork.fingerprint.LocalNetworkFingerprintService;
+import com.manager.Zombie_Keeper.service.networkSession.aux.NetworkSessionDatabaseManagerService;
+import com.manager.Zombie_Keeper.service.networkSession.fingerprint.NetworkSessionFingerprintService;
 import com.manager.Zombie_Keeper.service.processManagerService.ProcessManagerService;
 
 
@@ -31,20 +32,21 @@ import tools.jackson.databind.ObjectMapper;
 @RequestMapping("/c2-server/local-network/recon")
 public class ReconRestController {
     
-    LocalNetworkFingerprintService localNetFp;
-    LocalNetworkDatabaseManagerService auxNetworkAuxsService;
+    NetworkSessionFingerprintService networkSessionFingerprintService;
+    NetworkSessionDatabaseManagerService auxNetworkAuxsService;
     ProcessManagerService processManagerService;
     
     NetworkSessionRepository sessionRepository;
+    NetworkAutomationFingerprintService  networkAutomationFingerprintService;
     NetworkNodeRepository networkNodeRepository;
    
     AuthRestController authController;
 
-    public ReconRestController(LocalNetworkFingerprintService localNetFp, NetworkSessionRepository sessionRepository, 
-        LocalNetworkDatabaseManagerService auxNetworkAuxsService, NetworkNodeRepository networkNodeRepository, 
-        AuthRestController authController, ProcessManagerService processManagerService){
+    public ReconRestController(NetworkSessionFingerprintService localNetFp, NetworkSessionRepository sessionRepository,
+                               NetworkSessionDatabaseManagerService auxNetworkAuxsService, NetworkNodeRepository networkNodeRepository,
+                               AuthRestController authController, ProcessManagerService processManagerService){
         
-            this.localNetFp = localNetFp;
+            this.networkSessionFingerprintService = localNetFp;
             this.sessionRepository = sessionRepository;
             this.auxNetworkAuxsService = auxNetworkAuxsService;
             this.networkNodeRepository = networkNodeRepository;
@@ -62,7 +64,7 @@ public class ReconRestController {
     public ResponseEntity<String> sessionRecon(@PathVariable String binaryName, @PathVariable String flag, 
         @PathVariable String sec, @PathVariable String usec){
 
-        String json = localNetFp.localNetFingerPrintToJson(binaryName, flag, sec, usec);
+        String json = networkSessionFingerprintService.localNetFingerPrintToJson(binaryName, flag, sec, usec);
 
         try {
        
@@ -91,7 +93,7 @@ public class ReconRestController {
         @PathVariable String mac,  @PathVariable String flag, @PathVariable String sec, @PathVariable String usec
     ){
         
-        String json =  localNetFp.excLocalNodeFingerPrint(binaryName, mac, networkIdentfier, flag, sec, usec);
+        String json =  networkSessionFingerprintService.excLocalNodeFingerPrint(binaryName, mac, networkIdentfier, flag, sec, usec);
         Optional<NetworkNode> nodeDBA = networkNodeRepository.findByMacAddress(mac);
         
         System.out.println("JSON: " + json);
@@ -151,7 +153,7 @@ public class ReconRestController {
 
 
         try {
-            int result = localNetFp.excLocalPortScan(binaryName, networkIdentfier, mac, ip, port, sec, usec);
+            int result = networkSessionFingerprintService.excLocalPortScan(binaryName, networkIdentfier, mac, ip, port, sec, usec);
 
 
 
@@ -185,7 +187,7 @@ public class ReconRestController {
 
         CompletableFuture.runAsync(() -> {
 
-            String resultScript = localNetFp.execRequestAutomation(script, JSESSIONID, completeUrlScan);
+            String resultScript = networkAutomationFingerprintService.execRequestAutomation(script, JSESSIONID, completeUrlScan);
             System.out.println(" Automação [" + script + "] foi encerrada. Saída: " + resultScript);
         });
         
@@ -199,7 +201,7 @@ public class ReconRestController {
     public ResponseEntity<String> stopProcess(@PathVariable String script) {  
 
         
-        boolean wasKilled = processManagerService.killProcess(script, localNetFp.getActiveProcesses());
+        boolean wasKilled = processManagerService.killProcess(script, networkSessionFingerprintService.getActiveProcesses());
 
         if (wasKilled) {
             return ResponseEntity.ok(" Automação [" + script + "] foi encerrada com sucesso");

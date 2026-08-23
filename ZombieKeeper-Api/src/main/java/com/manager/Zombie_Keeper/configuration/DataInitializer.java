@@ -29,9 +29,9 @@ import org.springframework.stereotype.Component;
  * ignorada e um aviso é exibido no log — as roles ainda são criadas normalmente.
  */
 @Component
-public class DataInitializer {
-/*
-    // Lidas do .env via System.setProperty() em C2ServerApplication.loadDotEnv()
+public class DataInitializer implements ApplicationRunner {
+
+
     @Value("${ADMIN_USERNAME:}")
     private String adminUsername;
 
@@ -41,6 +41,7 @@ public class DataInitializer {
     @Value("${ADMIN_NAME:}")
     private String adminName;
 
+    private boolean resetAdminPassword = false;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -55,32 +56,42 @@ public class DataInitializer {
 
     @Override
     public void run(ApplicationArguments args) {
-        // Passo 1: garantir que as roles existam antes de qualquer coisa.
-        // findByName + orElseGet = só insere se não existir.
         Role adminRole = ensureRole("ADMIN");
         ensureRole("OPERATOR");
 
-        // Passo 2: criar o admin inicial apenas se as variáveis estiverem definidas.
+        // Definir as variaveis na env
         if (adminUsername.isBlank() || adminPassword.isBlank() || adminName.isBlank()) {
-            System.out.println("[DataInitializer] ADMIN_USERNAME / ADMIN_PASSWORD / ADMIN_NAME não configurados no .env — usuário admin não foi criado.");
+
+            System.err.println("Please fill both both admin and username and password");
             return;
         }
 
         // Só cria se ainda não existir um usuário com esse username.
-        userRepository.findByUsername(adminUsername).orElseGet(() -> {
-            User admin = new User(
-                    adminUsername,
-                    passwordEncoder.encode(adminPassword), // senha nunca salva em texto puro
-                    adminName,
-                    adminRole
-            );
-            userRepository.save(admin);
-            System.out.println("[DataInitializer] Usuário admin criado: " + adminUsername + " — altere a senha após o primeiro login.");
-            return admin;
-        });
-    }
+        userRepository.findByUsername(adminUsername).ifPresentOrElse(
+                admin -> {
+                    if(resetAdminPassword) {
+                        admin.setPassword(passwordEncoder.encode(adminPassword));
+                        admin.setRole(adminRole);
+                        admin.setUsername(adminUsername);
 
-    // Cria a role se não existir, retorna a existente ou a recém-criada.
+                        userRepository.save(admin);
+                    }
+                },
+                () -> {
+                    User admin = new User(
+
+                    );
+
+                    admin.setUsername(adminUsername);
+                    admin.setPassword(passwordEncoder.encode(adminPassword));
+                    admin.setRole(adminRole);
+                    admin.setName(adminName);
+
+                    userRepository.save(admin);
+
+                }
+        );
+    }
     private Role ensureRole(String name) {
         return roleRepository.findByName(name)
                 .orElseGet(() -> {
@@ -90,5 +101,10 @@ public class DataInitializer {
                 });
     }
 
- */
+
+
+
 }
+
+
+

@@ -1,10 +1,9 @@
 #include "JsonSerializer.h"
 #include <string>
 
-// Port and Node full definitions needed for serialization.
+// port_node and Node full definitions needed for serialization.
 // output_utils/CMakeLists must add local-fingerprint/include to include path.
-#include "model/Port.h"
-#include "model/Node.h"
+#include "model/Model.h"
 
 std::string JsonSerializer::escapeString(const std::string &s) {
     std::string out;
@@ -33,18 +32,18 @@ std::string JsonSerializer::escapeString(const std::string &s) {
     return out;
 }
 
-std::string JsonSerializer::portToJson(const Port &p) {
-    return "{\"number\":"     + std::to_string(p.getNumber())          +
-           ",\"protocol\":\"" + escapeString(p.getProtocol())  + "\"" +
-           ",\"service\":\""  + escapeString(p.getService())   + "\"" +
-           ",\"banner\":\""   + escapeString(p.getBanner())    + "\"" +
-           ",\"status\":\""   + escapeString(p.getStatus())    + "\"}";
+std::string JsonSerializer::portToJson(const port_node &p) {
+    return "{\"number\":"     + std::to_string(p.number)          +
+           ",\"protocol\":\"" + escapeString(p.protocol)  + "\"" +
+           ",\"service\":\""  + escapeString(p.service)   + "\"" +
+           ",\"banner\":\""   + escapeString(p.banner)    + "\"" +
+           ",\"status\":\""   + escapeString(p.status)    + "\"}";
 }
 
 std::string JsonSerializer::nodeToJson(const Node &n) {
     std::string ports = "[";
     bool first = true;
-    for (const Port &p : n.getOpenPorts()) {
+    for (const port_node &p : n.getOpenPorts()) {
         if (!first) ports += ',';
         ports += portToJson(p);
         first = false;
