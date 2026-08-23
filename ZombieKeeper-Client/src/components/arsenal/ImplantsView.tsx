@@ -186,8 +186,8 @@ export default function ImplantsView() {
               ['amsiPatch','AMSI Patch'],
             ] as [keyof ImplantConfig,string][]).map(([k,label])=>(
               <label key={k} style={S.checkbox} onClick={()=>set(k, !cfg[k] as ImplantConfig[typeof k])}>
-                <div style={{ width:14, height:14, border:`1px solid ${cfg[k]?'#e05c6e':'#1a1a1a'}`, background:cfg[k]?'#1a0000':'transparent', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-                  {cfg[k] && <span style={{ fontSize:9, color:'#e05c6e' }}>✓</span>}
+                <div style={{ width:14, height:14, border:`1px solid ${cfg[k]?'var(--accent-hi)':'#1a1a1a'}`, background:cfg[k]?'var(--accent-bg)':'transparent', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                  {cfg[k] && <span style={{ fontSize:9, color:'var(--accent-hi)' }}>✓</span>}
                 </div>
                 <span style={{ fontSize:11, color:'var(--tx1)' }}>{label}</span>
               </label>
@@ -257,9 +257,9 @@ export default function ImplantsView() {
 
         <div style={{ padding:'10px 12px', borderTop:'1px solid #1a1a1a', flexShrink:0 }}>
           <button onClick={generate} disabled={generating} style={{
-            width:'100%', background: generating?'#0d0d0d':'#1a0000',
-            border:`1px solid ${generating?'#222':'#e05c6e'}`,
-            color: generating?'var(--tx2)':'#e05c6e',
+            width:'100%', background: generating?'#0d0d0d':'var(--accent-bg)',
+            border:`1px solid ${generating?'#222':'var(--accent-hi)'}`,
+            color: generating?'var(--tx2)':'var(--accent-hi)',
             fontFamily:'Courier New', fontSize:12, fontWeight:700,
             padding:'8px', cursor: generating?'default':'pointer', letterSpacing:1,
           }}>

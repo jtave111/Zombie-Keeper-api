@@ -42,7 +42,6 @@ export default function DashboardView({ onNav }: Props) {
           <div key={i} style={{
             flex:1, padding:'10px 14px',
             borderRight:'1px solid var(--b1)',
-            borderTop:`2px solid ${s.accent}`,
             background:'var(--panel)',
           }}>
             <div style={{ fontSize:9, color:'var(--tx3)', textTransform:'uppercase', letterSpacing:'1px', marginBottom:5 }}>{s.label}</div>

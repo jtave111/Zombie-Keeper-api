@@ -15,11 +15,11 @@ interface Playbook {
 }
 
 const TYPE_COLOR: Record<StepType,string> = {
-  shell:'#5a96d4', upload:'#c8a84b', download:'#33a84a', inject:'#e05c6e',
-  persist:'#d48b55', screenshot:'#a07fd4', keylog:'#e05c6e', exfil:'#d48b55', wait:'#333',
+  shell:'var(--blue)', upload:'var(--tx1)', download:'var(--blue)', inject:'var(--red)',
+  persist:'var(--tx1)', screenshot:'var(--blue)', keylog:'var(--red)', exfil:'var(--red)', wait:'var(--tx3)',
 };
 const STEP_STATUS_COL: Record<StepStatus,string> = {
-  pending:'#333', running:'#d48b55', done:'#33a84a', failed:'#e05c6e', skipped:'#2a2a2a',
+  pending:'var(--tx3)', running:'var(--blue)', done:'var(--blue)', failed:'var(--red)', skipped:'var(--tx3)',
 };
 
 const PLAYBOOKS: Playbook[] = [
@@ -108,8 +108,8 @@ export default function PlaybooksView() {
           {books.map(pb => (
             <div key={pb.id} onClick={()=>setActive(pb)} style={{
               padding:'8px 10px', borderBottom:'1px solid #111', cursor:'pointer',
-              background: active.id===pb.id ? '#0a0a14' : 'transparent',
-              borderLeft:`2px solid ${active.id===pb.id?'#e05c6e':'transparent'}`,
+              background: active.id===pb.id ? '#0a0a0a' : 'transparent',
+              borderLeft:`2px solid ${active.id===pb.id?'var(--accent-hi)':'transparent'}`,
             }}>
               <div style={{ fontSize:10, color:active.id===pb.id?'#cccccc':'#777', fontWeight:700, marginBottom:2 }}>{pb.name}</div>
               <div style={{ fontSize:9, color:'var(--tx2)', marginBottom:4, lineHeight:1.4 }}>{pb.desc.slice(0,50)}…</div>
@@ -132,9 +132,9 @@ export default function PlaybooksView() {
             {['ZK-001','ZK-002','ZK-003','ZK-005','ZK-006'].map(a=><option key={a}>{a}</option>)}
           </select>
           <button onClick={run} disabled={running} style={{
-            background:running?'#0d0d0d':'#1a0000',
-            border:`1px solid ${running?'#222':'#e05c6e'}`,
-            color:running?'#333':'#e05c6e',
+            background:running?'#0d0d0d':'var(--accent-bg)',
+            border:`1px solid ${running?'#222':'var(--accent-hi)'}`,
+            color:running?'#333':'var(--accent-hi)',
             fontFamily:'Courier New', fontSize:11, fontWeight:700,
             padding:'6px 18px', cursor:running?'default':'pointer', letterSpacing:1,
           }}>
@@ -147,11 +147,11 @@ export default function PlaybooksView() {
           {active.steps.map((step,i) => (
             <div key={step.id} style={{ display:'flex', gap:12, marginBottom:8, alignItems:'flex-start' }}>
               {/* Step number */}
-              <div style={{ width:24, height:24, borderRadius:'50%', border:`1px solid ${STEP_STATUS_COL[step.status]}`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:10, color:STEP_STATUS_COL[step.status], background:step.status==='running'?'#0a0a00':'transparent' }}>
+              <div style={{ width:24, height:24, borderRadius:'50%', border:`1px solid ${STEP_STATUS_COL[step.status]}`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, fontSize:10, color:STEP_STATUS_COL[step.status], background:step.status==='running'?'#0a0a0a':'transparent' }}>
                 {step.status==='done'?'✓':step.status==='failed'?'✕':step.status==='running'?'▶':i+1}
               </div>
               {/* Content */}
-              <div style={{ flex:1, background:'var(--inset2)', border:`1px solid ${step.status==='running'?'#d48b55':'#1a1a1a'}`, padding:'8px 10px' }}>
+              <div style={{ flex:1, background:'var(--inset2)', border:`1px solid ${step.status==='running'?'var(--accent-hi)':'#1a1a1a'}`, padding:'8px 10px' }}>
                 <div style={{ display:'flex', gap:8, alignItems:'center', marginBottom:4 }}>
                   <span style={{ fontSize:9, color:TYPE_COLOR[step.type], fontWeight:700, textTransform:'uppercase', border:`1px solid ${TYPE_COLOR[step.type]}44`, padding:'1px 6px' }}>{step.type}</span>
                   <span style={{ fontSize:11, color:'#ccc' }}>{step.label}</span>
@@ -164,7 +164,7 @@ export default function PlaybooksView() {
                   <div style={{ background:'var(--inset2)', padding:'4px 8px', fontSize:10, color:'#5a96d4', fontFamily:'monospace', marginBottom:step.output?4:0 }}>target: {step.target}</div>
                 )}
                 {step.output && (
-                  <div style={{ fontSize:10, color:step.status==='done'?'#33a84a':'#e05c6e', marginTop:2 }}>{step.output}</div>
+                  <div style={{ fontSize:10, color:step.status==='done'?'#33a84a':'var(--accent-hi)', marginTop:2 }}>{step.output}</div>
                 )}
               </div>
             </div>

@@ -91,7 +91,7 @@ export default function AgentsView({ onOpenShell }: Props) {
           <div style={{ padding:'20px', color:'var(--tx2)', fontFamily:'Courier New', fontSize:11 }}>[*] Loading agents...</div>
         )}
         {error && (
-          <div style={{ padding:'20px', color:'#e05c6e', fontFamily:'Courier New', fontSize:11 }}>[-] {error}</div>
+          <div style={{ padding:'20px', color:'var(--accent-hi)', fontFamily:'Courier New', fontSize:11 }}>[-] {error}</div>
         )}
         {!loading && !error && agents.length === 0 && (
           <div style={{ padding:'20px', color:'var(--tx2)', fontFamily:'Courier New', fontSize:11 }}>[*] No agents connected</div>

@@ -371,8 +371,8 @@ export default function SettingsView() {
                 { label:'Factory reset',      desc:'Wipe all data and restore defaults. IRREVERSIBLE.', btn:'Factory Reset' },
               ]},
             ].map(section => (
-              <div key={section.grp} style={{ border:'1px solid rgba(204,68,68,0.3)', marginBottom:14, background:'var(--inset2)' }}>
-                <div style={{ padding:'5px 12px', background:'var(--red3)', borderBottom:'1px solid rgba(204,68,68,0.2)', fontSize:10, color:'var(--red-hi)', textTransform:'uppercase', letterSpacing:'0.8px' }}>
+              <div key={section.grp} style={{ border:'1px solid rgba(115,123,132,0.3)', marginBottom:14, background:'var(--inset2)' }}>
+                <div style={{ padding:'5px 12px', background:'var(--red3)', borderBottom:'1px solid rgba(115,123,132,0.2)', fontSize:10, color:'var(--red-hi)', textTransform:'uppercase', letterSpacing:'0.8px' }}>
                   {section.grp}
                 </div>
                 {section.rows.map(row => (

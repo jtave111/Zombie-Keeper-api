@@ -10,7 +10,7 @@ interface ArsenalTool {
 }
 
 const STATUS_COLOR: Record<BuildStatus,string> = {
-  built:'#33a84a', building:'#d48b55', outdated:'#c8a84b', 'not-built':'#444', planned:'#2a2a2a',
+  built:'var(--blue)', building:'var(--blue)', outdated:'var(--tx1)', 'not-built':'var(--tx3)', planned:'var(--tx3)',
 };
 
 const TOOLS: ArsenalTool[] = [
@@ -51,7 +51,7 @@ const TOOLS: ArsenalTool[] = [
   },
 ];
 
-const DOMAIN_COLOR: Record<Domain,string> = { 'network-session':'#5a96d4', agents:'#e05c6e', libs:'#c8a84b' };
+const DOMAIN_COLOR: Record<Domain,string> = { 'network-session':'var(--blue)', agents:'var(--red)', libs:'var(--tx1)' };
 
 const BUILD_LOG: Record<string,string[]> = {
   'local-fingerprint':[
@@ -125,7 +125,7 @@ export default function ArsenalView() {
           {visible.map(t=>(
             <div key={t.id} onClick={()=>setSelected(t)} style={{
               padding:'8px 10px', borderBottom:'1px solid #111', cursor:'pointer',
-              background: selected.id===t.id?'#0a0a14':'transparent',
+              background: selected.id===t.id?'#0a0a0a':'transparent',
               borderLeft:`2px solid ${selected.id===t.id?DOMAIN_COLOR[t.domain]:'transparent'}`,
               opacity: t.status==='planned'?0.5:1,
             }}>
@@ -138,14 +138,14 @@ export default function ArsenalView() {
               <div style={{ display:'flex', alignItems:'center', gap:6 }}>
                 <span style={{ fontSize:9, color:STATUS_COLOR[t.status] }}>● {t.status}</span>
                 {t.lastBuild && <span style={{ fontSize:9, color:'var(--tx2)' }}>{t.lastBuild.slice(11)}</span>}
-                {building===t.id && <span style={{ fontSize:9, color:'#d48b55', animation:'pulse 1s infinite' }}>BUILDING…</span>}
+                {building===t.id && <span style={{ fontSize:9, color:'var(--accent-hi)', animation:'pulse 1s infinite' }}>BUILDING…</span>}
               </div>
             </div>
           ))}
         </div>
 
         <div style={{ padding:'8px 10px', borderTop:'1px solid #1a1a1a', flexShrink:0 }}>
-          <button onClick={buildAll} style={{ width:'100%', background:'#1a0000', border:'1px solid #e05c6e', color:'#e05c6e', fontFamily:'Courier New', fontSize:10, padding:'5px', cursor:'pointer' }}>
+          <button onClick={buildAll} style={{ width:'100%', background:'var(--accent-bg)', border:'1px solid var(--accent-hi)', color:'var(--accent-hi)', fontFamily:'Courier New', fontSize:10, padding:'5px', cursor:'pointer' }}>
             [ BUILD ALL ]
           </button>
         </div>
@@ -178,7 +178,7 @@ export default function ArsenalView() {
           {selected.caps && (
             <div style={{ marginTop:4, display:'flex', gap:6 }}>
               <span style={{ fontSize:9, color:'var(--tx2)' }}>caps:</span>
-              {selected.caps.map(c=><span key={c} style={{ fontSize:9, color:'#c8a84b', border:'1px solid #2a2a1a', padding:'1px 6px' }}>{c}</span>)}
+              {selected.caps.map(c=><span key={c} style={{ fontSize:9, color:'var(--accent-hi)', border:'1px solid #2a2a1a', padding:'1px 6px' }}>{c}</span>)}
             </div>
           )}
         </div>
@@ -188,11 +188,11 @@ export default function ArsenalView() {
           <button
             onClick={()=>triggerBuild(selected)}
             disabled={building!==null || selected.status==='planned'}
-            style={{ background: selected.status==='planned'?'#0d0d0d':'#1a0000', border:`1px solid ${selected.status==='planned'?'#111':'#e05c6e'}`, color:selected.status==='planned'?'#1a1a1a':'#e05c6e', fontFamily:'Courier New', fontSize:10, padding:'4px 16px', cursor:selected.status==='planned'?'default':'pointer' }}>
+            style={{ background: selected.status==='planned'?'#0d0d0d':'var(--accent-bg)', border:`1px solid ${selected.status==='planned'?'#111':'var(--accent-hi)'}`, color:selected.status==='planned'?'#1a1a1a':'var(--accent-hi)', fontFamily:'Courier New', fontSize:10, padding:'4px 16px', cursor:selected.status==='planned'?'default':'pointer' }}>
             {building===selected.id?'[ BUILDING... ]':selected.status==='planned'?'[ PLANNED ]':'[ BUILD ]'}
           </button>
           {selected.caps && (
-            <button style={{ background:'#0a0a00', border:'1px solid #c8a84b', color:'#c8a84b', fontFamily:'Courier New', fontSize:10, padding:'4px 16px', cursor:'pointer' }}>
+            <button style={{ background:'#0a0a0a', border:'1px solid var(--accent-hi)', color:'var(--accent-hi)', fontFamily:'Courier New', fontSize:10, padding:'4px 16px', cursor:'pointer' }}>
               [ SETCAP ]
             </button>
           )}
@@ -211,7 +211,7 @@ export default function ArsenalView() {
             <div style={{ fontSize:10, color:'var(--tx3)' }}>No build output — click BUILD to compile</div>
           )}
           {buildLog.map((line,i)=>(
-            <div key={i} style={{ fontSize:11, color: line.startsWith('[+]')?'#33a84a':line.startsWith('[-]')?'#e05c6e':line.startsWith('[!]')?'#c8a84b':'#555', lineHeight:1.7, fontFamily:'monospace' }}>
+            <div key={i} style={{ fontSize:11, color: line.startsWith('[+]')?'#33a84a':line.startsWith('[-]')?'var(--accent-hi)':line.startsWith('[!]')?'var(--accent-hi)':'#555', lineHeight:1.7, fontFamily:'monospace' }}>
               {line}
             </div>
           ))}

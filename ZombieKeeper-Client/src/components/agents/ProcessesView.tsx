@@ -66,13 +66,13 @@ export default function ProcessesView() {
           style={{ width:160, background:'var(--inset2)', border:'1px solid #1e1e1e', color:'#777', fontFamily:'Courier New', fontSize:11, padding:'4px 8px', outline:'none' }}/>
 
         <button onClick={()=>setShowSusp(s=>!s)} style={{
-          background: showSusp?'#1a0000':'transparent',
-          border:`1px solid ${showSusp?'#e05c6e':'#1a1a1a'}`,
-          color: showSusp?'#e05c6e':'#333',
+          background: showSusp?'var(--accent-bg)':'transparent',
+          border:`1px solid ${showSusp?'var(--accent-hi)':'#1a1a1a'}`,
+          color: showSusp?'var(--accent-hi)':'#333',
           fontFamily:'Courier New', fontSize:10, padding:'3px 10px', cursor:'pointer',
         }}>
           {showSusp?'▼ suspicious':'▽ suspicious'}
-          {suspCount>0 && <span style={{ marginLeft:6, background:'#1a0000', color:'#e05c6e', padding:'0 4px', border:'1px solid #3d1520' }}>{suspCount}</span>}
+          {suspCount>0 && <span style={{ marginLeft:6, background:'var(--accent-bg)', color:'var(--accent-hi)', padding:'0 4px', border:'1px solid var(--b2)' }}>{suspCount}</span>}
         </button>
 
         <span style={{ marginLeft:'auto', fontSize:10, color:'var(--tx2)' }}>{visible.length} procs</span>
@@ -83,7 +83,7 @@ export default function ProcessesView() {
       </div>
 
       {suspCount > 0 && (
-        <div style={{ padding:'4px 14px', background:'#1a0000', borderBottom:'1px solid #3d1520', fontSize:10, color:'#e05c6e', flexShrink:0 }}>
+        <div style={{ padding:'4px 14px', background:'var(--accent-bg)', borderBottom:'1px solid var(--b2)', fontSize:10, color:'var(--accent-hi)', flexShrink:0 }}>
           [!] {suspCount} suspicious process(es) detected — review recommended
         </div>
       )}
@@ -101,15 +101,15 @@ export default function ProcessesView() {
               style={{
                 display:'grid', gridTemplateColumns:'60px 60px 160px 160px 60px 60px 1fr',
                 padding:'5px 14px', borderBottom:'1px solid #0d0d0d', cursor:'pointer', alignItems:'center',
-                background: selected?.pid===p.pid?'#0d0d14': p.suspicious?'#0d0000':'transparent',
+                background: selected?.pid===p.pid?'#0d0d0d': p.suspicious?'#060708':'transparent',
               }}>
-              <span style={{ fontSize:10, color:p.marked?'#e05c6e':p.suspicious?'#c8a84b':'#555', fontWeight:p.suspicious?700:400 }}>{p.pid}</span>
+              <span style={{ fontSize:10, color:p.marked?'var(--accent-hi)':p.suspicious?'var(--accent-hi)':'#555', fontWeight:p.suspicious?700:400 }}>{p.pid}</span>
               <span style={{ fontSize:9, color:'var(--tx2)' }}>{p.ppid||'—'}</span>
-              <span style={{ fontSize:11, color:p.suspicious?'#c8a84b':p.marked?'#e05c6e':'#777', fontWeight:p.suspicious?700:400 }}>
+              <span style={{ fontSize:11, color:p.suspicious?'var(--accent-hi)':p.marked?'var(--accent-hi)':'#777', fontWeight:p.suspicious?700:400 }}>
                 {p.suspicious && '⚠ '}{p.name}
               </span>
               <span style={{ fontSize:9, color:'var(--tx2)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{p.user.replace('NT AUTHORITY\\','').replace('CORP\\','')}</span>
-              <span style={{ fontSize:10, color:parseFloat(p.cpu)>5?'#d48b55':'#333' }}>{p.cpu}</span>
+              <span style={{ fontSize:10, color:parseFloat(p.cpu)>5?'var(--accent-hi)':'#333' }}>{p.cpu}</span>
               <span style={{ fontSize:10, color:'var(--tx2)' }}>{p.mem} MB</span>
               <span style={{ fontSize:9, color:'var(--tx2)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{p.cmdline||p.path}</span>
             </div>
@@ -119,7 +119,7 @@ export default function ProcessesView() {
         {/* Detail + actions */}
         {selected && (
           <div style={{ width:240, background:'var(--inset2)', borderLeft:'1px solid #1a1a1a', padding:'12px', flexShrink:0, overflowY:'auto' }}>
-            <div style={{ fontSize:12, color: selected.suspicious?'#c8a84b':'#ccc', fontWeight:700, marginBottom:4 }}>
+            <div style={{ fontSize:12, color: selected.suspicious?'var(--accent-hi)':'#ccc', fontWeight:700, marginBottom:4 }}>
               {selected.suspicious && '⚠ '}{selected.name}
             </div>
             <div style={{ fontSize:10, color:'var(--tx2)', marginBottom:10 }}>PID {selected.pid} · PPID {selected.ppid}</div>
@@ -150,9 +150,9 @@ export default function ProcessesView() {
             )}
 
             {selected.suspicious && (
-              <div style={{ padding:'6px 8px', background:'#1a0000', border:'1px solid #3d1520', marginBottom:12 }}>
-                <div style={{ fontSize:9, color:'#e05c6e' }}>Suspicious indicators:</div>
-                <div style={{ fontSize:9, color:'#c8a84b', marginTop:3 }}>
+              <div style={{ padding:'6px 8px', background:'var(--accent-bg)', border:'1px solid var(--b2)', marginBottom:12 }}>
+                <div style={{ fontSize:9, color:'var(--accent-hi)' }}>Suspicious indicators:</div>
+                <div style={{ fontSize:9, color:'var(--accent-hi)', marginTop:3 }}>
                   {selected.path.includes('\\Temp')||selected.path.includes('/tmp') ? '• Running from temp dir\n' : ''}
                   {selected.cmdline.includes('bypass')||selected.cmdline.includes('-enc') ? '• Suspicious PowerShell flags\n' : ''}
                   {selected.name.endsWith('s.exe')&&selected.name!=='services.exe'&&selected.name!=='smss.exe'&&selected.name!=='csrss.exe'&&selected.name!=='lsass.exe' ? '• Name mimics system process\n' : ''}
@@ -162,7 +162,7 @@ export default function ProcessesView() {
             )}
 
             <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
-              <button onClick={()=>mark(selected.pid)} style={{ background:'var(--inset2)', border:'1px solid #1a1a1a', color:'#c8a84b', fontFamily:'Courier New', fontSize:10, padding:'5px', cursor:'pointer' }}>
+              <button onClick={()=>mark(selected.pid)} style={{ background:'var(--inset2)', border:'1px solid #1a1a1a', color:'var(--accent-hi)', fontFamily:'Courier New', fontSize:10, padding:'5px', cursor:'pointer' }}>
                 {selected.marked?'UNMARK':'MARK SUSPICIOUS'}
               </button>
               <button style={{ background:'var(--inset2)', border:'1px solid #1a1a1a', color:'#5a96d4', fontFamily:'Courier New', fontSize:10, padding:'5px', cursor:'pointer' }}>
@@ -171,7 +171,7 @@ export default function ProcessesView() {
               <button style={{ background:'var(--inset2)', border:'1px solid #1a1a1a', color:'#a07fd4', fontFamily:'Courier New', fontSize:10, padding:'5px', cursor:'pointer' }}>
                 MIGRATE (SPAWN)
               </button>
-              <button onClick={()=>{ kill(selected.pid); setSelected(null); }} style={{ background:'#1a0000', border:'1px solid #3d1520', color:'#e05c6e', fontFamily:'Courier New', fontSize:10, padding:'5px', cursor:'pointer' }}>
+              <button onClick={()=>{ kill(selected.pid); setSelected(null); }} style={{ background:'var(--accent-bg)', border:'1px solid var(--b2)', color:'var(--accent-hi)', fontFamily:'Courier New', fontSize:10, padding:'5px', cursor:'pointer' }}>
                 KILL PROCESS
               </button>
             </div>

@@ -15,12 +15,12 @@ const ts = () => {
 };
 
 const C: Record<string, string> = {
-  cmd:  '#cccccc',
-  ok:   '#33a84a',
-  err:  '#e05c6e',
-  warn: '#d48b55',
+  cmd:  '#d7d7d7',
+  ok:   'var(--blue)',
+  err:  'var(--accent-hi)',
+  warn: 'var(--tx1)',
   sys:  'var(--tx2)',
-  info: '#5bb8d4',
+  info: 'var(--blue)',
   dim:  'var(--tx3)',
 };
 
@@ -371,7 +371,7 @@ export default function ShellModule() {
     setHIdx(-1);
   }, []);
 
-  const wsColor = wsStatus === 'connected' ? 'var(--green)' : wsStatus === 'connecting' ? 'var(--orange)' : 'var(--red)';
+  const wsColor = wsStatus === 'connected' ? 'var(--blue)' : wsStatus === 'connecting' ? 'var(--tx1)' : 'var(--accent-hi)';
   const wsLabel = wsStatus === 'connected' ? 'LIVE' : wsStatus === 'connecting' ? 'CONNECTING' : wsStatus === 'error' ? 'ERROR' : 'CLOSED';
 
   const filteredAgents = aQuery
@@ -383,20 +383,20 @@ export default function ShellModule() {
     : agents;
 
   const LOG_COLORS: Record<string, string> = {
-    ok: 'var(--green)', err: 'var(--red)', warn: 'var(--orange)', sys: 'var(--tx2)',
+    ok: 'var(--blue)', err: 'var(--accent-hi)', warn: 'var(--tx1)', sys: 'var(--tx2)',
   };
   const LOG_ICONS: Record<string, string> = { ok:'[+]', err:'[-]', warn:'[!]', sys:'[*]' };
 
   return (
-    <div style={{ display:'flex', height:'100%', overflow:'hidden', fontFamily:'Courier New' }}>
+    <div style={{ display:'flex', height:'100%', overflow:'hidden', fontFamily:'var(--mono)', background:'#050505' }}>
 
       {/* ── SIDEBAR ── */}
-      <div style={{ width:220, background:'var(--panel)', borderRight:'1px solid var(--b1)', display:'flex', flexDirection:'column', overflow:'hidden', flexShrink:0 }}>
+      <div style={{ width:220, background:'#101010', borderRight:'1px solid var(--b2)', display:'flex', flexDirection:'column', overflow:'hidden', flexShrink:0 }}>
 
         {/* Panel header with WS status */}
-        <div style={{ height:24, background:'var(--panel2)', borderBottom:'1px solid var(--b1)', display:'flex', alignItems:'center', padding:'0 10px', gap:6, fontSize:10, color:'var(--tx1)', userSelect:'none', flexShrink:0 }}>
-          <span style={{ color:'var(--red)', fontSize:9 }}>$_</span>
-          <span>C2 Shell</span>
+        <div style={{ height:28, background:'#171717', borderBottom:'1px solid var(--b2)', display:'flex', alignItems:'center', padding:'0 10px', gap:7, fontSize:10, color:'var(--tx1)', userSelect:'none', flexShrink:0 }}>
+          <span style={{ color:'var(--blue)', fontSize:11 }}>$</span>
+          <span style={{ color:'var(--tx0)' }}>C2 SHELL</span>
           <span style={{ marginLeft:'auto', display:'flex', alignItems:'center', gap:4 }}>
             <span style={{ width:5, height:5, borderRadius:'50%', background:wsColor, display:'inline-block', boxShadow:`0 0 4px ${wsColor}` }} />
             <span style={{ fontSize:9, color:wsColor }}>{wsLabel}</span>
@@ -407,11 +407,11 @@ export default function ShellModule() {
         <div style={{ padding:'8px 10px', borderBottom:'1px solid var(--b1)', flexShrink:0 }}>
           <div style={{ fontSize:9, color:'var(--tx3)', textTransform:'uppercase', letterSpacing:1, marginBottom:6 }}>Services</div>
           {[
-            { l:'C2 Server',   v:'ONLINE',  c:'var(--green)' },
-            { l:'Database',    v:'CONN',    c:'var(--green)' },
-            { l:'HTTP :4444',  v:'LISTEN',  c:'var(--green)' },
-            { l:'HTTPS :8443', v:'LISTEN',  c:'var(--green)' },
-            { l:'DNS :53',     v:'OFFLINE', c:'var(--red)'   },
+            { l:'C2 Server',   v:'ONLINE',  c:'var(--blue)' },
+            { l:'Database',    v:'CONN',    c:'var(--blue)' },
+            { l:'HTTP :4444',  v:'LISTEN',  c:'var(--blue)' },
+            { l:'HTTPS :8443', v:'LISTEN',  c:'var(--blue)' },
+            { l:'DNS :53',     v:'OFFLINE', c:'var(--tx3)'  },
           ].map(s => (
             <div key={s.l} style={{ display:'flex', justifyContent:'space-between', marginBottom:3 }}>
               <span style={{ fontSize:10, color:'var(--tx2)' }}>{s.l}</span>
@@ -425,7 +425,7 @@ export default function ShellModule() {
           <div style={{ display:'flex', justifyContent:'space-between', marginBottom:4 }}>
             <span style={{ fontSize:9, color:'var(--tx3)', textTransform:'uppercase', letterSpacing:1 }}>Agents</span>
             <span style={{ fontSize:9, color:'var(--tx3)' }}>
-              <span style={{ color:'var(--green)' }}>{agents.filter(a=>a.status==='ONLINE').length}</span>
+              <span style={{ color:'var(--blue)' }}>{agents.filter(a=>a.status==='ONLINE').length}</span>
               <span>/{agents.length}</span>
             </span>
           </div>
@@ -439,7 +439,7 @@ export default function ShellModule() {
 
         <div style={{ flex:1, overflowY:'auto' }}>
           {filteredAgents.map(a => {
-            const sc = a.status==='ONLINE' ? 'var(--green)' : a.status==='IDLE' ? 'var(--orange)' : 'var(--tx3)';
+            const sc = a.status==='ONLINE' ? 'var(--blue)' : a.status==='IDLE' ? 'var(--tx1)' : 'var(--tx3)';
             return (
               <div key={a.id}
                 onClick={() => { setInput(`info ${a.id}`); inputRef.current?.focus(); }}
@@ -450,7 +450,7 @@ export default function ShellModule() {
                 <div style={{ display:'flex', alignItems:'center', gap:5 }}>
                   <span style={{ width:5, height:5, borderRadius:'50%', background:sc, flexShrink:0, boxShadow:a.status==='ONLINE'?`0 0 4px ${sc}`:'none' }} />
                   <span style={{ fontSize:10, color:'var(--tx1)', flex:1, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{a.id}</span>
-                  <span style={{ fontSize:9, color:a.priv==='ROOT'?'var(--red-hi)':'var(--tx3)' }}>{a.priv}</span>
+                  <span style={{ fontSize:9, color:a.priv==='ROOT'?'var(--blue)':'var(--tx3)' }}>{a.priv}</span>
                 </div>
                 <div style={{ fontSize:9, color:'var(--tx2)', marginLeft:10, marginTop:1 }}>{a.ip}</div>
               </div>
@@ -473,7 +473,7 @@ export default function ShellModule() {
             <button key={cmd}
               onClick={() => { exec(cmd); inputRef.current?.focus(); }}
               style={{ display:'block', width:'100%', background:'transparent', border:'none', borderLeft:'2px solid var(--b2)', color:'var(--tx1)', fontSize:10, padding:'3px 8px', cursor:'pointer', textAlign:'left', marginBottom:2 }}
-              onMouseEnter={e => { e.currentTarget.style.borderLeftColor='var(--red)'; e.currentTarget.style.color='var(--red-hi)'; }}
+              onMouseEnter={e => { e.currentTarget.style.borderLeftColor='var(--blue)'; e.currentTarget.style.color='var(--blue)'; }}
               onMouseLeave={e => { e.currentTarget.style.borderLeftColor='var(--b2)'; e.currentTarget.style.color='var(--tx1)'; }}
             >
               &gt; {label}
@@ -483,35 +483,35 @@ export default function ShellModule() {
       </div>
 
       {/* ── TERMINAL ── */}
-      <div style={{ flex:1, display:'flex', flexDirection:'column', background:'#141414', overflow:'hidden' }}
+      <div style={{ flex:1, display:'flex', flexDirection:'column', background:'#050505', overflow:'hidden' }}
         onClick={() => inputRef.current?.focus()}>
 
         {/* Tab bar */}
-        <div style={{ display:'flex', background:'var(--panel)', borderBottom:'1px solid var(--b1)', flexShrink:0, height:28, alignItems:'stretch' }}>
+        <div style={{ display:'flex', background:'#101010', borderBottom:'1px solid var(--b2)', flexShrink:0, height:30, alignItems:'stretch' }}>
           {(['shell', 'log'] as const).map(tb => (
             <div key={tb} onClick={() => setTab(tb)}
               style={{
                 padding:'0 16px', display:'flex', alignItems:'center', cursor:'pointer',
                 fontSize:11, textTransform:'uppercase', letterSpacing:0.5,
                 color: tab===tb ? 'var(--tx0)' : 'var(--tx2)',
-                borderTop: tab===tb ? '2px solid var(--red)' : '2px solid transparent',
+                borderBottom: tab===tb ? '2px solid var(--blue)' : '2px solid transparent',
                 borderRight:'1px solid var(--b1)',
-                background: tab===tb ? 'var(--bg)' : 'transparent',
+                background: tab===tb ? '#050505' : 'transparent',
               }}
             >
-              {tb === 'shell' ? '$ Terminal' : '≈ Event Log'}
+              {tb === 'shell' ? 'Terminal' : 'Event Log'}
             </div>
           ))}
           <div style={{ marginLeft:'auto', display:'flex', alignItems:'center', padding:'0 12px', gap:8, userSelect:'none' }}>
             <span style={{ fontSize:9, color:'var(--tx3)' }}>op:</span>
-            <span style={{ fontSize:9, color:'var(--red-hi)', fontWeight:700 }}>ROOT_ADMIN</span>
+            <span style={{ fontSize:9, color:'var(--blue)', fontWeight:700 }}>ROOT_ADMIN</span>
           </div>
         </div>
 
         {/* Shell tab */}
         {tab === 'shell' && (
           <>
-            <div style={{ flex:1, overflowY:'auto', padding:'10px 16px', fontSize:12 }}>
+            <div style={{ flex:1, overflowY:'auto', padding:'14px 18px', fontSize:12, background:'#050505' }}>
               {lines.map((l, i) => (
                 <div key={i} style={{ display:'flex', gap:10, lineHeight:1.65, alignItems:'baseline' }}>
                   <span style={{ color:'var(--tx3)', fontSize:10, minWidth:58, flexShrink:0, userSelect:'none' }}>{l.time}</span>
@@ -534,8 +534,9 @@ export default function ShellModule() {
             </div>
 
             {/* Input bar */}
-            <div style={{ display:'flex', alignItems:'center', gap:8, padding:'7px 16px', borderTop:'1px solid var(--b1)', background:'var(--inset)', flexShrink:0 }}>
-              <span style={{ color:'var(--red-hi)', fontSize:13, fontWeight:700, userSelect:'none' }}>ZK&gt;</span>
+            <div style={{ display:'flex', alignItems:'center', gap:8, padding:'9px 16px', borderTop:'1px solid var(--b2)', background:'#0a0a0a', flexShrink:0, boxShadow:'inset 0 1px 0 #111' }}>
+              <span style={{ color:'var(--blue)', fontSize:12, fontWeight:700, userSelect:'none' }}>root@zk-c2</span>
+              <span style={{ color:'var(--tx1)', fontSize:12, userSelect:'none' }}>~#</span>
               <input
                 ref={inputRef}
                 value={input}

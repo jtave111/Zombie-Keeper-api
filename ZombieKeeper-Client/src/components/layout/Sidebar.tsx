@@ -26,7 +26,7 @@ const SECTIONS: Section[] = [
     { key: 'reports',    icon: '⊟', label: 'Reports' },
   ]},
   { key: 'arsenal', label: 'Arsenal', items: [
-    { key: 'implants',   icon: '⚡', label: 'Implants' },
+    { key: 'implants',   icon: '', label: 'Implants' },
     { key: 'exploits',   icon: '!', label: 'Exploits' },
     { key: 'arsenal',    icon: '⚙', label: 'Build Manager' },
   ]},

@@ -49,7 +49,7 @@ const DEMO: ScanResult = {
   ],
 };
 
-const PORT_COL: Record<PortState,string> = { open:'#33a84a', closed:'#2a2a2a', filtered:'#c8a84b' };
+const PORT_COL: Record<PortState,string> = { open:'#33a84a', closed:'#2a2a2a', filtered:'var(--accent-hi)' };
 
 export default function NetworkScannerView() {
   const [subnet,     setSubnet]    = useState('192.168.5.0/24');
@@ -111,9 +111,9 @@ export default function NetworkScannerView() {
           <input value={threads} onChange={e=>setThreads(e.target.value)} style={{ width:60, background:'var(--bg)', border:'1px solid #1e1e1e', color:'#ccc', fontFamily:'Courier New', fontSize:11, padding:'4px 8px', outline:'none' }}/>
         </div>
         <button onClick={scan} disabled={status==='scanning'} style={{
-          background: status==='scanning'?'#0d0d0d':'#1a0000',
-          border:`1px solid ${status==='scanning'?'#222':'#e05c6e'}`,
-          color: status==='scanning'?'#333':'#e05c6e',
+          background: status==='scanning'?'#0d0d0d':'var(--accent-bg)',
+          border:`1px solid ${status==='scanning'?'#222':'var(--accent-hi)'}`,
+          color: status==='scanning'?'#333':'var(--accent-hi)',
           fontFamily:'Courier New', fontSize:11, fontWeight:700,
           padding:'4px 20px', cursor:status==='scanning'?'default':'pointer', letterSpacing:1,
         }}>
@@ -122,7 +122,7 @@ export default function NetworkScannerView() {
         {status==='scanning' && (
           <div style={{ width:120, alignSelf:'center' }}>
             <div style={{ height:4, background:'var(--inset)', borderRadius:2 }}>
-              <div style={{ height:'100%', width:`${progress}%`, background:'#e05c6e', borderRadius:2, transition:'width 0.2s' }}/>
+              <div style={{ height:'100%', width:`${progress}%`, background:'var(--accent-hi)', borderRadius:2, transition:'width 0.2s' }}/>
             </div>
             <div style={{ fontSize:9, color:'var(--tx1)', marginTop:2 }}>{progress}%</div>
           </div>
@@ -138,7 +138,7 @@ export default function NetworkScannerView() {
           <div style={{ flex:1, overflowY:'auto', padding:'6px 10px' }}>
             {logLines.length === 0 && <div style={{ fontSize:10, color:'var(--tx3)' }}>awaiting scan…</div>}
             {logLines.map((l,i)=>(
-              <div key={i} style={{ fontSize:10, color:l.startsWith('[+]')?'#33a84a':l.startsWith('[!]')?'#c8a84b':'#444', lineHeight:1.8, fontFamily:'monospace' }}>
+              <div key={i} style={{ fontSize:10, color:l.startsWith('[+]')?'#33a84a':l.startsWith('[!]')?'var(--accent-hi)':'#444', lineHeight:1.8, fontFamily:'monospace' }}>
                 {l}
               </div>
             ))}
@@ -149,7 +149,7 @@ export default function NetworkScannerView() {
         <div style={{ flex:1, display:'flex', flexDirection:'column', overflow:'hidden' }}>
           {/* Vuln banner */}
           {vulnHosts.length > 0 && (
-            <div style={{ padding:'4px 14px', background:'#1a0000', borderBottom:'1px solid #3d1520', fontSize:10, color:'#e05c6e', flexShrink:0 }}>
+            <div style={{ padding:'4px 14px', background:'var(--accent-bg)', borderBottom:'1px solid var(--b2)', fontSize:10, color:'var(--accent-hi)', flexShrink:0 }}>
               [!] {vulnHosts.length} host(s) with critical vulnerabilities detected
             </div>
           )}
@@ -169,7 +169,7 @@ export default function NetworkScannerView() {
                 style={{
                   display:'grid', gridTemplateColumns:'110px 140px 160px 50px 1fr 80px',
                   padding:'6px 14px', borderBottom:'1px solid #0d0d0d', cursor:'pointer',
-                  background: selected?.ip===h.ip?'#0d0d14':h.vulns.length>0?'#0d0000':'transparent',
+                  background: selected?.ip===h.ip?'#0d0d0d':h.vulns.length>0?'#060708':'transparent',
                 }}>
                 <span style={{ fontSize:11, color:'#777', fontFamily:'monospace' }}>{h.ip}</span>
                 <span style={{ fontSize:10, color:'var(--tx1)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{h.hostname}</span>
@@ -180,7 +180,7 @@ export default function NetworkScannerView() {
                     <span key={p.port} style={{ fontSize:9, color:PORT_COL[p.state], border:`1px solid ${PORT_COL[p.state]}44`, padding:'1px 4px' }}>{p.port}</span>
                   ))}
                 </div>
-                <span style={{ fontSize:10, color:h.vulns.length>0?'#e05c6e':'#2a2a2a', fontWeight:h.vulns.length>0?700:400 }}>
+                <span style={{ fontSize:10, color:h.vulns.length>0?'var(--accent-hi)':'#2a2a2a', fontWeight:h.vulns.length>0?700:400 }}>
                   {h.vulns.length>0 ? `[!] ${h.vulns.length}` : '—'}
                 </span>
               </div>
@@ -208,14 +208,14 @@ export default function NetworkScannerView() {
 
             {selected.vulns.length > 0 && (
               <>
-                <div style={{ fontSize:9, color:'#e05c6e', textTransform:'uppercase', letterSpacing:1, margin:'10px 0 6px' }}>Vulnerabilities</div>
+                <div style={{ fontSize:9, color:'var(--accent-hi)', textTransform:'uppercase', letterSpacing:1, margin:'10px 0 6px' }}>Vulnerabilities</div>
                 {selected.vulns.map(v=>(
-                  <div key={v} style={{ fontSize:10, color:'#e05c6e', marginBottom:4, lineHeight:1.4 }}>[!] {v}</div>
+                  <div key={v} style={{ fontSize:10, color:'var(--accent-hi)', marginBottom:4, lineHeight:1.4 }}>[!] {v}</div>
                 ))}
               </>
             )}
 
-            <button style={{ width:'100%', marginTop:12, background:'#1a0000', border:'1px solid #e05c6e', color:'#e05c6e', fontFamily:'Courier New', fontSize:10, padding:'4px', cursor:'pointer' }}>
+            <button style={{ width:'100%', marginTop:12, background:'var(--accent-bg)', border:'1px solid var(--accent-hi)', color:'var(--accent-hi)', fontFamily:'Courier New', fontSize:10, padding:'4px', cursor:'pointer' }}>
               SEND TO AGENT
             </button>
           </div>

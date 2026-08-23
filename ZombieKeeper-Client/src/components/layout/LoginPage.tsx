@@ -211,7 +211,7 @@ export default function LoginPage({ onLogin }: Props) {
                 const barColor = (ping: Ping) => {
                   if (!ping.ok)      return 'var(--red)';
                   if (ping.ms <  80) return 'var(--green)';
-                  if (ping.ms < 300) return '#c8a000';
+                  if (ping.ms < 300) return 'var(--accent-hi)';
                   return 'var(--red-hi)';
                 };
                 return (

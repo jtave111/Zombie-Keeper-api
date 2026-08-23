@@ -17,9 +17,9 @@ interface LootFile {
 const MOCK_LOOT: LootFile[] = [];
 
 const TYPE_COL: Record<string,string> = {
-  'Config':'#5bb8d4','Key/Cert':'#33a84a','Database':'#c8a84b',
-  'Screenshot':'#a07fd4','Log':'#d48b55','Document':'#e8e8e8',
-  'Hash File':'#e05c6e','Other':'#555',
+  'Config':'#5bb8d4','Key/Cert':'#33a84a','Database':'var(--accent-hi)',
+  'Screenshot':'#a07fd4','Log':'var(--accent-hi)','Document':'#e8e8e8',
+  'Hash File':'var(--accent-hi)','Other':'#555',
 };
 
 export default function LootView() {
@@ -46,11 +46,11 @@ export default function LootView() {
         {[
           { l:'Total Files',    v:String(MOCK_LOOT.length), c:'#e8e8e8' },
           { l:'Total Size',     v:totalSize,                c:'#5bb8d4' },
-          { l:'Critical',       v:String(MOCK_LOOT.filter(l=>l.tags.includes('critical')).length), c:'#e05c6e' },
+          { l:'Critical',       v:String(MOCK_LOOT.filter(l=>l.tags.includes('critical')).length), c:'var(--accent-hi)' },
           { l:'Screenshots',    v:String(MOCK_LOOT.filter(l=>l.type==='Screenshot').length), c:'#a07fd4' },
           { l:'Keys / Certs',   v:String(MOCK_LOOT.filter(l=>l.type==='Key/Cert').length), c:'#33a84a' },
-          { l:'Hash Files',     v:String(MOCK_LOOT.filter(l=>l.type==='Hash File').length), c:'#e05c6e' },
-          { l:'Agents',         v:String(new Set(MOCK_LOOT.map(l=>l.agentId)).size), c:'#d48b55' },
+          { l:'Hash Files',     v:String(MOCK_LOOT.filter(l=>l.type==='Hash File').length), c:'var(--accent-hi)' },
+          { l:'Agents',         v:String(new Set(MOCK_LOOT.map(l=>l.agentId)).size), c:'var(--accent-hi)' },
         ].map((s,i)=>(
           <div key={i} style={{ flex:1, padding:'10px 14px', borderRight:'1px solid #111', background:'var(--inset2)' }}>
             <div style={{ fontSize:9, color:'var(--tx1)', textTransform:'uppercase', letterSpacing:'1px', marginBottom:5 }}>{s.l}</div>
@@ -66,8 +66,8 @@ export default function LootView() {
         <span style={{ color:'var(--tx3)' }}>|</span>
         {types.map(t=>(
           <button key={t} onClick={()=>setFilter(t)} style={{
-            background:filter===t?'#1a0000':'transparent', border:`1px solid ${filter===t?'#e05c6e':'#111'}`,
-            color:filter===t?'#e05c6e':'#555', fontFamily:'Courier New', fontSize:10,
+            background:filter===t?'var(--accent-bg)':'transparent', border:`1px solid ${filter===t?'var(--accent-hi)':'#111'}`,
+            color:filter===t?'var(--accent-hi)':'#555', fontFamily:'Courier New', fontSize:10,
             padding:'4px 10px', cursor:'pointer', textTransform:'uppercase',
           }}>{t}</button>
         ))}
@@ -106,13 +106,13 @@ export default function LootView() {
                   <td style={{ padding:'7px 12px', color:'var(--tx1)', borderRight:'1px solid #0a0a0a', fontSize:10, maxWidth:220, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{l.path}</td>
                   <td style={{ padding:'7px 12px', color:'#777', borderRight:'1px solid #0a0a0a', whiteSpace:'nowrap' }}>{l.size}</td>
                   <td style={{ padding:'7px 12px', color:'#5bb8d4', borderRight:'1px solid #0a0a0a' }}>{l.host}</td>
-                  <td style={{ padding:'7px 12px', color:'#e05c6e', borderRight:'1px solid #0a0a0a' }}>{l.agentId}</td>
+                  <td style={{ padding:'7px 12px', color:'var(--accent-hi)', borderRight:'1px solid #0a0a0a' }}>{l.agentId}</td>
                   <td style={{ padding:'7px 12px', color:'var(--tx2)', borderRight:'1px solid #0a0a0a', fontSize:10, whiteSpace:'nowrap' }}>{l.captured.slice(11)}</td>
                   <td style={{ padding:'7px 12px', borderRight:'1px solid #0a0a0a' }}>
                     <div style={{ display:'flex', gap:3, flexWrap:'wrap' }}>
                       {l.tags.map(t=>(
                         <span key={t} onClick={e=>{e.stopPropagation();setTag(t);}}
-                          style={{ fontSize:8, padding:'1px 5px', border:`1px solid ${t==='critical'?'#e05c6e44':'#1a1a1a'}`, color:t==='critical'?'#e05c6e':'#555', cursor:'pointer' }}>{t}</span>
+                          style={{ fontSize:8, padding:'1px 5px', border:`1px solid ${t==='critical'?'var(--accent-hi)44':'#1a1a1a'}`, color:t==='critical'?'var(--accent-hi)':'#555', cursor:'pointer' }}>{t}</span>
                       ))}
                     </div>
                   </td>
@@ -146,7 +146,7 @@ export default function LootView() {
               ].map(([k,v])=>(
                 <div key={k} style={{ marginBottom:7, paddingBottom:6, borderBottom:'1px solid #0a0a0a' }}>
                   <div style={{ fontSize:8, color:'var(--tx2)', textTransform:'uppercase', letterSpacing:1, marginBottom:2 }}>{k}</div>
-                  <div style={{ fontSize:10, color:k==='Agent'?'#e05c6e':k==='Host'?'#5bb8d4':k==='SHA256'?'#333':'#aaaaaa', wordBreak:'break-all' }}>{v}</div>
+                  <div style={{ fontSize:10, color:k==='Agent'?'var(--accent-hi)':k==='Host'?'#5bb8d4':k==='SHA256'?'#333':'#aaaaaa', wordBreak:'break-all' }}>{v}</div>
                 </div>
               ))}
               {selItem.notes && (
@@ -156,7 +156,7 @@ export default function LootView() {
                 </div>
               )}
               <div style={{ display:'flex', flexDirection:'column', gap:6, marginTop:10 }}>
-                <button style={{ background:'#0a1a0a', border:'1px solid #33a84a', color:'#33a84a', fontFamily:'Courier New', fontSize:11, padding:'7px', cursor:'pointer' }}>Download File</button>
+                <button style={{ background:'#0a0a0a', border:'1px solid #33a84a', color:'#33a84a', fontFamily:'Courier New', fontSize:11, padding:'7px', cursor:'pointer' }}>Download File</button>
                 <button style={{ background:'transparent', border:'1px solid #1a1a1a', color:'var(--tx1)', fontFamily:'Courier New', fontSize:11, padding:'7px', cursor:'pointer' }}>Copy Path</button>
                 <button style={{ background:'transparent', border:'1px solid #1a1a1a', color:'var(--tx2)', fontFamily:'Courier New', fontSize:11, padding:'7px', cursor:'pointer' }}>Delete from Loot</button>
               </div>
@@ -166,7 +166,7 @@ export default function LootView() {
       </div>
 
       <div style={{ padding:'3px 12px', background:'var(--inset2)', borderTop:'1px solid #0d0d0d', flexShrink:0, display:'flex', gap:20, fontSize:10 }}>
-        <span style={{ color:'#e05c6e' }}>{MOCK_LOOT.filter(l=>l.tags.includes('critical')).length} critical files</span>
+        <span style={{ color:'var(--accent-hi)' }}>{MOCK_LOOT.filter(l=>l.tags.includes('critical')).length} critical files</span>
         <span style={{ color:'#5bb8d4' }}>{totalSize} total</span>
         <span style={{ marginLeft:'auto', color:'var(--tx2)' }}>Wire: GET /api/loot — GET /api/loot/:id/download</span>
       </div>

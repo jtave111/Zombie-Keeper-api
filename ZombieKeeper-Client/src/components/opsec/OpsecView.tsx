@@ -9,8 +9,8 @@ interface Artifact {
   clean: CleanStatus; risk: 'low'|'med'|'high'|'critical';
 }
 
-const RISK_COL: Record<string,string> = { low:'#2a2a2a', med:'#c8a84b', high:'#d48b55', critical:'#e05c6e' };
-const CLEAN_COL: Record<CleanStatus,string> = { dirty:'#e05c6e', cleaning:'#d48b55', clean:'#33a84a', verified:'#5a96d4' };
+const RISK_COL: Record<string,string> = { low:'#2a2a2a', med:'var(--accent-hi)', high:'var(--accent-hi)', critical:'var(--accent-hi)' };
+const CLEAN_COL: Record<CleanStatus,string> = { dirty:'var(--accent-hi)', cleaning:'var(--accent-hi)', clean:'#33a84a', verified:'#5a96d4' };
 const TYPE_ICON: Record<ArtifactType,string> = { file:'f', registry:'r', process:'p', service:'s', network:'n', log:'l' };
 
 const INIT: Artifact[] = [
@@ -66,20 +66,20 @@ export default function OpsecView() {
         <div style={{ display:'flex', alignItems:'center', gap:8 }}>
           <span style={{ fontSize:9, color:'var(--tx2)', textTransform:'uppercase', letterSpacing:1 }}>OPSEC Score</span>
           <div style={{ width:80, height:6, background:'var(--inset)', borderRadius:3 }}>
-            <div style={{ height:'100%', width:`${score}%`, background: score>75?'#33a84a':score>40?'#d48b55':'#e05c6e', borderRadius:3, transition:'width 0.3s' }}/>
+            <div style={{ height:'100%', width:`${score}%`, background: score>75?'#33a84a':score>40?'var(--accent-hi)':'var(--accent-hi)', borderRadius:3, transition:'width 0.3s' }}/>
           </div>
-          <span style={{ fontSize:11, color: score>75?'#33a84a':score>40?'#d48b55':'#e05c6e', fontWeight:700 }}>{score}%</span>
+          <span style={{ fontSize:11, color: score>75?'#33a84a':score>40?'var(--accent-hi)':'var(--accent-hi)', fontWeight:700 }}>{score}%</span>
         </div>
 
         <div style={{ display:'flex', gap:12 }}>
-          <span style={{ fontSize:10, color:'#e05c6e' }}>dirty: {arts.filter(a=>a.clean==='dirty').length}</span>
-          <span style={{ fontSize:10, color:'#d48b55' }}>cleaning: {arts.filter(a=>a.clean==='cleaning').length}</span>
+          <span style={{ fontSize:10, color:'var(--accent-hi)' }}>dirty: {arts.filter(a=>a.clean==='dirty').length}</span>
+          <span style={{ fontSize:10, color:'var(--accent-hi)' }}>cleaning: {arts.filter(a=>a.clean==='cleaning').length}</span>
           <span style={{ fontSize:10, color:'#33a84a' }}>clean: {arts.filter(a=>a.clean==='clean').length}</span>
           <span style={{ fontSize:10, color:'#5a96d4' }}>verified: {arts.filter(a=>a.clean==='verified').length}</span>
         </div>
 
         {dirty > 0 && (
-          <button onClick={cleanAll} style={{ marginLeft:'auto', background:'#1a0000', border:'1px solid #e05c6e', color:'#e05c6e', fontFamily:'Courier New', fontSize:10, padding:'3px 14px', cursor:'pointer' }}>
+          <button onClick={cleanAll} style={{ marginLeft:'auto', background:'var(--accent-bg)', border:'1px solid var(--accent-hi)', color:'var(--accent-hi)', fontFamily:'Courier New', fontSize:10, padding:'3px 14px', cursor:'pointer' }}>
             [ CLEAN VISIBLE ({visible.filter(a=>a.clean==='dirty').length}) ]
           </button>
         )}
@@ -116,7 +116,7 @@ export default function OpsecView() {
               style={{
                 display:'grid', gridTemplateColumns:'70px 30px 100px 70px 1fr 70px 80px 80px',
                 padding:'6px 14px', borderBottom:'1px solid #0d0d0d', cursor:'pointer', alignItems:'center',
-                background: selected?.id===a.id?'#0d0d14':'transparent',
+                background: selected?.id===a.id?'#0d0d0d':'transparent',
               }}>
               <span style={{ fontSize:9, color:'var(--tx2)' }}>{a.id}</span>
               <span style={{ fontSize:10, color:'var(--tx1)', fontWeight:700 }}>{TYPE_ICON[a.type]}</span>
@@ -148,10 +148,10 @@ export default function OpsecView() {
             const hDirty = hArts.filter(a=>a.clean==='dirty');
             const hCrit  = hArts.filter(a=>a.risk==='critical'&&a.clean==='dirty');
             return (
-              <div key={h} style={{ marginBottom:10, padding:'6px 8px', background:'var(--inset2)', border:`1px solid ${hCrit.length>0?'#3a1220':'#1a1a1a'}` }}>
-                <div style={{ fontSize:10, color: hCrit.length>0?'#e05c6e':'#555', marginBottom:3, fontWeight:700 }}>{h.split('-')[1]||h}</div>
+              <div key={h} style={{ marginBottom:10, padding:'6px 8px', background:'var(--inset2)', border:`1px solid ${hCrit.length>0?'var(--b2)':'#1a1a1a'}` }}>
+                <div style={{ fontSize:10, color: hCrit.length>0?'var(--accent-hi)':'#555', marginBottom:3, fontWeight:700 }}>{h.split('-')[1]||h}</div>
                 <div style={{ fontSize:9, color:'var(--tx2)' }}>{hDirty.length}/{hArts.length} unclean</div>
-                {hCrit.length>0&&<div style={{ fontSize:9, color:'#e05c6e', marginTop:2 }}>{hCrit.length} critical!</div>}
+                {hCrit.length>0&&<div style={{ fontSize:9, color:'var(--accent-hi)', marginTop:2 }}>{hCrit.length} critical!</div>}
                 <div style={{ height:3, background:'var(--inset)', marginTop:4, borderRadius:2 }}>
                   <div style={{ height:'100%', width:`${((hArts.length-hDirty.length)/hArts.length)*100}%`, background:'#33a84a', borderRadius:2 }}/>
                 </div>
@@ -175,7 +175,7 @@ export default function OpsecView() {
       {/* Detail bar */}
       {selected && (
         <div style={{ padding:'6px 14px', background:'var(--inset2)', borderTop:'1px solid #1a1a1a', flexShrink:0, display:'flex', gap:16, fontSize:10 }}>
-          <span style={{ color:'#e05c6e' }}>{selected.id}</span>
+          <span style={{ color:'var(--accent-hi)' }}>{selected.id}</span>
           <span style={{ color:'#777' }}>{selected.path}</span>
           <span style={{ color:'var(--tx2)' }}>{selected.detail}</span>
           <span style={{ color:'var(--tx2)', marginLeft:'auto' }}>{selected.ts}</span>

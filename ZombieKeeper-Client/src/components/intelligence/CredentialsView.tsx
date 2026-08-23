@@ -18,12 +18,12 @@ const MOCK_CREDS: Credential[] = [];
 
 const TYPE_COL: Record<string, string> = {
   'SSH Key':       '#33a84a',
-  'Password':      '#e05c6e',
-  'Hash (NTLM)':   '#d48b55',
-  'Hash (SHA256)': '#d48b55',
+  'Password':      'var(--accent-hi)',
+  'Hash (NTLM)':   'var(--accent-hi)',
+  'Hash (SHA256)': 'var(--accent-hi)',
   'API Key':       '#5bb8d4',
   'Token':         '#a07fd4',
-  'Certificate':   '#c8a84b',
+  'Certificate':   'var(--accent-hi)',
 };
 
 export default function CredentialsView() {
@@ -47,10 +47,10 @@ export default function CredentialsView() {
         {[
           { l:'Total Credentials', v:MOCK_CREDS.length,                             c:'#e8e8e8' },
           { l:'Verified',          v:MOCK_CREDS.filter(c=>c.verified).length,       c:'#33a84a' },
-          { l:'Unverified',        v:MOCK_CREDS.filter(c=>!c.verified).length,      c:'#d48b55' },
+          { l:'Unverified',        v:MOCK_CREDS.filter(c=>!c.verified).length,      c:'var(--accent-hi)' },
           { l:'SSH Keys',          v:MOCK_CREDS.filter(c=>c.type==='SSH Key').length,     c:'#33a84a' },
-          { l:'Passwords',         v:MOCK_CREDS.filter(c=>c.type==='Password').length,    c:'#e05c6e' },
-          { l:'Hashes',            v:MOCK_CREDS.filter(c=>c.type.startsWith('Hash')).length, c:'#d48b55' },
+          { l:'Passwords',         v:MOCK_CREDS.filter(c=>c.type==='Password').length,    c:'var(--accent-hi)' },
+          { l:'Hashes',            v:MOCK_CREDS.filter(c=>c.type.startsWith('Hash')).length, c:'var(--accent-hi)' },
           { l:'Tokens / Keys',     v:MOCK_CREDS.filter(c=>['API Key','Token'].includes(c.type)).length, c:'#5bb8d4' },
         ].map((s,i) => (
           <div key={i} style={{ flex:1, padding:'10px 14px', borderRight:'1px solid #111', background:'var(--inset2)' }}>
@@ -67,14 +67,14 @@ export default function CredentialsView() {
         <span style={{ color:'var(--tx3)' }}>|</span>
         {types.map(t => (
           <button key={t} onClick={()=>setFilter(t)} style={{
-            background: filter===t?'#1a0000':'transparent', border:`1px solid ${filter===t?'#e05c6e':'#111'}`,
-            color: filter===t?'#e05c6e':'#555', fontFamily:'Courier New', fontSize:10,
+            background: filter===t?'var(--accent-bg)':'transparent', border:`1px solid ${filter===t?'var(--accent-hi)':'#111'}`,
+            color: filter===t?'var(--accent-hi)':'#555', fontFamily:'Courier New', fontSize:10,
             padding:'4px 10px', cursor:'pointer', textTransform:'uppercase',
           }}>{t}</button>
         ))}
         <div style={{ marginLeft:'auto', display:'flex', gap:6 }}>
           <button style={{ background:'transparent', border:'1px solid #111', color:'#777', fontFamily:'Courier New', fontSize:10, padding:'4px 10px', cursor:'pointer' }}>Export CSV</button>
-          <button style={{ background:'#1a0000', border:'1px solid #e05c6e', color:'#e05c6e', fontFamily:'Courier New', fontSize:10, padding:'4px 10px', cursor:'pointer' }}>+ Add Manual</button>
+          <button style={{ background:'var(--accent-bg)', border:'1px solid var(--accent-hi)', color:'var(--accent-hi)', fontFamily:'Courier New', fontSize:10, padding:'4px 10px', cursor:'pointer' }}>+ Add Manual</button>
         </div>
       </div>
 
@@ -106,10 +106,10 @@ export default function CredentialsView() {
                     {'•'.repeat(Math.min(c.secret.length, 20))}
                   </td>
                   <td style={{ padding:'7px 12px', color:'var(--tx1)', borderRight:'1px solid #0a0a0a', maxWidth:180, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{c.source}</td>
-                  <td style={{ padding:'7px 12px', color:'#e05c6e', borderRight:'1px solid #0a0a0a' }}>{c.agentId}</td>
+                  <td style={{ padding:'7px 12px', color:'var(--accent-hi)', borderRight:'1px solid #0a0a0a' }}>{c.agentId}</td>
                   <td style={{ padding:'7px 12px', color:'var(--tx2)', borderRight:'1px solid #0a0a0a', fontSize:10, whiteSpace:'nowrap' }}>{c.captured.slice(11)}</td>
                   <td style={{ padding:'7px 12px', borderRight:'1px solid #0a0a0a', textAlign:'center' }}>
-                    <span style={{ color:c.verified?'#33a84a':'#d48b55' }}>{c.verified?'✓':'?'}</span>
+                    <span style={{ color:c.verified?'#33a84a':'var(--accent-hi)' }}>{c.verified?'✓':'?'}</span>
                   </td>
                   <td style={{ padding:'7px 12px' }}>
                     <div style={{ display:'flex', gap:4 }}>
@@ -133,7 +133,7 @@ export default function CredentialsView() {
             <div style={{ flex:1, overflowY:'auto', padding:'14px' }}>
               <div style={{ marginBottom:16 }}>
                 <span style={{ fontSize:10, padding:'3px 10px', border:`1px solid ${TYPE_COL[selCred.type]}`, color:TYPE_COL[selCred.type], background:`${TYPE_COL[selCred.type]}11` }}>{selCred.type}</span>
-                {selCred.verified && <span style={{ marginLeft:8, fontSize:10, padding:'3px 8px', border:'1px solid #33a84a', color:'#33a84a', background:'#0a1a0a' }}>VERIFIED</span>}
+                {selCred.verified && <span style={{ marginLeft:8, fontSize:10, padding:'3px 8px', border:'1px solid #33a84a', color:'#33a84a', background:'#0a0a0a' }}>VERIFIED</span>}
               </div>
 
               {[
@@ -145,18 +145,18 @@ export default function CredentialsView() {
               ].map(([k,v])=>(
                 <div key={k} style={{ marginBottom:8, padding:'6px 0', borderBottom:'1px solid #0d0d0d' }}>
                   <div style={{ fontSize:8, color:'var(--tx2)', textTransform:'uppercase', letterSpacing:1, marginBottom:3 }}>{k}</div>
-                  <div style={{ fontSize:11, color: k==='Agent'?'#e05c6e':k==='Host'?'#5bb8d4':'#aaaaaa' }}>{v}</div>
+                  <div style={{ fontSize:11, color: k==='Agent'?'var(--accent-hi)':k==='Host'?'#5bb8d4':'#aaaaaa' }}>{v}</div>
                 </div>
               ))}
 
               <div style={{ marginBottom:8, padding:'6px 0', borderBottom:'1px solid #0d0d0d' }}>
                 <div style={{ fontSize:8, color:'var(--tx2)', textTransform:'uppercase', letterSpacing:1, marginBottom:3 }}>Secret</div>
                 {showSecret ? (
-                  <div style={{ fontSize:10, color:'#e05c6e', fontFamily:'Courier New', background:'var(--inset2)', padding:'8px', border:'1px solid #1a0000', wordBreak:'break-all', maxHeight:120, overflowY:'auto' }}>
+                  <div style={{ fontSize:10, color:'var(--accent-hi)', fontFamily:'Courier New', background:'var(--inset2)', padding:'8px', border:'1px solid var(--accent-bg)', wordBreak:'break-all', maxHeight:120, overflowY:'auto' }}>
                     {selCred.secret}
                   </div>
                 ) : (
-                  <button onClick={()=>setShowSecret(true)} style={{ background:'#1a0000', border:'1px solid #e05c6e', color:'#e05c6e', fontFamily:'Courier New', fontSize:10, padding:'5px 12px', cursor:'pointer' }}>
+                  <button onClick={()=>setShowSecret(true)} style={{ background:'var(--accent-bg)', border:'1px solid var(--accent-hi)', color:'var(--accent-hi)', fontFamily:'Courier New', fontSize:10, padding:'5px 12px', cursor:'pointer' }}>
                     ⚠ Reveal Secret
                   </button>
                 )}
@@ -170,8 +170,8 @@ export default function CredentialsView() {
               )}
 
               <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
-                <button style={{ background:'#1a0000', border:'1px solid #e05c6e', color:'#e05c6e', fontFamily:'Courier New', fontSize:11, padding:'7px', cursor:'pointer' }}>Use for SSH</button>
-                <button style={{ background:'#0a1a0a', border:'1px solid #33a84a', color:'#33a84a', fontFamily:'Courier New', fontSize:11, padding:'7px', cursor:'pointer' }}>Mark Verified</button>
+                <button style={{ background:'var(--accent-bg)', border:'1px solid var(--accent-hi)', color:'var(--accent-hi)', fontFamily:'Courier New', fontSize:11, padding:'7px', cursor:'pointer' }}>Use for SSH</button>
+                <button style={{ background:'#0a0a0a', border:'1px solid #33a84a', color:'#33a84a', fontFamily:'Courier New', fontSize:11, padding:'7px', cursor:'pointer' }}>Mark Verified</button>
                 <button style={{ background:'transparent', border:'1px solid #1a1a1a', color:'var(--tx1)', fontFamily:'Courier New', fontSize:11, padding:'7px', cursor:'pointer' }}>Copy to Clipboard</button>
                 <button style={{ background:'transparent', border:'1px solid #1a1a1a', color:'var(--tx2)', fontFamily:'Courier New', fontSize:11, padding:'7px', cursor:'pointer' }}>Delete</button>
               </div>
@@ -183,7 +183,7 @@ export default function CredentialsView() {
       {/* STATUS */}
       <div style={{ padding:'3px 12px', background:'var(--inset2)', borderTop:'1px solid #0d0d0d', flexShrink:0, display:'flex', gap:20, fontSize:10 }}>
         <span style={{ color:'#33a84a' }}>{creds.filter(c=>c.verified).length} verified</span>
-        <span style={{ color:'#d48b55' }}>{creds.filter(c=>!c.verified).length} unverified</span>
+        <span style={{ color:'var(--accent-hi)' }}>{creds.filter(c=>!c.verified).length} unverified</span>
         <span style={{ marginLeft:'auto', color:'var(--tx2)' }}>Wire: GET /api/credentials — POST /api/credentials/import</span>
       </div>
     </div>

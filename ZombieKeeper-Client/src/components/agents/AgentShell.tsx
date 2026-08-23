@@ -105,18 +105,18 @@ export default function AgentShell({ agent, onClose }: { agent: Agent; onClose: 
   };
 
   const LINE_COLOR: Record<string, string> = {
-    cmd:  '#cccccc', ok: '#33a84a', err: '#e05c6e',
-    warn: '#d48b55', sys: '#555555', info: '#5bb8d4',
+    cmd:  '#cccccc', ok: '#33a84a', err: 'var(--accent-hi)',
+    warn: 'var(--accent-hi)', sys: '#555555', info: '#5bb8d4',
   };
 
   const WS_INDICATOR: Record<WsStatus, { color: string; label: string }> = {
-    connecting:   { color: '#d48b55', label: 'CONNECTING' },
+    connecting:   { color: 'var(--accent-hi)', label: 'CONNECTING' },
     connected:    { color: '#33a84a', label: 'CONNECTED'  },
     disconnected: { color: '#444444', label: 'DISCONNECTED' },
-    error:        { color: '#e05c6e', label: 'ERROR'      },
+    error:        { color: 'var(--accent-hi)', label: 'ERROR'      },
   };
 
-  const privColor = agent.priv === 'ROOT' ? '#e05c6e' : '#888888';
+  const privColor = agent.priv === 'ROOT' ? 'var(--accent-hi)' : '#888888';
 
   return (
     <div style={{ display:'flex', flexDirection:'column', height:'100%', overflow:'hidden', background:'var(--inset2)' }}>
@@ -148,7 +148,7 @@ export default function AgentShell({ agent, onClose }: { agent: Agent; onClose: 
             padding:'5px 16px', fontSize:12, fontFamily:'Courier New',
             color: tab === t ? 'var(--tx0)' : 'var(--tx2)',
             borderRight:'1px solid #1a1a1a',
-            borderTop: tab === t ? '2px solid #e05c6e' : '2px solid transparent',
+            borderTop: tab === t ? '2px solid var(--accent-hi)' : '2px solid transparent',
             background: tab === t ? '#080808' : 'transparent',
             cursor:'pointer',
           }}>
@@ -171,7 +171,7 @@ export default function AgentShell({ agent, onClose }: { agent: Agent; onClose: 
           </div>
 
           <div style={{ display:'flex', alignItems:'center', gap:8, padding:'8px 14px', borderTop:'1px solid #1a1a1a', background:'var(--inset2)', flexShrink:0 }}>
-            <span style={{ color:'#e05c6e', fontFamily:'Courier New', fontSize:12, whiteSpace:'nowrap', fontWeight:700 }}>
+            <span style={{ color:'var(--accent-hi)', fontFamily:'Courier New', fontSize:12, whiteSpace:'nowrap', fontWeight:700 }}>
               {agent.user}@{agent.hostname} $&gt;
             </span>
             <input ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKey}
@@ -206,7 +206,7 @@ export default function AgentShell({ agent, onClose }: { agent: Agent; onClose: 
                   onMouseEnter={e => (e.currentTarget.style.background='#111')}
                   onMouseLeave={e => (e.currentTarget.style.background='transparent')}>
                   {row.map((cell, ci) => (
-                    <td key={ci} style={{ padding:'5px 12px', color: row[5]==='S <-- ZK' ? '#e05c6e' : ci===2?'#d48b55':ci===3?'#888':'#888', borderRight:'1px solid #111' }}>
+                    <td key={ci} style={{ padding:'5px 12px', color: row[5]==='S <-- ZK' ? 'var(--accent-hi)' : ci===2?'var(--accent-hi)':ci===3?'#888':'#888', borderRight:'1px solid #111' }}>
                       {cell}
                     </td>
                   ))}
@@ -247,7 +247,7 @@ export default function AgentShell({ agent, onClose }: { agent: Agent; onClose: 
                     <tr key={row[0]} style={{ borderBottom:'1px solid #111', cursor:'pointer' }}
                       onMouseEnter={e=>(e.currentTarget.style.background='#111')}
                       onMouseLeave={e=>(e.currentTarget.style.background='transparent')}>
-                      <td style={{ padding:'5px 12px', color: row[2]==='dir'?'#5bb8d4':row[0].includes('password')||row[0].includes('id_rsa')?'#e05c6e':'#888', borderRight:'1px solid #111' }}>{row[0]}</td>
+                      <td style={{ padding:'5px 12px', color: row[2]==='dir'?'#5bb8d4':row[0].includes('password')||row[0].includes('id_rsa')?'var(--accent-hi)':'#888', borderRight:'1px solid #111' }}>{row[0]}</td>
                       <td style={{ padding:'5px 12px', color:'var(--tx1)', borderRight:'1px solid #111' }}>{row[1]}</td>
                       <td style={{ padding:'5px 12px', color:'var(--tx1)', borderRight:'1px solid #111' }}>{row[2]}</td>
                       <td style={{ padding:'5px 12px', color:'var(--tx1)', borderRight:'1px solid #111' }}>{row[3]}</td>
@@ -267,7 +267,7 @@ export default function AgentShell({ agent, onClose }: { agent: Agent; onClose: 
           <div style={{ display:'flex', gap:8, marginBottom:16 }}>
             <input style={{ background:'var(--inset2)', border:'1px solid #2a2a2a', color:'#cccccc', fontFamily:'Courier New', fontSize:12, padding:'5px 8px', width:120 }} placeholder="Local port" />
             <input style={{ background:'var(--inset2)', border:'1px solid #2a2a2a', color:'#cccccc', fontFamily:'Courier New', fontSize:12, padding:'5px 8px', flex:1 }} placeholder="Remote host:port" />
-            <button style={{ background:'#1a0000', border:'1px solid #e05c6e', color:'#e05c6e', fontFamily:'Courier New', fontSize:11, padding:'5px 14px', cursor:'pointer' }}>Add Rule</button>
+            <button style={{ background:'var(--accent-bg)', border:'1px solid var(--accent-hi)', color:'var(--accent-hi)', fontFamily:'Courier New', fontSize:11, padding:'5px 14px', cursor:'pointer' }}>Add Rule</button>
           </div>
           <table style={{ width:'100%', borderCollapse:'collapse', fontSize:12 }}>
             <thead>
@@ -282,7 +282,7 @@ export default function AgentShell({ agent, onClose }: { agent: Agent; onClose: 
                 <td style={{ padding:'5px 12px', color:'#5bb8d4' }}>:8080</td>
                 <td style={{ padding:'5px 12px', color:'#888' }}>10.0.0.1:80</td>
                 <td style={{ padding:'5px 12px', color:'#33a84a' }}>[*] ACTIVE</td>
-                <td style={{ padding:'5px 12px' }}><button style={{ background:'transparent', border:'1px solid #e05c6e', color:'#e05c6e', fontFamily:'Courier New', fontSize:10, padding:'1px 8px', cursor:'pointer' }}>Stop</button></td>
+                <td style={{ padding:'5px 12px' }}><button style={{ background:'transparent', border:'1px solid var(--accent-hi)', color:'var(--accent-hi)', fontFamily:'Courier New', fontSize:10, padding:'1px 8px', cursor:'pointer' }}>Stop</button></td>
               </tr>
             </tbody>
           </table>
@@ -303,7 +303,7 @@ export default function AgentShell({ agent, onClose }: { agent: Agent; onClose: 
                 {card.rows.map(([k,v]) => (
                   <div key={k} style={{ display:'flex', padding:'6px 12px', borderBottom:'1px solid #111' }}>
                     <span style={{ color:'var(--tx1)', minWidth:90 }}>{k}:</span>
-                    <span style={{ color: k==='Privilege'&&v==='ROOT'?'#e05c6e':k==='IP'?'#5bb8d4':k==='Shell'?WS_INDICATOR[wsStatus].color:'#888' }}>{v}</span>
+                    <span style={{ color: k==='Privilege'&&v==='ROOT'?'var(--accent-hi)':k==='IP'?'#5bb8d4':k==='Shell'?WS_INDICATOR[wsStatus].color:'#888' }}>{v}</span>
                   </div>
                 ))}
               </div>

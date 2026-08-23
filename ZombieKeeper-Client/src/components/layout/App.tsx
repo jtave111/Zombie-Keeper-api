@@ -498,7 +498,6 @@ export default function App() {
 
       {/* ── Status bar ── */}
       <div className="ide-status">
-        <span className="status-seg on">● C2 ONLINE</span>
         <span className="status-seg">0.0.0.0:4444</span>
         <span className="status-seg">DB: CONNECTED</span>
         <span className="status-seg">
@@ -574,7 +573,7 @@ export default function App() {
         >
           <div
             onClick={e => e.stopPropagation()}
-            style={{ width:380, background:'var(--panel)', border:'1px solid var(--red)', boxShadow:'0 0 40px rgba(204,68,68,0.25)' }}
+            style={{ width:380, background:'var(--panel)', border:'1px solid var(--red)', boxShadow:'0 0 40px rgba(115,123,132,0.25)' }}
           >
             <div style={{ padding:'10px 14px', borderBottom:'1px solid var(--red3)', display:'flex', alignItems:'center', gap:8 }}>
               <span style={{ color:'var(--red-hi)', fontSize:12, fontWeight:700 }}>⊘ Kill All Agents</span>

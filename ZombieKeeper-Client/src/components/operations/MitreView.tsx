@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 type TechStatus = 'none'|'planned'|'active'|'done';
 const CYCLE: TechStatus[] = ['none','planned','active','done'];
-const S_COLOR: Record<TechStatus,string> = { none:'#111', planned:'#1e1a00', active:'#1a0000', done:'#091609' };
-const S_TEXT:  Record<TechStatus,string> = { none:'#2a2a2a', planned:'#c8a84b', active:'#e05c6e', done:'#33a84a' };
+const S_COLOR: Record<TechStatus,string> = { none:'#111', planned:'#1e1a00', active:'var(--accent-bg)', done:'#090909' };
+const S_TEXT:  Record<TechStatus,string> = { none:'#2a2a2a', planned:'var(--accent-hi)', active:'var(--accent-hi)', done:'#33a84a' };
 const S_LABEL: Record<TechStatus,string> = { none:'—', planned:'PLANNED', active:'ACTIVE', done:'DONE' };
 
 const MATRIX: { id:string; tactic:string; techniques:{ id:string; name:string }[] }[] = [
@@ -111,7 +111,7 @@ export default function MitreView() {
           {MATRIX.map(col => (
             <div key={col.id} style={{ width:130, flexShrink:0 }}>
               <div style={{ background:'var(--inset)', border:'1px solid #222', padding:'5px 7px', marginBottom:4 }}>
-                <div style={{ fontSize:8, color:'#e05c6e', letterSpacing:1, textTransform:'uppercase', marginBottom:1 }}>{col.id}</div>
+                <div style={{ fontSize:8, color:'var(--accent-hi)', letterSpacing:1, textTransform:'uppercase', marginBottom:1 }}>{col.id}</div>
                 <div style={{ fontSize:10, color:'#888', fontWeight:700, lineHeight:1.3 }}>{col.tactic}</div>
               </div>
               {col.techniques.map(t => {
@@ -141,7 +141,7 @@ export default function MitreView() {
       {/* Detail bar */}
       {detail && (
         <div style={{ padding:'6px 14px', background:'var(--inset2)', borderTop:'1px solid #1a1a1a', display:'flex', gap:16, alignItems:'center', flexShrink:0, fontSize:10 }}>
-          <span style={{ color:'#e05c6e' }}>{detail.id}</span>
+          <span style={{ color:'var(--accent-hi)' }}>{detail.id}</span>
           <span style={{ color:'#777' }}>{detail.name}</span>
           <span style={{ color:'var(--tx2)' }}>{detail.tactic}</span>
           <span style={{ color:S_TEXT[techs[detail.id]||'none'], marginLeft:'auto' }}>{S_LABEL[techs[detail.id]||'none']}</span>

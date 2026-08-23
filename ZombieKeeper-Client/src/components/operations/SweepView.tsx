@@ -30,7 +30,7 @@ interface AgentResult {
 }
 
 const S_COL: Record<ResultStatus,string> = {
-  pending:'#333', running:'#d48b55', done:'#33a84a', error:'#e05c6e', offline:'#2a2a2a',
+  pending:'#333', running:'var(--accent-hi)', done:'#33a84a', error:'var(--accent-hi)', offline:'#2a2a2a',
 };
 
 export default function SweepView() {
@@ -92,9 +92,9 @@ export default function SweepView() {
           {(['all','online','windows','linux','root'] as const).map(m => (
             <div key={m} onClick={()=>setMode(m)} style={{
               padding:'3px 8px', fontSize:11, cursor:'pointer', marginBottom:2,
-              color: mode===m ? '#e05c6e' : '#444',
-              background: mode===m ? '#1a0000' : 'transparent',
-              border: mode===m ? '1px solid #3d1520' : '1px solid transparent',
+              color: mode===m ? 'var(--accent-hi)' : '#444',
+              background: mode===m ? 'var(--accent-bg)' : 'transparent',
+              border: mode===m ? '1px solid var(--b2)' : '1px solid transparent',
             }}>{m.toUpperCase()}</div>
           ))}
         </div>
@@ -104,7 +104,7 @@ export default function SweepView() {
             <div key={a.id} onClick={()=>toggle(a.id)} style={{
               padding:'5px 10px', borderBottom:'1px solid #111', cursor:'pointer',
               opacity: a.status === 'OFFLINE' ? 0.3 : 1,
-              background: selected.has(a.id) ? '#0a0a12' : 'transparent',
+              background: selected.has(a.id) ? '#0a0a0a' : 'transparent',
             }}>
               <div style={{ display:'flex', gap:6, alignItems:'center' }}>
                 <div style={{ width:5, height:5, borderRadius:'50%', flexShrink:0,
@@ -132,9 +132,9 @@ export default function SweepView() {
               placeholder="command to execute on all targets..."
               style={{ flex:1, background:'var(--inset2)', border:'1px solid #1e1e1e', color:'#cccccc', fontFamily:'Courier New', fontSize:12, padding:'6px 10px', outline:'none' }}/>
             <button onClick={sweep} disabled={sweeping||!cmd.trim()||targets.length===0} style={{
-              background: sweeping?'#0d0d0d':'#1a0000',
-              border:`1px solid ${sweeping?'#222':'#e05c6e'}`,
-              color: sweeping?'#333':'#e05c6e',
+              background: sweeping?'#0d0d0d':'var(--accent-bg)',
+              border:`1px solid ${sweeping?'#222':'var(--accent-hi)'}`,
+              color: sweeping?'#333':'var(--accent-hi)',
               fontFamily:'Courier New', fontSize:11, fontWeight:700,
               padding:'6px 18px', cursor: sweeping?'default':'pointer', letterSpacing:1,
             }}>
@@ -171,11 +171,11 @@ export default function SweepView() {
                   <span style={{ fontSize:9, color:S_COL[r.status], fontWeight:700, textTransform:'uppercase' }}>{r.status}</span>
                 </div>
               </div>
-              <div style={{ background:'var(--inset2)', border:'1px solid #111', padding:'6px 8px', minHeight:40, fontFamily:'Courier New', fontSize:10, color: r.status==='error'?'#e05c6e':'#555', whiteSpace:'pre-wrap', wordBreak:'break-all' }}>
+              <div style={{ background:'var(--inset2)', border:'1px solid #111', padding:'6px 8px', minHeight:40, fontFamily:'Courier New', fontSize:10, color: r.status==='error'?'var(--accent-hi)':'#555', whiteSpace:'pre-wrap', wordBreak:'break-all' }}>
                 {r.status==='running' ? '...' : r.status==='pending' ? '' : r.output || '(no output)'}
               </div>
               {r.exitCode !== null && (
-                <div style={{ fontSize:9, color: r.exitCode===0?'#33a84a':'#e05c6e', marginTop:4 }}>
+                <div style={{ fontSize:9, color: r.exitCode===0?'#33a84a':'var(--accent-hi)', marginTop:4 }}>
                   exit: {r.exitCode} · {r.os} · {r.priv}
                 </div>
               )}

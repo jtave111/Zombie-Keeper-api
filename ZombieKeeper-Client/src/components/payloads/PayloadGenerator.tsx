@@ -62,7 +62,7 @@ function Toggle({ label, desc, value, onChange }: { label:string; desc:string; v
         <div style={{ fontSize:11, color:'#888', fontFamily:'Courier New' }}>{label}</div>
         <div style={{ fontSize:9, color:'var(--tx2)', fontFamily:'Courier New', marginTop:1 }}>{desc}</div>
       </div>
-      <button onClick={()=>onChange(!value)} style={{ background:value?'#1a0000':'#0d0d0d', border:`1px solid ${value?'#e05c6e':'#222'}`, color:value?'#e05c6e':'#444', fontFamily:'Courier New', fontSize:9, fontWeight:700, padding:'3px 10px', cursor:'pointer', minWidth:40 }}>
+      <button onClick={()=>onChange(!value)} style={{ background:value?'var(--accent-bg)':'#0d0d0d', border:`1px solid ${value?'var(--accent-hi)':'#222'}`, color:value?'var(--accent-hi)':'#444', fontFamily:'Courier New', fontSize:9, fontWeight:700, padding:'3px 10px', cursor:'pointer', minWidth:40 }}>
         {value?'ON':'OFF'}
       </button>
     </div>
@@ -123,7 +123,7 @@ export default function PayloadGenerator() {
               flex:1, padding:'6px 0', textAlign:'center', fontSize:9, fontFamily:'Courier New',
               textTransform:'uppercase', letterSpacing:'0.8px', cursor:'pointer',
               color: tab===t?'#cccccc':'#333',
-              borderTop: tab===t?'2px solid #e05c6e':'2px solid transparent',
+              borderTop: tab===t?'2px solid var(--accent-hi)':'2px solid transparent',
               background: tab===t?'#0d0d0d':'transparent',
             }}>{t}</div>
           ))}
@@ -231,9 +231,9 @@ export default function PayloadGenerator() {
         {/* Generate button */}
         <div style={{ padding:'12px 14px', borderTop:'1px solid #1a1a1a', flexShrink:0 }}>
           <button onClick={generate} disabled={building} style={{
-            width:'100%', background:building?'#0d0d0d':'#1a0000',
-            border:`1px solid ${building?'#222':'#e05c6e'}`,
-            color:building?'#333':'#e05c6e', fontFamily:'Courier New',
+            width:'100%', background:building?'#0d0d0d':'var(--accent-bg)',
+            border:`1px solid ${building?'#222':'var(--accent-hi)'}`,
+            color:building?'#333':'var(--accent-hi)', fontFamily:'Courier New',
             fontSize:12, fontWeight:700, padding:'10px', cursor:building?'default':'pointer', letterSpacing:1,
           }}>
             {building ? '[ BUILDING... ]' : '[ GENERATE PAYLOAD ]'}
@@ -245,7 +245,7 @@ export default function PayloadGenerator() {
       <div style={{ flex:1, display:'flex', flexDirection:'column', background:'var(--inset2)', overflow:'hidden' }}>
         <div style={{ padding:'5px 12px', background:'var(--inset)', borderBottom:'1px solid #1a1a1a', fontSize:10, color:'var(--tx2)', textTransform:'uppercase', letterSpacing:1, flexShrink:0, display:'flex', alignItems:'center', gap:10 }}>
           <span>Build Output</span>
-          {building && <span style={{ color:'#d48b55' }}>● BUILDING</span>}
+          {building && <span style={{ color:'var(--accent-hi)' }}>● BUILDING</span>}
           {built && !building && <span style={{ color:'#33a84a' }}>● SUCCESS</span>}
         </div>
         <div style={{ flex:1, overflowY:'auto', padding:'14px', fontFamily:'Courier New', fontSize:12 }}>
@@ -275,8 +275,8 @@ export default function PayloadGenerator() {
                 ))}
               </div>
               <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
-                {[['Download Binary','#e05c6e'],['Copy Base64','#777'],['Get Stage URL','#777'],['One-liner (PS)','#777'],['One-liner (curl)','#777']].map(([label,col])=>(
-                  <button key={label} style={{ background:'var(--inset2)', border:`1px solid ${col==='#e05c6e'?'#e05c6e':'#222'}`, color:col, fontFamily:'Courier New', fontSize:11, padding:'5px 14px', cursor:'pointer' }}>{label}</button>
+                {[['Download Binary','var(--accent-hi)'],['Copy Base64','#777'],['Get Stage URL','#777'],['One-liner (PS)','#777'],['One-liner (curl)','#777']].map(([label,col])=>(
+                  <button key={label} style={{ background:'var(--inset2)', border:`1px solid ${col==='var(--accent-hi)'?'var(--accent-hi)':'#222'}`, color:col, fontFamily:'Courier New', fontSize:11, padding:'5px 14px', cursor:'pointer' }}>{label}</button>
                 ))}
               </div>
             </div>

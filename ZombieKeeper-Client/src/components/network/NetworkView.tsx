@@ -4,17 +4,17 @@ import ScannerView from '../scanner/ScannerView';
 
 type Tab = 'topology' | 'scanner' | 'admin';
 
-const SEV_COL: Record<string,string> = { CRITICAL:'#e05c6e', HIGH:'#d48b55', MEDIUM:'#c8a84b', LOW:'#5bb8d4', INFO:'#444' };
-const SEV_BG:  Record<string,string> = { CRITICAL:'#140408', HIGH:'#140d04', MEDIUM:'#141004', LOW:'#041014', INFO:'#0d0d0d' };
+const SEV_COL: Record<string,string> = { CRITICAL:'var(--accent-hi)', HIGH:'var(--accent-hi)', MEDIUM:'var(--accent-hi)', LOW:'#5bb8d4', INFO:'#444' };
+const SEV_BG:  Record<string,string> = { CRITICAL:'#0a0b0d', HIGH:'#141414', MEDIUM:'#141414', LOW:'#050505', INFO:'#0d0d0d' };
 
 function nodeRiskColor(n: NetworkNode) {
-  if (n.vulnerabilityScore >= 70) return '#e05c6e';
-  if (n.vulnerabilityScore >= 40) return '#d48b55';
+  if (n.vulnerabilityScore >= 70) return 'var(--accent-hi)';
+  if (n.vulnerabilityScore >= 40) return 'var(--accent-hi)';
   return '#33a84a';
 }
 
 function ScoreBar({ score }: { score: number }) {
-  const col = score >= 70 ? '#e05c6e' : score >= 40 ? '#d48b55' : '#33a84a';
+  const col = score >= 70 ? 'var(--accent-hi)' : score >= 40 ? 'var(--accent-hi)' : '#33a84a';
   return (
     <div style={{ display:'flex', alignItems:'center', gap:8 }}>
       <div style={{ width:80, height:3, background:'var(--inset2)', position:'relative' }}>
@@ -79,8 +79,8 @@ export default function NetworkView() {
         <span style={{ fontSize:10, color:'var(--tx3)', textTransform:'uppercase', letterSpacing:1, marginRight:10, fontFamily:'Courier New' }}>Network</span>
         {(['topology','scanner','admin'] as Tab[]).map(t=>(
           <button key={t} onClick={()=>{ setTab(t); if(t!=='scanner') setScanNode(null); }} style={{
-            background:tab===t?'#1a0000':'transparent', border:`1px solid ${tab===t?'#e05c6e':'#111'}`,
-            color:tab===t?'#e05c6e':'#333', fontFamily:'Courier New', fontSize:11,
+            background:tab===t?'var(--accent-bg)':'transparent', border:`1px solid ${tab===t?'var(--accent-hi)':'#111'}`,
+            color:tab===t?'var(--accent-hi)':'#333', fontFamily:'Courier New', fontSize:11,
             padding:'4px 14px', cursor:'pointer', textTransform:'uppercase', letterSpacing:0.8,
           }}>{t}{t==='scanner'&&scanNode?' ('+scanNode.ipv4+')':''}</button>
         ))}
@@ -103,11 +103,11 @@ export default function NetworkView() {
         <div style={{ flex:1, display:'flex', overflow:'hidden' }}>
 
           {/* SVG */}
-          <div style={{ flex:1, position:'relative', overflow:'hidden', background:'#050508' }}>
+          <div style={{ flex:1, position:'relative', overflow:'hidden', background:'#050505' }}>
             <svg ref={svgRef} width="100%" height="100%" style={{ display:'block' }}>
               <defs>
                 <radialGradient id="tbg" cx="50%" cy="50%" r="55%">
-                  <stop offset="0%" stopColor="#08100c"/><stop offset="100%" stopColor="#030508"/>
+                  <stop offset="0%" stopColor="#080808"/><stop offset="100%" stopColor="#050505"/>
                 </radialGradient>
                 <filter id="glow3"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
                 <filter id="glow6"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
@@ -117,7 +117,7 @@ export default function NetworkView() {
 
               {/* Radar rings */}
               {[R*0.35, R*0.65, R*1.0, R*1.35].map((r,i)=>(
-                <circle key={i} cx={cx} cy={cy} r={r} fill="none" stroke="#0a1810" strokeWidth="0.8" strokeDasharray="4 10"/>
+                <circle key={i} cx={cx} cy={cy} r={r} fill="none" stroke="#0a0a0a" strokeWidth="0.8" strokeDasharray="4 10"/>
               ))}
               {/* Radar sweep line */}
               <line x1={cx} y1={cy} x2={cx} y2={cy-R*1.4}
@@ -148,11 +148,11 @@ export default function NetworkView() {
               })}
 
               {/* Gateway — center */}
-              <circle cx={cx} cy={cy} r={32+pulse*6} fill="none" stroke="#e05c6e" strokeWidth="0.5" opacity={0.1}/>
-              <circle cx={cx} cy={cy} r={22+pulse*3} fill="none" stroke="#e05c6e" strokeWidth="0.8" opacity={0.2}/>
-              <circle cx={cx} cy={cy} r={16} fill="#120206" stroke="#e05c6e" strokeWidth="1.8" filter="url(#glow6)"/>
-              <text x={cx} y={cy-2} textAnchor="middle" fontSize="9" fill="#e05c6e" fontFamily="Courier New" fontWeight="bold">GW</text>
-              <text x={cx} y={cy+10} textAnchor="middle" fontSize="7.5" fill="#e05c6e" fontFamily="Courier New" opacity={0.5}>{session?.gatewayIp??''}</text>
+              <circle cx={cx} cy={cy} r={32+pulse*6} fill="none" stroke="var(--accent-hi)" strokeWidth="0.5" opacity={0.1}/>
+              <circle cx={cx} cy={cy} r={22+pulse*3} fill="none" stroke="var(--accent-hi)" strokeWidth="0.8" opacity={0.2}/>
+              <circle cx={cx} cy={cy} r={16} fill="#0a0b0d" stroke="var(--accent-hi)" strokeWidth="1.8" filter="url(#glow6)"/>
+              <text x={cx} y={cy-2} textAnchor="middle" fontSize="9" fill="var(--accent-hi)" fontFamily="Courier New" fontWeight="bold">GW</text>
+              <text x={cx} y={cy+10} textAnchor="middle" fontSize="7.5" fill="var(--accent-hi)" fontFamily="Courier New" opacity={0.5}>{session?.gatewayIp??''}</text>
 
               {/* Nodes */}
               {positions.map(({node,x,y})=>{
@@ -172,7 +172,7 @@ export default function NetworkView() {
                     <circle cx={x} cy={y} r={R_node+8} fill={col} opacity={isRisk?0.07+pulse*0.04:isMed?0.04:0.02} filter="url(#glow10)"/>
                     {/* Node circle */}
                     <circle cx={x} cy={y} r={R_node}
-                      fill={isRisk?'#160408':isMed?'#140d04':'#080e0a'}
+                      fill={isRisk?'#0a0b0d':isMed?'#141414':'#080808'}
                       stroke={col} strokeWidth={isSel?2.2:1.4} filter="url(#glow3)"/>
 
                     {/* IP last octet */}
@@ -183,15 +183,15 @@ export default function NetworkView() {
                     {/* Agent badge */}
                     {node.isAgent && (
                       <g>
-                        <rect x={x-14} y={y-R_node-14} width={28} height={10} fill="#1a0000" stroke="#e05c6e" strokeWidth="0.8" rx={1}/>
-                        <text x={x} y={y-R_node-6} textAnchor="middle" fontSize="7" fill="#e05c6e" fontFamily="Courier New" fontWeight="bold">AGENT</text>
+                        <rect x={x-14} y={y-R_node-14} width={28} height={10} fill="var(--accent-bg)" stroke="var(--accent-hi)" strokeWidth="0.8" rx={1}/>
+                        <text x={x} y={y-R_node-6} textAnchor="middle" fontSize="7" fill="var(--accent-hi)" fontFamily="Courier New" fontWeight="bold">AGENT</text>
                       </g>
                     )}
                     {/* Untrusted badge */}
                     {!node.isTrusted && (
                       <g>
-                        <rect x={x-18} y={y+R_node+4} width={36} height={10} fill="#140a00" stroke="#d48b55" strokeWidth="0.6" rx={1}/>
-                        <text x={x} y={y+R_node+12} textAnchor="middle" fontSize="6.5" fill="#d48b55" fontFamily="Courier New">UNTRUSTED</text>
+                        <rect x={x-18} y={y+R_node+4} width={36} height={10} fill="#141414" stroke="var(--accent-hi)" strokeWidth="0.6" rx={1}/>
+                        <text x={x} y={y+R_node+12} textAnchor="middle" fontSize="6.5" fill="var(--accent-hi)" fontFamily="Courier New">UNTRUSTED</text>
                       </g>
                     )}
                     {/* OS label */}
@@ -207,14 +207,14 @@ export default function NetworkView() {
                 );
               })}
 
-              <text x="10" y="20" fontSize="8" fill="#0a1810" fontFamily="Courier New">
+              <text x="10" y="20" fontSize="8" fill="#0a0a0a" fontFamily="Courier New">
                 {session?.networkName??''}{session?' — ':''}{session?.cidr??''}{session?` — ${nodes.length} nodes · gw: ${session.gatewayIp}`:''}
               </text>
             </svg>
 
             {/* Legend */}
             <div style={{ position:'absolute',bottom:12,left:12,background:'rgba(4,4,6,0.9)',border:'1px solid #0d0d0d',padding:'8px 12px',fontFamily:'Courier New',fontSize:10 }}>
-              {[['#33a84a','Score < 40'],['#d48b55','Score 40-70'],['#e05c6e','Score > 70 / Risk']].map(([c,l])=>(
+              {[['#33a84a','Score < 40'],['var(--accent-hi)','Score 40-70'],['var(--accent-hi)','Score > 70 / Risk']].map(([c,l])=>(
                 <div key={l} style={{ display:'flex',alignItems:'center',gap:7,marginBottom:4 }}>
                   <span style={{ width:7,height:7,borderRadius:'50%',background:c as string,display:'inline-block',boxShadow:`0 0 4px ${c}` }}/>
                   <span style={{ color:'var(--tx2)' }}>{l}</span>
@@ -248,7 +248,7 @@ export default function NetworkView() {
                   ].map(([k,v])=>(
                     <div key={k} style={{ borderBottom:'1px solid #0a0a0a',paddingBottom:4 }}>
                       <div style={{ fontSize:8,color:'var(--tx3)',fontFamily:'Courier New',textTransform:'uppercase',letterSpacing:0.8,marginBottom:2 }}>{k}</div>
-                      <div style={{ fontSize:10,color:k==='Trusted'&&v==='NO'?'#d48b55':k==='Agent'&&v==='YES'?'#e05c6e':k==='Status'?v==='UP'?'#33a84a':'#e05c6e':'#666',fontFamily:'Courier New' }}>{v}</div>
+                      <div style={{ fontSize:10,color:k==='Trusted'&&v==='NO'?'var(--accent-hi)':k==='Agent'&&v==='YES'?'var(--accent-hi)':k==='Status'?v==='UP'?'#33a84a':'var(--accent-hi)':'#666',fontFamily:'Courier New' }}>{v}</div>
                     </div>
                   ))}
                 </div>
@@ -257,7 +257,7 @@ export default function NetworkView() {
                 <div style={{ marginTop:12,fontSize:8,color:'var(--tx3)',textTransform:'uppercase',letterSpacing:1,marginBottom:6 }}>Ports ({selNode.ports.length})</div>
                 {selNode.ports.map(p=>(
                   <div key={p.id} style={{ display:'flex',alignItems:'center',gap:8,padding:'4px 8px',marginBottom:4,background:'var(--inset2)',border:'1px solid #0d0d0d' }}>
-                    <span style={{ color:'#e05c6e',fontFamily:'Courier New',fontSize:11,fontWeight:700,minWidth:40 }}>{p.number}</span>
+                    <span style={{ color:'var(--accent-hi)',fontFamily:'Courier New',fontSize:11,fontWeight:700,minWidth:40 }}>{p.number}</span>
                     <span style={{ color:'var(--tx2)',fontSize:10,fontFamily:'Courier New',minWidth:32 }}>{p.proto?.toUpperCase()}</span>
                     <span style={{ color:'var(--tx1)',fontSize:10,fontFamily:'Courier New',flex:1,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{p.service}</span>
                   </div>
@@ -282,7 +282,7 @@ export default function NetworkView() {
 
                 {/* Actions */}
                 <div style={{ marginTop:14,display:'flex',gap:6 }}>
-                  <button onClick={()=>setScanNode(selNode)} style={{ flex:1,background:'#1a0000',border:'1px solid #e05c6e',color:'#e05c6e',fontFamily:'Courier New',fontSize:11,padding:'7px',cursor:'pointer',fontWeight:700 }}>
+                  <button onClick={()=>setScanNode(selNode)} style={{ flex:1,background:'var(--accent-bg)',border:'1px solid var(--accent-hi)',color:'var(--accent-hi)',fontFamily:'Courier New',fontSize:11,padding:'7px',cursor:'pointer',fontWeight:700 }}>
                     ▶ Scan This Node
                   </button>
                   <button onClick={()=>setSelNode(null)} style={{ background:'transparent',border:'1px solid #111',color:'var(--tx2)',fontFamily:'Courier New',fontSize:11,padding:'7px 10px',cursor:'pointer' }}>
@@ -303,8 +303,8 @@ export default function NetworkView() {
                         <div style={{ display:'flex',alignItems:'center',gap:8,marginBottom:3 }}>
                           <span style={{ width:6,height:6,borderRadius:'50%',background:col,flexShrink:0,boxShadow:`0 0 3px ${col}` }}/>
                           <span style={{ color:'#5bb8d4',fontFamily:'Courier New',fontSize:11,fontWeight:700,flex:1 }}>{node.ipv4}</span>
-                          {node.isAgent && <span style={{ fontSize:8,padding:'0 5px',background:'#1a0000',border:'1px solid #e05c6e',color:'#e05c6e',fontFamily:'Courier New' }}>AGENT</span>}
-                          {!node.isTrusted && <span style={{ fontSize:8,padding:'0 5px',background:'#140800',border:'1px solid #d48b55',color:'#d48b55',fontFamily:'Courier New' }}>!</span>}
+                          {node.isAgent && <span style={{ fontSize:8,padding:'0 5px',background:'var(--accent-bg)',border:'1px solid var(--accent-hi)',color:'var(--accent-hi)',fontFamily:'Courier New' }}>AGENT</span>}
+                          {!node.isTrusted && <span style={{ fontSize:8,padding:'0 5px',background:'#141414',border:'1px solid var(--accent-hi)',color:'var(--accent-hi)',fontFamily:'Courier New' }}>!</span>}
                         </div>
                         <div style={{ display:'flex',alignItems:'center',gap:8,paddingLeft:14 }}>
                           <span style={{ fontSize:9,color:'var(--tx2)',fontFamily:'Courier New',flex:1 }}>{node.hostname}</span>
@@ -334,10 +334,10 @@ export default function NetworkView() {
             <div style={{ padding:'5px 10px',background:'var(--inset)',borderBottom:'1px solid #0d0d0d',fontSize:10,color:'var(--tx2)',textTransform:'uppercase',letterSpacing:1 }}>Network Admin</div>
             {[{k:'nodes',l:'Nodes',n:allNodes.length},{k:'vulns',l:'Vulnerabilities',n:allVulns.length},{k:'ports',l:'Port Registry',n:allPorts.length},{k:'stats',l:'Statistics',n:0}].map(item=>(
               <div key={item.k} onClick={()=>setAdminSub(item.k as any)}
-                style={{ padding:'9px 12px',borderBottom:'1px solid #0a0a0a',cursor:'pointer',borderLeft:`2px solid ${adminSub===item.k?'#e05c6e':'transparent'}`,background:adminSub===item.k?'#100000':'transparent' }}
+                style={{ padding:'9px 12px',borderBottom:'1px solid #0a0a0a',cursor:'pointer',borderLeft:`2px solid ${adminSub===item.k?'var(--accent-hi)':'transparent'}`,background:adminSub===item.k?'#0a0b0d':'transparent' }}
                 onMouseEnter={e=>(e.currentTarget.style.background='#0d0d0d')}
-                onMouseLeave={e=>(e.currentTarget.style.background=adminSub===item.k?'#100000':'transparent')}>
-                <div style={{ fontSize:11,color:adminSub===item.k?'#e05c6e':'#666',fontFamily:'Courier New' }}>{item.l}</div>
+                onMouseLeave={e=>(e.currentTarget.style.background=adminSub===item.k?'#0a0b0d':'transparent')}>
+                <div style={{ fontSize:11,color:adminSub===item.k?'var(--accent-hi)':'#666',fontFamily:'Courier New' }}>{item.l}</div>
                 {item.n>0&&<div style={{ fontSize:9,color:'var(--tx2)',fontFamily:'Courier New',marginTop:2 }}>{item.n} entries</div>}
               </div>
             ))}
@@ -359,8 +359,8 @@ export default function NetworkView() {
                 style={{ background:'var(--inset2)',border:'1px solid #111',color:'var(--tx1)',fontFamily:'Courier New',fontSize:11,padding:'3px 8px',outline:'none',width:200 }}/>
               <button onClick={()=>setSearch('')} style={{ background:'transparent',border:'1px solid #0d0d0d',color:'var(--tx3)',fontFamily:'Courier New',fontSize:9,padding:'3px 8px',cursor:'pointer' }}>Clear</button>
               <div style={{ marginLeft:'auto',display:'flex',gap:8 }}>
-                {allVulns.filter(v=>v.severity==='CRITICAL').length>0&&<span style={{ fontSize:10,color:'#e05c6e',fontFamily:'Courier New',border:'1px solid #e05c6e44',padding:'1px 8px' }}>{allVulns.filter(v=>v.severity==='CRITICAL').length} CRITICAL</span>}
-                {allVulns.filter(v=>v.severity==='HIGH').length>0&&<span style={{ fontSize:10,color:'#d48b55',fontFamily:'Courier New',border:'1px solid #d48b5544',padding:'1px 8px' }}>{allVulns.filter(v=>v.severity==='HIGH').length} HIGH</span>}
+                {allVulns.filter(v=>v.severity==='CRITICAL').length>0&&<span style={{ fontSize:10,color:'var(--accent-hi)',fontFamily:'Courier New',border:'1px solid var(--accent-hi)44',padding:'1px 8px' }}>{allVulns.filter(v=>v.severity==='CRITICAL').length} CRITICAL</span>}
+                {allVulns.filter(v=>v.severity==='HIGH').length>0&&<span style={{ fontSize:10,color:'var(--accent-hi)',fontFamily:'Courier New',border:'1px solid var(--accent-hi)44',padding:'1px 8px' }}>{allVulns.filter(v=>v.severity==='HIGH').length} HIGH</span>}
               </div>
             </div>
 
@@ -387,19 +387,19 @@ export default function NetworkView() {
                         <td style={{ padding:'6px 10px',color:'var(--tx2)',borderRight:'1px solid #080808',fontSize:10 }}>{n.vendor}</td>
                         <td style={{ padding:'6px 10px',color:'var(--tx2)',borderRight:'1px solid #080808',fontSize:10 }}>{n.mac}</td>
                         <td style={{ padding:'6px 10px',borderRight:'1px solid #080808',textAlign:'center' }}>
-                          <span style={{ color:n.isTrusted?'#33a84a':'#d48b55' }}>{n.isTrusted?'✓':'✗'}</span>
+                          <span style={{ color:n.isTrusted?'#33a84a':'var(--accent-hi)' }}>{n.isTrusted?'✓':'✗'}</span>
                         </td>
                         <td style={{ padding:'6px 10px',borderRight:'1px solid #080808',textAlign:'center' }}>
-                          {n.isAgent&&<span style={{ fontSize:8,padding:'0 5px',background:'#1a0000',border:'1px solid #e05c6e',color:'#e05c6e' }}>ZK</span>}
+                          {n.isAgent&&<span style={{ fontSize:8,padding:'0 5px',background:'var(--accent-bg)',border:'1px solid var(--accent-hi)',color:'var(--accent-hi)' }}>ZK</span>}
                         </td>
                         <td style={{ padding:'6px 10px',borderRight:'1px solid #080808' }}><ScoreBar score={n.vulnerabilityScore}/></td>
                         <td style={{ padding:'6px 10px',color:'#5bb8d4',borderRight:'1px solid #080808',textAlign:'center' }}>{n.ports.length}</td>
                         <td style={{ padding:'6px 10px',borderRight:'1px solid #080808',textAlign:'center' }}>
-                          <span style={{ color:n.vulnerabilities.length>0?'#e05c6e':'#2a2a2a' }}>{n.vulnerabilities.length}</span>
+                          <span style={{ color:n.vulnerabilities.length>0?'var(--accent-hi)':'#2a2a2a' }}>{n.vulnerabilities.length}</span>
                         </td>
                         <td style={{ padding:'6px 10px' }}>
                           <div style={{ display:'flex',gap:4 }}>
-                            <button onClick={()=>setScanNode(n)} style={{ background:'#1a0000',border:'1px solid #e05c6e',color:'#e05c6e',fontFamily:'Courier New',fontSize:9,padding:'2px 7px',cursor:'pointer' }}>Scan</button>
+                            <button onClick={()=>setScanNode(n)} style={{ background:'var(--accent-bg)',border:'1px solid var(--accent-hi)',color:'var(--accent-hi)',fontFamily:'Courier New',fontSize:9,padding:'2px 7px',cursor:'pointer' }}>Scan</button>
                             <button onClick={()=>{setTab('topology');setTimeout(()=>setSelNode(n),50);}} style={{ background:'transparent',border:'1px solid #111',color:'var(--tx2)',fontFamily:'Courier New',fontSize:9,padding:'2px 7px',cursor:'pointer' }}>View</button>
                           </div>
                         </td>
@@ -462,7 +462,7 @@ export default function NetworkView() {
                         onMouseLeave={e=>(e.currentTarget.style.background='transparent')}>
                         <td style={{ padding:'6px 12px',color:'#5bb8d4',borderRight:'1px solid #080808',cursor:'pointer',whiteSpace:'nowrap' }}
                           onClick={()=>{setTab('topology');setTimeout(()=>setSelNode(p.node),50);}}>{p.node.ipv4}</td>
-                        <td style={{ padding:'6px 12px',color:'#e05c6e',borderRight:'1px solid #080808',fontWeight:700 }}>{p.number}</td>
+                        <td style={{ padding:'6px 12px',color:'var(--accent-hi)',borderRight:'1px solid #080808',fontWeight:700 }}>{p.number}</td>
                         <td style={{ padding:'6px 12px',color:'var(--tx2)',borderRight:'1px solid #080808',fontSize:10 }}>{p.proto?.toUpperCase()||''}</td>
                         <td style={{ padding:'6px 12px',color:'var(--tx1)',borderRight:'1px solid #080808' }}>{p.service}</td>
                         <td style={{ padding:'6px 12px',color:'var(--tx2)',fontSize:10,maxWidth:350,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{p.banner||'—'}</td>
@@ -478,13 +478,13 @@ export default function NetworkView() {
                     {[
                       {l:'Total Nodes',v:allNodes.length,c:'#cccccc'},
                       {l:'Nodes UP',v:allNodes.filter(n=>n.status==='UP').length,c:'#33a84a'},
-                      {l:'Nodes DOWN',v:allNodes.filter(n=>n.status==='DOWN').length,c:'#e05c6e'},
-                      {l:'ZK Agents',v:allNodes.filter(n=>n.isAgent).length,c:'#e05c6e'},
-                      {l:'Untrusted',v:allNodes.filter(n=>!n.isTrusted).length,c:'#d48b55'},
+                      {l:'Nodes DOWN',v:allNodes.filter(n=>n.status==='DOWN').length,c:'var(--accent-hi)'},
+                      {l:'ZK Agents',v:allNodes.filter(n=>n.isAgent).length,c:'var(--accent-hi)'},
+                      {l:'Untrusted',v:allNodes.filter(n=>!n.isTrusted).length,c:'var(--accent-hi)'},
                       {l:'Total Ports',v:allPorts.length,c:'#5bb8d4'},
-                      {l:'Total Vulns',v:allVulns.length,c:'#e05c6e'},
-                      {l:'Critical',v:allVulns.filter(v=>v.severity==='CRITICAL').length,c:'#e05c6e'},
-                      {l:'High',v:allVulns.filter(v=>v.severity==='HIGH').length,c:'#d48b55'},
+                      {l:'Total Vulns',v:allVulns.length,c:'var(--accent-hi)'},
+                      {l:'Critical',v:allVulns.filter(v=>v.severity==='CRITICAL').length,c:'var(--accent-hi)'},
+                      {l:'High',v:allVulns.filter(v=>v.severity==='HIGH').length,c:'var(--accent-hi)'},
                     ].map(s=>(
                       <div key={s.l} style={{ background:'var(--inset2)',border:'1px solid #0d0d0d',padding:'12px 14px' }}>
                         <div style={{ fontSize:9,color:'var(--tx3)',fontFamily:'Courier New',textTransform:'uppercase',letterSpacing:1,marginBottom:6 }}>{s.l}</div>
@@ -498,7 +498,7 @@ export default function NetworkView() {
                       <span style={{ color:'#5bb8d4',fontFamily:'Courier New',fontSize:11,minWidth:110 }}>{n.ipv4}</span>
                       <span style={{ color:'var(--tx2)',fontFamily:'Courier New',fontSize:10,minWidth:130,flex:0 }}>{n.hostname}</span>
                       <div style={{ flex:1 }}><ScoreBar score={n.vulnerabilityScore}/></div>
-                      <span style={{ color:n.vulnerabilities.length>0?'#e05c6e':'#222',fontFamily:'Courier New',fontSize:10,minWidth:55 }}>{n.vulnerabilities.length} vulns</span>
+                      <span style={{ color:n.vulnerabilities.length>0?'var(--accent-hi)':'#222',fontFamily:'Courier New',fontSize:10,minWidth:55 }}>{n.vulnerabilities.length} vulns</span>
                     </div>
                   ))}
                 </div>

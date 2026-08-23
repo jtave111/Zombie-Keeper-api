@@ -8,13 +8,18 @@ interface OpTask {
 }
 
 const PHASES: { key:Phase; label:string; color:string }[] = [
-  { key:'planned', label:'PLANNED',    color:'#5a96d4' },
-  { key:'active',  label:'EXECUTING',  color:'#d48b55' },
-  { key:'done',    label:'COMPLETED',  color:'#33a84a' },
-  { key:'blocked', label:'BLOCKED',    color:'#e05c6e' },
+  { key:'planned', label:'PLANNED',    color:'var(--tx1)' },
+  { key:'active',  label:'EXECUTING',  color:'var(--blue)' },
+  { key:'done',    label:'COMPLETED',  color:'var(--tx1)' },
+  { key:'blocked', label:'BLOCKED',    color:'var(--red-hi)' },
 ];
 
-const PRIO_COL: Record<string,string> = { low:'#2a2a2a', med:'#c8a84b', high:'#d48b55', critical:'#e05c6e' };
+const PRIO_COL: Record<string,string> = {
+  low: 'var(--tx3)',
+  med: 'var(--tx1)',
+  high: 'var(--blue)',
+  critical: 'var(--red-hi)',
+};
 
 const INIT_TASKS: OpTask[] = [
   { id:'OP-001', title:'Domain Recon — AD Enum',        phase:'done',    agent:'ZK-001', tags:['recon','AD'],       priority:'high',     desc:'Enumerate AD users, groups, GPOs via LDAP.', ts:'02:14' },
@@ -119,7 +124,7 @@ export default function OperationsView() {
                     placeholder="task title..."
                     style={{ width:'100%', background:'var(--inset2)', border:'1px solid #2a2a2a', color:'#ccc', fontFamily:'Courier New', fontSize:11, padding:'4px 8px', outline:'none', marginBottom:4 }}/>
                   <div style={{ display:'flex', gap:4 }}>
-                    <button onClick={()=>addTask(ph.key)} style={{ background:'#1a0000', border:'1px solid #e05c6e', color:'#e05c6e', fontFamily:'Courier New', fontSize:9, padding:'2px 10px', cursor:'pointer' }}>ADD</button>
+                    <button onClick={()=>addTask(ph.key)} style={{ background:'var(--panel2)', border:'1px solid var(--b2)', color:'var(--tx1)', fontFamily:'Courier New', fontSize:9, padding:'2px 10px', cursor:'pointer' }}>ADD</button>
                     <button onClick={()=>setAdding(null)} style={{ background:'transparent', border:'1px solid #222', color:'var(--tx2)', fontFamily:'Courier New', fontSize:9, padding:'2px 10px', cursor:'pointer' }}>CANCEL</button>
                   </div>
                 </div>
@@ -136,7 +141,7 @@ export default function OperationsView() {
       {/* Detail panel */}
       {selected && (
         <div style={{ padding:'8px 14px', background:'var(--inset2)', borderTop:'1px solid #1a1a1a', flexShrink:0 }}>
-          <span style={{ fontSize:10, color:'#e05c6e', marginRight:12 }}>{selected.id}</span>
+          <span style={{ fontSize:10, color:'var(--tx1)', marginRight:12 }}>{selected.id}</span>
           <span style={{ fontSize:10, color:'#777' }}>{selected.desc || 'no description'}</span>
         </div>
       )}

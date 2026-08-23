@@ -27,9 +27,9 @@ const SECTIONS = [
 ];
 
 const TYPE_COL: Record<string,string> = {
-  'Campaign Summary':'#e05c6e', 'Vulnerability Report':'#d48b55',
+  'Campaign Summary':'var(--accent-hi)', 'Vulnerability Report':'var(--accent-hi)',
   'Credential Dump':'#5bb8d4', 'Network Recon':'#33a84a',
-  'Executive Summary':'#a07fd4', 'Technical Detail':'#c8a84b',
+  'Executive Summary':'#a07fd4', 'Technical Detail':'var(--accent-hi)',
 };
 const STATUS_COL: Record<string,string> = {
   Draft:'#555', Generated:'#33a84a', Exported:'#5bb8d4',
@@ -61,7 +61,7 @@ export default function ReportsView() {
         {[{k:'list',l:'Report Library'},{k:'builder',l:'Report Builder'}].map(t=>(
           <button key={t.k} onClick={()=>setTab(t.k as any)} style={{
             padding:'7px 18px', background:tab===t.k?'#080808':'transparent',
-            border:'none', borderTop:tab===t.k?'2px solid #e05c6e':'2px solid transparent',
+            border:'none', borderTop:tab===t.k?'2px solid var(--accent-hi)':'2px solid transparent',
             color:tab===t.k?'#e8e8e8':'#555', fontFamily:'Courier New', fontSize:11,
             cursor:'pointer', textTransform:'uppercase', letterSpacing:0.8,
           }}>{t.l}</button>
@@ -113,12 +113,12 @@ export default function ReportsView() {
                     </td>
                     <td style={{ padding:'7px 12px', color:'var(--tx1)', borderRight:'1px solid #0a0a0a', fontSize:10, whiteSpace:'nowrap' }}>{r.created}</td>
                     <td style={{ padding:'7px 12px', color:'#777', borderRight:'1px solid #0a0a0a' }}>{r.size}</td>
-                    <td style={{ padding:'7px 12px', color:'#e05c6e', borderRight:'1px solid #0a0a0a', textAlign:'center' }}>{r.agents}</td>
-                    <td style={{ padding:'7px 12px', color:'#d48b55', borderRight:'1px solid #0a0a0a', textAlign:'center' }}>{r.vulns}</td>
+                    <td style={{ padding:'7px 12px', color:'var(--accent-hi)', borderRight:'1px solid #0a0a0a', textAlign:'center' }}>{r.agents}</td>
+                    <td style={{ padding:'7px 12px', color:'var(--accent-hi)', borderRight:'1px solid #0a0a0a', textAlign:'center' }}>{r.vulns}</td>
                     <td style={{ padding:'7px 12px', color:'#5bb8d4', borderRight:'1px solid #0a0a0a', textAlign:'center' }}>{r.creds}</td>
                     <td style={{ padding:'7px 12px' }}>
                       <div style={{ display:'flex', gap:4 }}>
-                        <button onClick={e=>e.stopPropagation()} style={{ background:'#0a1a0a', border:'1px solid #33a84a', color:'#33a84a', fontFamily:'Courier New', fontSize:9, padding:'2px 6px', cursor:'pointer' }}>Export</button>
+                        <button onClick={e=>e.stopPropagation()} style={{ background:'#0a0a0a', border:'1px solid #33a84a', color:'#33a84a', fontFamily:'Courier New', fontSize:9, padding:'2px 6px', cursor:'pointer' }}>Export</button>
                         <button onClick={e=>e.stopPropagation()} style={{ background:'transparent', border:'1px solid #1a1a1a', color:'var(--tx1)', fontFamily:'Courier New', fontSize:9, padding:'2px 6px', cursor:'pointer' }}>View</button>
                       </div>
                     </td>
@@ -146,10 +146,10 @@ export default function ReportsView() {
                   </div>
                 ))}
                 <div style={{ display:'flex',flexDirection:'column',gap:6,marginTop:14 }}>
-                  <button style={{ background:'#0a1a0a',border:'1px solid #33a84a',color:'#33a84a',fontFamily:'Courier New',fontSize:11,padding:'7px',cursor:'pointer' }}>Export PDF</button>
-                  <button style={{ background:'#0a0a1a',border:'1px solid #5bb8d4',color:'#5bb8d4',fontFamily:'Courier New',fontSize:11,padding:'7px',cursor:'pointer' }}>Export HTML</button>
+                  <button style={{ background:'#0a0a0a',border:'1px solid #33a84a',color:'#33a84a',fontFamily:'Courier New',fontSize:11,padding:'7px',cursor:'pointer' }}>Export PDF</button>
+                  <button style={{ background:'#0a0a0a',border:'1px solid #5bb8d4',color:'#5bb8d4',fontFamily:'Courier New',fontSize:11,padding:'7px',cursor:'pointer' }}>Export HTML</button>
                   <button style={{ background:'transparent',border:'1px solid #1a1a1a',color:'var(--tx1)',fontFamily:'Courier New',fontSize:11,padding:'7px',cursor:'pointer' }}>Regenerate</button>
-                  <button onClick={()=>setTab('builder')} style={{ background:'#1a0000',border:'1px solid #e05c6e',color:'#e05c6e',fontFamily:'Courier New',fontSize:11,padding:'7px',cursor:'pointer' }}>Edit in Builder</button>
+                  <button onClick={()=>setTab('builder')} style={{ background:'var(--accent-bg)',border:'1px solid var(--accent-hi)',color:'var(--accent-hi)',fontFamily:'Courier New',fontSize:11,padding:'7px',cursor:'pointer' }}>Edit in Builder</button>
                 </div>
               </div>
             </div>
@@ -183,9 +183,9 @@ export default function ReportsView() {
                 <div style={{ display:'flex', gap:4 }}>
                   {(['PDF','HTML','MD','JSON'] as const).map(f=>(
                     <button key={f} onClick={()=>setFormat(f)} style={{
-                      flex:1, background:format===f?'#1a0000':'#0d0d0d',
-                      border:`1px solid ${format===f?'#e05c6e':'#111'}`,
-                      color:format===f?'#e05c6e':'#555', fontFamily:'Courier New',
+                      flex:1, background:format===f?'var(--accent-bg)':'#0d0d0d',
+                      border:`1px solid ${format===f?'var(--accent-hi)':'#111'}`,
+                      color:format===f?'var(--accent-hi)':'#555', fontFamily:'Courier New',
                       fontSize:11, padding:'5px', cursor:'pointer',
                     }}>{f}</button>
                   ))}
@@ -197,11 +197,11 @@ export default function ReportsView() {
                 {SECTIONS.map(sec=>(
                   <div key={sec.key} onClick={()=>toggleSec(sec.key)}
                     style={{ display:'flex',alignItems:'flex-start',gap:10,padding:'6px 8px',marginBottom:3,cursor:'pointer',
-                      background:selSecs.includes(sec.key)?'#120000':'transparent',
-                      border:`1px solid ${selSecs.includes(sec.key)?'#e05c6e22':'#0d0d0d'}` }}
-                    onMouseEnter={e=>(e.currentTarget.style.background=selSecs.includes(sec.key)?'#1a0000':'#0d0d0d')}
-                    onMouseLeave={e=>(e.currentTarget.style.background=selSecs.includes(sec.key)?'#120000':'transparent')}>
-                    <span style={{ fontSize:10,color:selSecs.includes(sec.key)?'#e05c6e':'#333',marginTop:1,flexShrink:0,fontWeight:700 }}>{selSecs.includes(sec.key)?'[✓]':'[ ]'}</span>
+                      background:selSecs.includes(sec.key)?'#0a0b0d':'transparent',
+                      border:`1px solid ${selSecs.includes(sec.key)?'var(--accent-hi)22':'#0d0d0d'}` }}
+                    onMouseEnter={e=>(e.currentTarget.style.background=selSecs.includes(sec.key)?'var(--accent-bg)':'#0d0d0d')}
+                    onMouseLeave={e=>(e.currentTarget.style.background=selSecs.includes(sec.key)?'#0a0b0d':'transparent')}>
+                    <span style={{ fontSize:10,color:selSecs.includes(sec.key)?'var(--accent-hi)':'#333',marginTop:1,flexShrink:0,fontWeight:700 }}>{selSecs.includes(sec.key)?'[✓]':'[ ]'}</span>
                     <div>
                       <div style={{ fontSize:11,color:selSecs.includes(sec.key)?'#aaaaaa':'#555' }}>{sec.label}</div>
                       <div style={{ fontSize:9,color:'var(--tx2)' }}>{sec.desc}</div>
@@ -214,7 +214,7 @@ export default function ReportsView() {
                 <div style={{ fontSize:9,color:'var(--tx1)',textTransform:'uppercase',letterSpacing:'1px',marginBottom:6 }}>Data Sources</div>
                 {['Include all agents','Include all credentials','Include all loot files','Include scan results','Include timeline'].map(s=>(
                   <div key={s} style={{ display:'flex',alignItems:'center',gap:8,marginBottom:6 }}>
-                    <input type="checkbox" defaultChecked style={{ accentColor:'#e05c6e' }}/>
+                    <input type="checkbox" defaultChecked style={{ accentColor:'var(--accent-hi)' }}/>
                     <span style={{ fontSize:11,color:'#777' }}>{s}</span>
                   </div>
                 ))}
@@ -225,9 +225,9 @@ export default function ReportsView() {
               <button onClick={generate} disabled={building} style={{
                 width:'100%', padding:'10px', fontSize:12, fontWeight:700, letterSpacing:1,
                 fontFamily:'Courier New', cursor:building?'default':'pointer',
-                background:building?'#0d0d0d':'#1a0000',
-                border:`1px solid ${building?'#222':'#e05c6e'}`,
-                color:building?'#333':'#e05c6e',
+                background:building?'#0d0d0d':'var(--accent-bg)',
+                border:`1px solid ${building?'#222':'var(--accent-hi)'}`,
+                color:building?'#333':'var(--accent-hi)',
               }}>{building?'[ GENERATING... ]':built?'[ REGENERATE ]':'[ GENERATE REPORT ]'}</button>
             </div>
           </div>
@@ -239,7 +239,7 @@ export default function ReportsView() {
               {built && <span style={{ color:'#33a84a' }}>● Generated</span>}
               {built && (
                 <div style={{ marginLeft:'auto', display:'flex', gap:6 }}>
-                  <button style={{ background:'#0a1a0a', border:'1px solid #33a84a', color:'#33a84a', fontFamily:'Courier New', fontSize:10, padding:'2px 10px', cursor:'pointer' }}>Export {format}</button>
+                  <button style={{ background:'#0a0a0a', border:'1px solid #33a84a', color:'#33a84a', fontFamily:'Courier New', fontSize:10, padding:'2px 10px', cursor:'pointer' }}>Export {format}</button>
                   <button style={{ background:'transparent', border:'1px solid #111', color:'var(--tx1)', fontFamily:'Courier New', fontSize:10, padding:'2px 10px', cursor:'pointer' }}>Save to Library</button>
                 </div>
               )}
@@ -253,7 +253,7 @@ export default function ReportsView() {
                   {['[*] Collecting agent session data...','[*] Aggregating credential records...','[*] Compiling vulnerability findings...','[*] Building network topology section...','[*] Generating executive summary...','[*] Rendering output...'].map((l,i)=>(
                     <div key={i} style={{ color:'#33a84a', marginBottom:6 }}>{l}</div>
                   ))}
-                  <div style={{ color:'#e05c6e' }}>Generating {format}...<span className="cursor"/></div>
+                  <div style={{ color:'var(--accent-hi)' }}>Generating {format}...<span className="cursor"/></div>
                 </div>
               )}
               {built && (
@@ -268,7 +268,7 @@ export default function ReportsView() {
                     if (!sec) return null;
                     return (
                       <div key={k} style={{ marginBottom:16, padding:'12px 14px', background:'var(--inset2)', border:'1px solid #111' }}>
-                        <div style={{ fontSize:12, color:'#e05c6e', fontWeight:700, marginBottom:6, textTransform:'uppercase', letterSpacing:1 }}>{sec.label}</div>
+                        <div style={{ fontSize:12, color:'var(--accent-hi)', fontWeight:700, marginBottom:6, textTransform:'uppercase', letterSpacing:1 }}>{sec.label}</div>
                         <div style={{ fontSize:11, color:'var(--tx1)' }}>{sec.desc}</div>
                         <div style={{ fontSize:10, color:'var(--tx2)', marginTop:6 }}>[Content populated from live data — wire to /api/report/generate]</div>
                       </div>

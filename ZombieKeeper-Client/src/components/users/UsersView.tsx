@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { BackendUser, BackendRole, usersApi } from '@/lib/client/api';
 
 const ROLE_COL: Record<string, string> = {
-  ADMIN:    '#e05c6e',
+  ADMIN:    'var(--accent-hi)',
   OPERATOR: '#5bb8d4',
-  VIEWER:   '#d48b55',
+  VIEWER:   'var(--accent-hi)',
 };
 
 function roleColor(role: string) {
@@ -23,7 +23,7 @@ function ModalWrap({ children, onClose }: { children: React.ReactNode; onClose: 
   return (
     <div onClick={onClose} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.80)', display:'flex',
       alignItems:'center', justifyContent:'center', zIndex:200, fontFamily:'Courier New' }}>
-      <div onClick={e => e.stopPropagation()} style={{ background:'var(--inset2)', border:'1px solid #e05c6e',
+      <div onClick={e => e.stopPropagation()} style={{ background:'var(--inset2)', border:'1px solid var(--accent-hi)',
         padding:'22px 24px', minWidth:360, maxWidth:440 }}>
         {children}
       </div>
@@ -43,7 +43,7 @@ function Field({ label, value, onChange, type='text', placeholder='' }:
   );
 }
 
-function Btn({ label, color='#e05c6e', onClick, disabled=false }:
+function Btn({ label, color='var(--accent-hi)', onClick, disabled=false }:
   { label:string; color?:string; onClick:()=>void; disabled?:boolean }) {
   return (
     <button onClick={onClick} disabled={disabled} style={{
@@ -146,9 +146,9 @@ export default function UsersView() {
       <div style={{ display:'flex', flexShrink:0, borderBottom:'1px solid #111' }}>
         {[
           { l:'Total Operators', v: users.length,   c:'#cccccc' },
-          { l:'Admins',          v: admins,          c:'#e05c6e' },
+          { l:'Admins',          v: admins,          c:'var(--accent-hi)' },
           { l:'Operators',       v: operators,       c:'#5bb8d4' },
-          { l:'Roles',           v: roles.length,    c:'#d48b55' },
+          { l:'Roles',           v: roles.length,    c:'var(--accent-hi)' },
         ].map((s, i) => (
           <div key={i} style={{ flex:1, padding:'10px 16px', borderRight:'1px solid #111', background:'var(--inset2)' }}>
             <div style={{ fontSize:9, color:'var(--tx2)', textTransform:'uppercase', letterSpacing:1, marginBottom:5 }}>{s.l}</div>
@@ -166,7 +166,7 @@ export default function UsersView() {
         <div style={{ marginLeft:'auto', display:'flex', gap:6 }}>
           <button onClick={load} style={{ background:'transparent', border:'1px solid #1a1a1a', color:'var(--tx2)',
             fontFamily:'Courier New', fontSize:10, padding:'4px 10px', cursor:'pointer' }}>Refresh</button>
-          <button onClick={openCreate} style={{ background:'#1a0000', border:'1px solid #e05c6e', color:'#e05c6e',
+          <button onClick={openCreate} style={{ background:'var(--accent-bg)', border:'1px solid var(--accent-hi)', color:'var(--accent-hi)',
             fontFamily:'Courier New', fontSize:10, padding:'4px 14px', cursor:'pointer' }}>+ New Operator</button>
         </div>
       </div>
@@ -174,7 +174,7 @@ export default function UsersView() {
       {/* TABLE */}
       <div style={{ flex:1, overflow:'auto' }}>
         {error && (
-          <div style={{ padding:'10px 14px', color:'#e05c6e', fontSize:11 }}>{error}</div>
+          <div style={{ padding:'10px 14px', color:'var(--accent-hi)', fontSize:11 }}>{error}</div>
         )}
         {loading && !error && (
           <div style={{ padding:'10px 14px', color:'var(--tx2)', fontSize:11 }}>[*] Loading operators...</div>
@@ -210,8 +210,8 @@ export default function UsersView() {
                         color:'var(--tx1)', fontFamily:'Courier New', fontSize:9, padding:'2px 7px', cursor:'pointer' }}>Role</button>
                       <button onClick={() => openPassword(u)} style={{ background:'transparent', border:'1px solid #1a3520',
                         color:'#33a84a', fontFamily:'Courier New', fontSize:9, padding:'2px 7px', cursor:'pointer' }}>Pwd</button>
-                      <button onClick={() => openDelete(u)} style={{ background:'transparent', border:'1px solid #3d1520',
-                        color:'#e05c6e', fontFamily:'Courier New', fontSize:9, padding:'2px 7px', cursor:'pointer' }}>Del</button>
+                      <button onClick={() => openDelete(u)} style={{ background:'transparent', border:'1px solid var(--b2)',
+                        color:'var(--accent-hi)', fontFamily:'Courier New', fontSize:9, padding:'2px 7px', cursor:'pointer' }}>Del</button>
                     </div>
                   </td>
                 </tr>
@@ -227,7 +227,7 @@ export default function UsersView() {
       {/* STATUS BAR */}
       <div style={{ padding:'3px 12px', background:'var(--inset2)', borderTop:'1px solid #0d0d0d',
         flexShrink:0, display:'flex', gap:20, fontSize:10 }}>
-        <span style={{ color:'#e05c6e' }}>{admins} admin{admins !== 1 ? 's' : ''}</span>
+        <span style={{ color:'var(--accent-hi)' }}>{admins} admin{admins !== 1 ? 's' : ''}</span>
         <span style={{ color:'#5bb8d4' }}>{operators} operator{operators !== 1 ? 's' : ''}</span>
         <span style={{ marginLeft:'auto', color:'var(--tx2)' }}>
           GET /api/auth/users · POST /api/auth/register
@@ -250,7 +250,7 @@ export default function UsersView() {
               {roles.map(r => <option key={r.id} value={r.name}>{roleLabel(r.name)}</option>)}
             </select>
           </div>
-          {fErr && <div style={{ color:'#e05c6e', fontSize:10, marginBottom:10 }}>{fErr}</div>}
+          {fErr && <div style={{ color:'var(--accent-hi)', fontSize:10, marginBottom:10 }}>{fErr}</div>}
           <div style={{ display:'flex', gap:8 }}>
             <Btn label={fBusy ? 'Creating...' : 'Create'} onClick={submitCreate} disabled={fBusy} />
             <Btn label="Cancel" color="#444" onClick={() => setModal(null)} />
@@ -260,7 +260,7 @@ export default function UsersView() {
 
       {modal?.type === 'delete' && (
         <ModalWrap onClose={() => setModal(null)}>
-          <div style={{ fontSize:13, color:'#e05c6e', fontWeight:700, marginBottom:12 }}>[!] Delete Operator</div>
+          <div style={{ fontSize:13, color:'var(--accent-hi)', fontWeight:700, marginBottom:12 }}>[!] Delete Operator</div>
           <div style={{ fontSize:11, color:'#777', marginBottom:6 }}>
             This will permanently remove:
           </div>
@@ -272,7 +272,7 @@ export default function UsersView() {
                 color:roleColor(modal.user.role) }}>{roleLabel(modal.user.role)}</span>
             </div>
           </div>
-          {fErr && <div style={{ color:'#e05c6e', fontSize:10, marginBottom:10 }}>{fErr}</div>}
+          {fErr && <div style={{ color:'var(--accent-hi)', fontSize:10, marginBottom:10 }}>{fErr}</div>}
           <div style={{ display:'flex', gap:8 }}>
             <Btn label={fBusy ? 'Deleting...' : 'Confirm Delete'} onClick={() => submitDelete(modal.user.id)} disabled={fBusy} />
             <Btn label="Cancel" color="#444" onClick={() => setModal(null)} />
@@ -292,7 +292,7 @@ export default function UsersView() {
               {roles.map(r => <option key={r.id} value={r.name}>{roleLabel(r.name)}</option>)}
             </select>
           </div>
-          {fErr && <div style={{ color:'#e05c6e', fontSize:10, marginBottom:10 }}>{fErr}</div>}
+          {fErr && <div style={{ color:'var(--accent-hi)', fontSize:10, marginBottom:10 }}>{fErr}</div>}
           <div style={{ display:'flex', gap:8 }}>
             <Btn label={fBusy ? 'Saving...' : 'Save'} onClick={() => submitRole(modal.user.id)} disabled={fBusy} />
             <Btn label="Cancel" color="#444" onClick={() => setModal(null)} />
@@ -305,7 +305,7 @@ export default function UsersView() {
           <div style={{ fontSize:13, color:'#cccccc', fontWeight:700, marginBottom:6 }}>Reset Password</div>
           <div style={{ fontSize:10, color:'var(--tx2)', marginBottom:16 }}>{modal.user.username}</div>
           <Field label="New Password" value={fPass} onChange={setFPass} type="password" placeholder="••••••••" />
-          {fErr && <div style={{ color:'#e05c6e', fontSize:10, marginBottom:10 }}>{fErr}</div>}
+          {fErr && <div style={{ color:'var(--accent-hi)', fontSize:10, marginBottom:10 }}>{fErr}</div>}
           <div style={{ display:'flex', gap:8 }}>
             <Btn label={fBusy ? 'Saving...' : 'Reset'} onClick={() => submitPassword(modal.user.id)} disabled={fBusy} />
             <Btn label="Cancel" color="#444" onClick={() => setModal(null)} />

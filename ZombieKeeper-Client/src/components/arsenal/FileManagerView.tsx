@@ -27,7 +27,7 @@ const MOCK_FS: Record<string, FsEntry[]> = {
 
 const AGENTS = ['ZK-001 · WIN-DC01','ZK-002 · UBUNTU-WEB','ZK-005 · WIN-EXCH01'];
 const ICON: Record<string,string> = { dir:'/', file:'f', link:'~' };
-const COL:  Record<string,string> = { dir:'#5a96d4', file:'#aaaaaa', link:'#c8a84b' };
+const COL: Record<string,string> = { dir:'var(--blue)', file:'var(--tx1)', link:'var(--tx1)' };
 
 export default function FileManagerView() {
   const [agent,    setAgent]    = useState(AGENTS[0]);
@@ -84,8 +84,8 @@ export default function FileManagerView() {
           {['/', '/etc', '/root', '/home', '/var', '/tmp'].map(p => (
             <div key={p} onClick={()=>{setPath(p);setSelected(null);}} style={{
               padding:'3px 8px', fontSize:11, cursor:'pointer', marginBottom:2,
-              color: path===p ? '#e05c6e' : '#444',
-              background: path===p ? '#1a0000' : 'transparent',
+              color: path===p ? 'var(--accent-hi)' : '#444',
+              background: path===p ? 'var(--accent-bg)' : 'transparent',
             }}>{p}</div>
           ))}
         </div>
@@ -104,7 +104,7 @@ export default function FileManagerView() {
             <div key={u.name} style={{ marginTop:4 }}>
               <div style={{ fontSize:9, color:'var(--tx1)', marginBottom:2, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{u.name}</div>
               <div style={{ height:3, background:'var(--inset)', borderRadius:2 }}>
-                <div style={{ height:'100%', width:`${u.prog}%`, background: u.prog===100?'#33a84a':'#d48b55', borderRadius:2, transition:'width 0.1s' }}/>
+                <div style={{ height:'100%', width:`${u.prog}%`, background: u.prog===100?'#33a84a':'var(--accent-hi)', borderRadius:2, transition:'width 0.1s' }}/>
               </div>
             </div>
           ))}
@@ -116,8 +116,8 @@ export default function FileManagerView() {
         {selected && (
           <div style={{ padding:'8px 10px', borderTop:'1px solid #1a1a1a' }}>
             <div style={{ fontSize:9, color:'var(--tx1)', marginBottom:6 }}>{selected.name}</div>
-            {[['Download','#e05c6e'],['View','#777'],['Execute','#d48b55'],['Delete','#e05c6e']].map(([l,c])=>(
-              <button key={l} style={{ width:'100%', background:'var(--inset2)', border:`1px solid ${l==='Delete'?'#3a1220':'#1a1a1a'}`, color:c as string, fontFamily:'Courier New', fontSize:10, padding:'4px', cursor:'pointer', marginBottom:3 }}>{l}</button>
+            {[['Download','var(--accent-hi)'],['View','#777'],['Execute','var(--accent-hi)'],['Delete','var(--accent-hi)']].map(([l,c])=>(
+              <button key={l} style={{ width:'100%', background:'var(--inset2)', border:`1px solid ${l==='Delete'?'var(--b2)':'#1a1a1a'}`, color:c as string, fontFamily:'Courier New', fontSize:10, padding:'4px', cursor:'pointer', marginBottom:3 }}>{l}</button>
             ))}
           </div>
         )}
@@ -156,10 +156,10 @@ export default function FileManagerView() {
               style={{
                 display:'grid', gridTemplateColumns:'28px 1fr 80px 120px 80px 90px',
                 padding:'5px 14px', borderBottom:'1px solid #0d0d0d', cursor:'pointer',
-                background: selected?.name===e.name ? '#0d0d14' : 'transparent',
+                background: selected?.name===e.name ? '#0d0d0d' : 'transparent',
               }}
               onMouseEnter={el=>(el.currentTarget.style.background='#0a0a0a')}
-              onMouseLeave={el=>(el.currentTarget.style.background=selected?.name===e.name?'#0d0d14':'transparent')}>
+              onMouseLeave={el=>(el.currentTarget.style.background=selected?.name===e.name?'#0d0d0d':'transparent')}>
               <span style={{ fontSize:10, color:COL[e.type], fontWeight:700 }}>{ICON[e.type]}</span>
               <span style={{ fontSize:11, color:COL[e.type] }}>{e.name}</span>
               <span style={{ fontSize:10, color:'var(--tx2)', textAlign:'right' }}>{e.size}</span>

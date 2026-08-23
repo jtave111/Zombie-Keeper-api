@@ -11,10 +11,10 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | 
     if (this.state.error) {
       const msg = (this.state.error as Error).message;
       return (
-        <div style={{ height:'100vh', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', background:'#1e1e1e', fontFamily:'Courier New', color:'#e05c6e', padding:32 }}>
+        <div style={{ height:'100vh', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', background:'#1e1e1e', fontFamily:'Courier New', color:'var(--accent-hi)', padding:32 }}>
           <div style={{ fontSize:13, marginBottom:12 }}>⊘ RENDER FAULT — App component crashed</div>
           <div style={{ fontSize:11, color:'#a8a8a8', maxWidth:600, wordBreak:'break-word', lineHeight:1.7 }}>{msg}</div>
-          <button onClick={() => this.setState({ error: null })} style={{ marginTop:20, padding:'6px 16px', background:'transparent', border:'1px solid #cc4444', color:'#e05c6e', cursor:'pointer', fontFamily:'Courier New', fontSize:11 }}>
+          <button onClick={() => this.setState({ error: null })} style={{ marginTop:20, padding:'6px 16px', background:'transparent', border:'1px solid var(--accent)', color:'var(--accent-hi)', cursor:'pointer', fontFamily:'Courier New', fontSize:11 }}>
             retry
           </button>
         </div>

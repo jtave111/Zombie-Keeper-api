@@ -11,7 +11,7 @@ interface Tunnel {
 }
 
 const STATUS_COLOR: Record<TunnelStatus,string> = {
-  ACTIVE:'#33a84a', BROKEN:'#e05c6e', PENDING:'#d48b55', STOPPED:'#2a2a2a',
+  ACTIVE:'var(--blue)', BROKEN:'var(--red)', PENDING:'var(--tx1)', STOPPED:'var(--tx3)',
 };
 
 const INIT: Tunnel[] = [
@@ -22,7 +22,7 @@ const INIT: Tunnel[] = [
 ];
 
 const TYPE_COLOR: Record<TunnelType,string> = {
-  'SOCKS5':'#5a96d4', 'TCP-FWD':'#c8a84b', 'REV-FWD':'#a07fd4', 'DNS-TUNNEL':'#d48b55',
+  'SOCKS5':'var(--blue)', 'TCP-FWD':'var(--tx1)', 'REV-FWD':'var(--blue)', 'DNS-TUNNEL':'var(--tx1)',
 };
 
 export default function TunnelsView() {
@@ -65,7 +65,7 @@ export default function TunnelsView() {
             </span>
           ))}
         </div>
-        <button onClick={()=>setCreating(c=>!c)} style={{ marginLeft:'auto', background:'#1a0000', border:'1px solid #e05c6e', color:'#e05c6e', fontFamily:'Courier New', fontSize:10, padding:'3px 14px', cursor:'pointer' }}>
+        <button onClick={()=>setCreating(c=>!c)} style={{ marginLeft:'auto', background:'var(--accent-bg)', border:'1px solid var(--accent-hi)', color:'var(--accent-hi)', fontFamily:'Courier New', fontSize:10, padding:'3px 14px', cursor:'pointer' }}>
           {creating ? '[ CANCEL ]' : '[ + NEW TUNNEL ]'}
         </button>
       </div>
@@ -87,7 +87,7 @@ export default function TunnelsView() {
               {el}
             </div>
           ))}
-          <button onClick={create} style={{ background:'#1a0000', border:'1px solid #e05c6e', color:'#e05c6e', fontFamily:'Courier New', fontSize:11, padding:'4px 16px', cursor:'pointer' }}>CREATE</button>
+          <button onClick={create} style={{ background:'var(--accent-bg)', border:'1px solid var(--accent-hi)', color:'var(--accent-hi)', fontFamily:'Courier New', fontSize:11, padding:'4px 16px', cursor:'pointer' }}>CREATE</button>
         </div>
       )}
 
@@ -111,11 +111,11 @@ export default function TunnelsView() {
               <span style={{ fontSize:10, color:'var(--tx2)' }}>{t.conns}</span>
               <div style={{ display:'flex', gap:4 }}>
                 {t.status !== 'STOPPED' && (
-                  <button onClick={()=>toggle(t.id)} style={{ background:'var(--inset2)', border:'1px solid #1a1a1a', color:t.status==='ACTIVE'?'#d48b55':'#33a84a', fontFamily:'Courier New', fontSize:9, padding:'2px 6px', cursor:'pointer' }}>
+                  <button onClick={()=>toggle(t.id)} style={{ background:'var(--inset2)', border:'1px solid #1a1a1a', color:t.status==='ACTIVE'?'var(--accent-hi)':'#33a84a', fontFamily:'Courier New', fontSize:9, padding:'2px 6px', cursor:'pointer' }}>
                     {t.status==='ACTIVE'?'STOP':'START'}
                   </button>
                 )}
-                <button onClick={()=>destroy(t.id)} style={{ background:'var(--inset2)', border:'1px solid #3d1520', color:'#e05c6e', fontFamily:'Courier New', fontSize:9, padding:'2px 6px', cursor:'pointer' }}>✕</button>
+                <button onClick={()=>destroy(t.id)} style={{ background:'var(--inset2)', border:'1px solid var(--b2)', color:'var(--accent-hi)', fontFamily:'Courier New', fontSize:9, padding:'2px 6px', cursor:'pointer' }}>✕</button>
               </div>
             </div>
           ))}
@@ -125,7 +125,7 @@ export default function TunnelsView() {
         <div style={{ width:220, background:'var(--inset2)', borderLeft:'1px solid #1a1a1a', padding:'10px', overflow:'auto', flexShrink:0 }}>
           <div style={{ fontSize:9, color:'var(--tx2)', textTransform:'uppercase', letterSpacing:1, marginBottom:10 }}>Active Chain</div>
           <div style={{ fontFamily:'Courier New', fontSize:10, color:'var(--tx2)', lineHeight:2 }}>
-            <div style={{ color:'#e05c6e' }}>[ C2 Server ]</div>
+            <div style={{ color:'var(--accent-hi)' }}>[ C2 Server ]</div>
             {activeChain.map((t,i) => (
               <div key={t.id}>
                 <div style={{ color:'var(--tx3)' }}>    │</div>

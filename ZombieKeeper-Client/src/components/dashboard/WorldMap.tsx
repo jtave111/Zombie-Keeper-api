@@ -3,7 +3,7 @@ import { AgentGeo } from '@/lib/models/agents/agentModel';
 import { C2Info } from '@/lib/client/api';
 
 const STATUS_COLOR: Record<string, string> = {
-  ONLINE: '#e05c6e', IDLE: '#d48b55', LOST: '#555',
+  ONLINE: 'var(--accent-hi)', IDLE: 'var(--accent-hi)', LOST: '#555',
 };
 
 interface Props { geoAgents: AgentGeo[]; c2: C2Info | null; }
@@ -56,11 +56,11 @@ export default function WorldMap({ geoAgents, c2 }: Props) {
       if (c2) {
         const icon = L.divIcon({
           html: `<div style="position:relative;width:44px;height:44px;">
-            <div style="position:absolute;inset:-10px;border-radius:50%;background:rgba(224,92,110,0.12);animation:zkP 1.8s ease-out infinite;"></div>
-            <div style="position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(224,92,110,0.3);animation:zkP 1.8s 0.5s ease-out infinite;"></div>
-            <div style="position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,#ff8899 0%,#e05c6e 55%,#c03050 100%);box-shadow:0 0 22px rgba(224,92,110,0.7),0 0 6px #e05c6e;"></div>
+            <div style="position:absolute;inset:-10px;border-radius:50%;background:rgba(115,123,132,0.12);animation:zkP 1.8s ease-out infinite;"></div>
+            <div style="position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(115,123,132,0.3);animation:zkP 1.8s 0.5s ease-out infinite;"></div>
+            <div style="position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,#8fb0d0 0%,var(--blue) 55%,#315779 100%);box-shadow:0 0 22px rgba(71,121,170,0.55),0 0 6px var(--blue);"></div>
             <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;background:#fff;"></div>
-            <div style="position:absolute;top:-22px;left:50%;transform:translateX(-50%);white-space:nowrap;color:#e05c6e;font-family:'Courier New';font-size:8px;letter-spacing:1.5px;text-shadow:0 0 8px #e05c6e;pointer-events:none;">C2</div>
+            <div style="position:absolute;top:-22px;left:50%;transform:translateX(-50%);white-space:nowrap;color:var(--accent-hi);font-family:'Courier New';font-size:8px;letter-spacing:1.5px;text-shadow:0 0 8px var(--accent-hi);pointer-events:none;">C2</div>
           </div>`,
           className:'', iconSize:[44,44], iconAnchor:[22,22],
         });
@@ -71,7 +71,7 @@ export default function WorldMap({ geoAgents, c2 }: Props) {
           .bindPopup(mkPopup({
             title: `C2 SERVER${c2.name ? ' — ' + c2.name : ''}`,
             rows: [['Location', loc], ['Listen', ip], ['Status', 'ONLINE']],
-            col: '#e05c6e',
+            col: 'var(--accent-hi)',
           }), { className:'zkpop', maxWidth:240 });
       }
 
@@ -122,11 +122,11 @@ export default function WorldMap({ geoAgents, c2 }: Props) {
               agent.lng + (c2.lng - agent.lng) * t,
             ]);
           }
-          L.polyline(pts, { color:'#e05c6e', weight:0.8, opacity:0.18, dashArray:'5 9', smoothFactor:2 }).addTo(map);
+          L.polyline(pts, { color:'var(--accent-hi)', weight:0.8, opacity:0.18, dashArray:'5 9', smoothFactor:2 }).addTo(map);
 
           /* Traveling dot */
           const dot = L.circleMarker([agent.lat, agent.lng], {
-            radius:2.5, color:'#e05c6e', fillColor:'#ffaabb', fillOpacity:0.9, opacity:0.9, weight:0,
+            radius:2.5, color:'var(--blue)', fillColor:'#8fb0d0', fillOpacity:0.9, opacity:0.9, weight:0,
           }).addTo(map);
 
           let step = 0; const total = N + 25;
@@ -172,7 +172,7 @@ export default function WorldMap({ geoAgents, c2 }: Props) {
   }
 
   return (
-    <div style={{ position:'relative', width:'100%', height:'100%', background:'#060a0e', overflow:'hidden' }}>
+    <div style={{ position:'relative', width:'100%', height:'100%', background:'#060606', overflow:'hidden' }}>
       <style>{`
         @import url('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');
         @keyframes zkP { 0%{transform:scale(1);opacity:.6} 100%{transform:scale(2.6);opacity:0} }
@@ -182,16 +182,16 @@ export default function WorldMap({ geoAgents, c2 }: Props) {
         .zkpop .leaflet-popup-close-button{color:#555!important;right:4px!important;top:4px!important;font-size:14px!important;}
         .leaflet-control-zoom{border:none!important;box-shadow:none!important;}
         .leaflet-control-zoom a{background:#111!important;border:1px solid #222!important;color:#555!important;font-family:'Courier New'!important;border-radius:0!important;}
-        .leaflet-control-zoom a:hover{background:#1a0008!important;color:#e05c6e!important;border-color:#e05c6e!important;}
+        .leaflet-control-zoom a:hover{background:#0a0b0d!important;color:var(--accent-hi)!important;border-color:var(--accent-hi)!important;}
         .leaflet-tile{filter:brightness(0.58) contrast(1.08) saturate(0.7)!important;}
-        .leaflet-container{background:#060a0e!important;}
+        .leaflet-container{background:#060606!important;}
         .leaflet-control-attribution{display:none!important;}
       `}</style>
 
       {/* Header bar */}
-      <div style={{ position:'absolute', top:0, left:0, right:0, zIndex:1000, height:24, background:'rgba(6,10,14,0.96)', borderBottom:'1px solid #0d1824', display:'flex', alignItems:'center', padding:'0 12px', gap:14, fontFamily:'Courier New', fontSize:10 }}>
+      <div style={{ position:'absolute', top:0, left:0, right:0, zIndex:1000, height:24, background:'rgba(6,10,14,0.96)', borderBottom:'1px solid #0d0d0d', display:'flex', alignItems:'center', padding:'0 12px', gap:14, fontFamily:'Courier New', fontSize:10 }}>
         <span style={{ color:'#2a3e50', letterSpacing:2, textTransform:'uppercase' }}>ZK // Global Agent Telemetry</span>
-        <span style={{ color:'#0e1e2a' }}>|</span>
+        <span style={{ color:'#0e0e0e' }}>|</span>
         {(['ONLINE','IDLE','LOST'] as const).map(s => (
           <span key={s} style={{ display:'flex', alignItems:'center', gap:5 }}>
             <span style={{ width:5, height:5, borderRadius:'50%', background:STATUS_COLOR[s], display:'inline-block', boxShadow:`0 0 4px ${STATUS_COLOR[s]}` }} />
@@ -208,7 +208,7 @@ export default function WorldMap({ geoAgents, c2 }: Props) {
       <div style={{ position:'absolute', inset:0, pointerEvents:'none', zIndex:500, background:'radial-gradient(ellipse 80% 80% at 50% 55%,transparent 40%,rgba(3,6,12,0.5) 100%)' }} />
 
       {/* Agent list (bottom-left) */}
-      <div style={{ position:'absolute', bottom:12, left:12, zIndex:1000, background:'rgba(6,10,14,0.94)', border:'1px solid #0d1824', padding:'7px 10px', fontFamily:'Courier New', fontSize:10, maxWidth:220 }}>
+      <div style={{ position:'absolute', bottom:12, left:12, zIndex:1000, background:'rgba(6,10,14,0.94)', border:'1px solid #0d0d0d', padding:'7px 10px', fontFamily:'Courier New', fontSize:10, maxWidth:220 }}>
         {!geoAgents.length && (
           <div style={{ color:'#3a4a58' }}>[*] No agent geo data</div>
         )}
