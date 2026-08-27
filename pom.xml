@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    ZombieKeeper — POM Agregador do Monorepo
+    Merum — POM Agregador do Monorepo
     =========================================
 
-    Este é o POM raiz do monorepo ZombieKeeper. Seu papel é exclusivamente
+    Este é o POM raiz do monorepo Merum. Seu papel é exclusivamente
     de AGREGADOR: ele lista os módulos Java do projeto e permite executar
     comandos Maven a partir da raiz que se propagam para todos os módulos.
 
@@ -11,17 +11,17 @@
     Não produz nenhum artefato (JAR/WAR). Apenas orquestra o build.
 
     Módulos Java gerenciados:
-      - ZombieKeeper-Api  →  Servidor C2 Spring Boot 4 · Java 21
+      - Merum-Api  →  Servidor C2 Spring Boot 4 · Java 21
 
-    Nota: ZombieKeeper-Web (Next.js) e ZombieKeeper-Arsenal (C++/CMake) NÃO
+    Nota: Merum-Web (Next.js) e Merum-Arsenal (C++/CMake) NÃO
     são módulos Maven. Eles possuem seus próprios sistemas de build (npm e cmake).
 
     Comandos úteis a partir da raiz:
       ./mvnw clean package -DskipTests        Build de todos os módulos Java
-      ./mvnw clean package -DskipTests -pl ZombieKeeper-Api   Apenas a API
-      ./mvnw spring-boot:run -pl ZombieKeeper-Api             Rodar a API
+      ./mvnw clean package -DskipTests -pl Merum-Api   Apenas a API
+      ./mvnw spring-boot:run -pl Merum-Api             Rodar a API
 
-    Importante: ZombieKeeper-Api mantém spring-boot-starter-parent como seu
+    Importante: Merum-Api mantém spring-boot-starter-parent como seu
     próprio parent POM. Este POM raiz NÃO interfere no gerenciamento de
     dependências do Spring Boot — é um agregador puro sem herança de dependências.
 -->
@@ -30,11 +30,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.manager</groupId>
-    <artifactId>zombie-keeper-parent</artifactId>
+    <artifactId>merum-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>ZombieKeeper</name>
+    <name>Merum</name>
     <description>
-        ZombieKeeper — Plataforma C2 dual-purpose para monitoramento de infraestrutura
+        Merum — Plataforma C2 dual-purpose para monitoramento de infraestrutura
         e operações de segurança ofensiva autorizada. POM agregador do monorepo.
     </description>
     <packaging>pom</packaging>
@@ -46,11 +46,11 @@
     <!--
         Módulos Java do monorepo.
         Adicione novos módulos Java aqui conforme o projeto crescer.
-        Ex: <module>ZombieKeeper-Agent-Java</module>
+        Ex: <module>Merum-Agent-Java</module>
     -->
     <modules>
-        <module>ZombieKeeper-Api</module>
-        <!-- <module>ZombieKeeper-Web</module>  Next.js — gerenciado por npm, não Maven -->
+        <module>Merum-Api</module>
+        <!-- <module>Merum-Web</module>  Next.js — gerenciado por npm, não Maven -->
     </modules>
 
 </project>

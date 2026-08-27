@@ -8,8 +8,8 @@ CLAUDE.md
 ### Personal notes ###
 Learning/
 Ideas/
-ZombieKeeper-Web/SECURITY_UPGRADE.md
-ZombieKeeper-Arsenal/CPP_STRUCTURE_GUIDE.md
+Merum-Web/SECURITY_UPGRADE.md
+Merum-Arsenal/CPP_STRUCTURE_GUIDE.md
 
 ### Java / Maven ###
 target/
@@ -61,8 +61,8 @@ build/
 *.a
 *.so
 compile_commands.json
-ZombieKeeper-Arsenal/cpp/LocalFingerPrint/LocalFingerPrint
-ZombieKeeper-Arsenal/cpp/Ping/Ping
+Merum-Arsenal/cpp/LocalFingerPrint/LocalFingerPrint
+Merum-Arsenal/cpp/Ping/Ping
 
 ### Logs ###
 *.log
@@ -80,10 +80,10 @@ replay_pid*
 .env.*.local
 
 ### Next.js ###
-ZombieKeeper-Web/.next/
-ZombieKeeper-Web/node_modules/
-ZombieKeeper-Web/tsconfig.tsbuildinfo
-ZombieKeeper-Web/out/
+Merum-Web/.next/
+Merum-Web/node_modules/
+Merum-Web/tsconfig.tsbuildinfo
+Merum-Web/out/
 
 ### OS ###
 .DS_Store

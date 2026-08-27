@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ZombieKeeper — Platform Launcher"""
+"""Merum — Platform Launcher"""
 
 import os, sys, time, random, shutil, subprocess, argparse
 from pathlib import Path
@@ -13,10 +13,10 @@ from rich.table import Table
 from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 
 ROOT       = Path(__file__).parent.resolve()
-API_DIR    = ROOT / "ZombieKeeper-Api"
-CLIENT_DIR = ROOT / "ZombieKeeper-Client"
-ARSENAL    = ROOT / "ZombieKeeper-Arsenal"
-API_JAR    = API_DIR / "target" / "Zombie-Keeper-0.0.1-SNAPSHOT.jar"
+API_DIR    = ROOT / "Merum-Api"
+CLIENT_DIR = ROOT / "Merum-Client"
+ARSENAL    = ROOT / "Merum-Arsenal"
+API_JAR    = API_DIR / "target" / "Merum-0.0.1-SNAPSHOT.jar"
 
 con = Console()
 
@@ -149,7 +149,7 @@ def glitch_title(text: str, color: str, steps: int = 12, delay: float = 0.035):
 
 # ─── Boot sequence ────────────────────────────────────────────────────────────
 BOOT_LINES = [
-    (C_BLK, "BIOS 2.1 — ZombieKeeper Corp.",          "[  OK  ]"),
+    (C_BLK, "BIOS 2.1 — Merum Corp.",          "[  OK  ]"),
     (C_BLK, "Initializing memory controller  ",        "[  OK  ]"),
     (C_DGY, "Loading kernel modules          ",        "[  OK  ]"),
     (C_DGY, "Mounting encrypted storage      ",        "[  OK  ]"),
@@ -158,7 +158,7 @@ BOOT_LINES = [
     (C_GRY, "Loading C2 configuration        ",        "[  OK  ]"),
     (C_GRY, "Bypassing endpoint monitoring   ",        "[ SKIP ]"),
     (C_WHT, "Establishing encrypted channel  ",        "[  OK  ]"),
-    (C_RED, "ZOMBIE KEEPER OS READY          ",        "[ARMED ]"),
+    (C_RED, "MERUM OS READY          ",        "[ARMED ]"),
 ]
 
 def boot_sequence():
@@ -281,7 +281,7 @@ def build_api():
 # ─── API ──────────────────────────────────────────────────────────────────────
 def start_api(env: dict) -> "subprocess.Popen | None":
     if not API_JAR.exists():
-        err(f"JAR not found: {API_JAR}"); info("Run:  ./ZombieKeeper.sh --build"); return None
+        err(f"JAR not found: {API_JAR}"); info("Run:  ./Merum.sh --build"); return None
     port = env.get("SERVER_PORT", "8080")
     proc = subprocess.Popen(["java","-jar",str(API_JAR)],
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, cwd=str(API_DIR))
@@ -358,14 +358,14 @@ def main():
     if args.help:
         con.print(Panel(
             Text.assemble(
-                ("./ZombieKeeper.sh ",f"bold {C_WHT}"),("[options]\n\n",C_GRY),
+                ("./Merum.sh ",f"bold {C_WHT}"),("[options]\n\n",C_GRY),
                 ("  --build     ",f"bold {C_GRN}"),("Compile API (mvn package)\n",C_GRY),
                 ("  --api-only  ",f"bold {C_CYN}"),("Start API only\n",C_GRY),
                 ("  --client    ",f"bold {C_PRP}"),("Start desktop client only\n",C_GRY),
                 ("  --arsenal   ",f"bold {C_CYN}"),("Build C++ Arsenal tools\n",C_GRY),
                 ("  --help      ",f"bold {C_DGY}"),("This message",C_GRY),
             ),
-            title=Text("ZombieKeeper",style=f"bold {C_RED}"),border_style=C_DGY,
+            title=Text("Merum",style=f"bold {C_RED}"),border_style=C_DGY,
         ))
         return
 
@@ -417,7 +417,7 @@ def main():
         except subprocess.TimeoutExpired: api_proc.kill()
         ok("API stopped.")
 
-    con.print(); con.print(Align.center(Text("[ ZombieKeeper exited ]", style=C_DGY))); con.print()
+    con.print(); con.print(Align.center(Text("[ Merum exited ]", style=C_DGY))); con.print()
 
 if __name__ == "__main__":
     main()

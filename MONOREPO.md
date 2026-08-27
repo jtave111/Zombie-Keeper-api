@@ -1,6 +1,6 @@
-# ZombieKeeper — Estrutura do Monorepo
+# Merum — Estrutura do Monorepo
 
-Este projeto é um **monorepo** contendo toda a plataforma ZombieKeeper C2: servidor API, dashboard web, arsenal de ferramentas nativas e scripts de automação.
+Este projeto é um **monorepo** contendo toda a plataforma Merum C2: servidor API, dashboard web, arsenal de ferramentas nativas e scripts de automação.
 
 ---
 
@@ -8,19 +8,19 @@ Este projeto é um **monorepo** contendo toda a plataforma ZombieKeeper C2: serv
 
 | Módulo | Tecnologia | Porta | Status |
 |---|---|---|---|
-| `ZombieKeeper-Api` | Spring Boot 4 · Java 21 · MySQL 8 | 8080 | Estável |
-| `ZombieKeeper-Web` | Next.js 15 · React 19 · TypeScript | 3000 | Estável |
-| `ZombieKeeper-Arsenal` | C++17 · CMake · Python · Go · Rust | — | Em desenvolvimento |
+| `Merum-Api` | Spring Boot 4 · Java 21 · MySQL 8 | 8080 | Estável |
+| `Merum-Web` | Next.js 15 · React 19 · TypeScript | 3000 | Estável |
+| `Merum-Arsenal` | C++17 · CMake · Python · Go · Rust | — | Em desenvolvimento |
 
 ---
 
 ## Layout do Repositório
 
 ```
-ZombieKeeper/
+Merum/
 │
-├── ZombieKeeper-Api/                        # Servidor C2 — Spring Boot 4 · Java 21
-│   ├── src/main/java/com/manager/Zombie_Keeper/
+├── Merum-Api/                        # Servidor C2 — Spring Boot 4 · Java 21
+│   ├── src/main/java/com/manager/Merum/
 │   │   ├── controller/                      # REST: Agent, Auth, Recon
 │   │   ├── service/                         # Lógica de negócio
 │   │   ├── model/entity/                    # Entidades JPA
@@ -36,7 +36,7 @@ ZombieKeeper/
 │   ├── pom.xml                              # POM do módulo Maven
 │   └── mvnw                                 # Maven wrapper
 │
-├── ZombieKeeper-Web/                        # Dashboard do Operador — Next.js 15 · React 19
+├── Merum-Web/                        # Dashboard do Operador — Next.js 15 · React 19
 │   ├── src/
 │   │   ├── app/                             # Next.js App Router
 │   │   ├── components/                      # Componentes React por feature
@@ -55,7 +55,7 @@ ZombieKeeper/
 │   ├── .env.local                           # NEXT_PUBLIC_API_URL (gitignored)
 │   └── package.json
 │
-├── ZombieKeeper-Arsenal/                    # Arsenal de ferramentas nativas
+├── Merum-Arsenal/                    # Arsenal de ferramentas nativas
 │   │
 │   ├── network-session/                     # Domínio: Blue Team — inteligência de rede
 │   │   ├── scanners/
@@ -173,12 +173,12 @@ ZombieKeeper/
 
 ```bash
 # API
-cd ZombieKeeper-Api
+cd Merum-Api
 ./mvnw spring-boot:run
 # → http://localhost:8080
 
 # Web
-cd ZombieKeeper-Web
+cd Merum-Web
 npm run dev
 # → http://localhost:3000
 ```
@@ -190,15 +190,15 @@ npm run dev
 ### API
 
 ```bash
-cd ZombieKeeper-Api
+cd Merum-Api
 ./mvnw clean package -DskipTests
-java -jar target/Zombie-Keeper-0.0.1-SNAPSHOT.jar
+java -jar target/Merum-0.0.1-SNAPSHOT.jar
 ```
 
 ### Web
 
 ```bash
-cd ZombieKeeper-Web
+cd Merum-Web
 npm run build
 npm start
 ```
@@ -206,7 +206,7 @@ npm start
 ### Arsenal — Ferramentas C/C++
 
 ```bash
-cd ZombieKeeper-Arsenal
+cd Merum-Arsenal
 
 # Instalar dependências (primeira vez)
 sudo apt install build-essential cmake libcurl4-openssl-dev
@@ -230,7 +230,7 @@ make reset        # remove build/ inteiro
 
 O binário compilado fica em:
 ```
-ZombieKeeper-Arsenal/build/network-session/scanners/local-fingerprint/cpp/LocalFingerPrint
+Merum-Arsenal/build/network-session/scanners/local-fingerprint/cpp/LocalFingerPrint
 ```
 
 ---
@@ -241,8 +241,8 @@ Ambos os módulos requerem seus próprios arquivos de ambiente. **Esses arquivos
 
 | Arquivo | Módulo | Obrigatório |
 |---|---|---|
-| `ZombieKeeper-Api/.env` | Servidor API | Sim |
-| `ZombieKeeper-Web/.env.local` | Dashboard Web | Sim |
+| `Merum-Api/.env` | Servidor API | Sim |
+| `Merum-Web/.env.local` | Dashboard Web | Sim |
 
 Veja [HELP.md](HELP.md) para a lista completa de variáveis.
 
@@ -257,7 +257,7 @@ O `pom.xml` raiz é um **agregador puro** (`<packaging>pom</packaging>`). Ele pe
 ./mvnw clean package -DskipTests -f pom.xml
 ```
 
-`ZombieKeeper-Api` mantém o `spring-boot-starter-parent` como seu próprio parent — o POM raiz não interfere no gerenciamento de dependências do Spring Boot.
+`Merum-Api` mantém o `spring-boot-starter-parent` como seu próprio parent — o POM raiz não interfere no gerenciamento de dependências do Spring Boot.
 
 ---
 
@@ -267,8 +267,8 @@ O `pom.xml` raiz é um **agregador puro** (`<packaging>pom</packaging>`). Ele pe
 
 | Módulo | Caminho | Status |
 |---|---|---|
-| ZombieKeeper-Api | `ZombieKeeper-Api/` | Estável · porta 8080 |
-| ZombieKeeper-Web | `ZombieKeeper-Web/` | Estável · porta 3000 |
+| Merum-Api | `Merum-Api/` | Estável · porta 8080 |
+| Merum-Web | `Merum-Web/` | Estável · porta 3000 |
 
 ### Arsenal — network-session (Blue Team)
 

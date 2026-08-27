@@ -1,6 +1,6 @@
-# ZombieKeeper — Referência Rápida para Desenvolvedores
+# Merum — Referência Rápida para Desenvolvedores
 
-Referência de configuração, comandos e resolução de problemas da plataforma ZombieKeeper.
+Referência de configuração, comandos e resolução de problemas da plataforma Merum.
 
 ---
 
@@ -23,7 +23,7 @@ Referência de configuração, comandos e resolução de problemas da plataforma
 
 ## Configuração de Ambiente
 
-### Servidor API (`ZombieKeeper-Api/.env`)
+### Servidor API (`Merum-Api/.env`)
 
 Crie este arquivo antes de iniciar a API. Ele é gitignored — **nunca commite credenciais**.
 
@@ -58,7 +58,7 @@ LIQUIBASE_DROP_FIRST=false
 # Conta admin padrão (criada na primeira execução)
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=TroqueMinhaSenha!2024
-ADMIN_EMAIL=admin@zombiekeeper.local
+ADMIN_EMAIL=admin@merum.local
 
 # Perfil Spring
 SPRING_PROFILES_ACTIVE=dev
@@ -78,7 +78,7 @@ SHODAN_API_KEY=
 VIRUSTOTAL_API_KEY=
 ```
 
-### Dashboard Web (`ZombieKeeper-Web/.env.local`)
+### Dashboard Web (`Merum-Web/.env.local`)
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8080
@@ -159,35 +159,35 @@ LIQUIBASE_DROP_FIRST=true
 ### Executar API em modo desenvolvimento
 
 ```bash
-cd ZombieKeeper-Api
+cd Merum-Api
 ./mvnw spring-boot:run
 ```
 
 ### Executar Web em modo desenvolvimento
 
 ```bash
-cd ZombieKeeper-Web
+cd Merum-Web
 npm run dev
 ```
 
 ### Executar verificação de tipos completa (Web)
 
 ```bash
-cd ZombieKeeper-Web
+cd Merum-Web
 npx tsc --noEmit
 ```
 
 ### Build JAR de produção
 
 ```bash
-cd ZombieKeeper-Api
+cd Merum-Api
 ./mvnw clean package -DskipTests
 ```
 
 ### Build Web de produção
 
 ```bash
-cd ZombieKeeper-Web
+cd Merum-Web
 npm run build
 npm start
 ```
@@ -195,7 +195,7 @@ npm start
 ### Compilar ferramentas C++ do Arsenal
 
 ```bash
-cd ZombieKeeper-Arsenal
+cd Merum-Arsenal
 
 # Instalar dependências (primeira vez)
 sudo apt install build-essential cmake libcurl4-openssl-dev
@@ -229,20 +229,20 @@ sudo cmake --build build --target setcap
 
 # Ou diretamente
 sudo setcap cap_net_raw,cap_net_admin=eip \
-  ZombieKeeper-Arsenal/build/network-session/scanners/local-fingerprint/cpp/LocalFingerPrint
+  Merum-Arsenal/build/network-session/scanners/local-fingerprint/cpp/LocalFingerPrint
 ```
 
 ### Executar o scanner de rede
 
 ```bash
 # O binário fica em build/, não na raiz do Arsenal
-sudo ZombieKeeper-Arsenal/build/network-session/scanners/local-fingerprint/cpp/LocalFingerPrint
+sudo Merum-Arsenal/build/network-session/scanners/local-fingerprint/cpp/LocalFingerPrint
 ```
 
 ### Integrar com CLion
 
 1. Abrir o CLion
-2. `File → Open` → selecionar `ZombieKeeper-Arsenal/`
+2. `File → Open` → selecionar `Merum-Arsenal/`
 3. CLion detecta o `CMakeLists.txt` raiz automaticamente
 4. Targets disponíveis no seletor: `LocalFingerPrint`, `ping`, `setcap`
 5. Run/Debug funcionam com breakpoints nativos (GDB/LLDB)
@@ -252,7 +252,7 @@ sudo ZombieKeeper-Arsenal/build/network-session/scanners/local-fingerprint/cpp/L
 O arquivo é gerado automaticamente em `build/compile_commands.json` pelo cmake. Para usar com VSCode ou clangd na raiz:
 
 ```bash
-cd ZombieKeeper-Arsenal
+cd Merum-Arsenal
 ln -sf build/compile_commands.json compile_commands.json
 ```
 
@@ -260,13 +260,13 @@ ln -sf build/compile_commands.json compile_commands.json
 
 ## Notas do Projeto
 
-- **Nome do pacote:** A aplicação Spring Boot usa `com.manager.Zombie_Keeper` (underscore) porque `com.manager.Zombie-Keeper` não é um nome de pacote Java válido.
+- **Nome do pacote:** A aplicação Spring Boot usa `com.manager.Merum` (underscore) porque `com.manager.Merum` não é um nome de pacote Java válido.
 - **Armazenamento do token:** O dashboard web armazena o JWT no `localStorage` com a chave `zk_token`.
 - **Polling de agents:** O dashboard faz polling em `/api/c2-server/agents` a cada 30 segundos via `setInterval`.
 - **Map SSR:** O mapa mundial Leaflet (`WorldMap.tsx`) usa `next/dynamic` com `ssr: false` porque o Leaflet requer o DOM do browser.
 - **CORS:** O `CorsConfig` da API deve incluir a origem do dashboard. Atualize `CORS_ALLOWED_ORIGINS` ao fazer deploy em hosts/portas diferentes.
 - **Liquibase:** As migrações ficam em `src/main/resources/db/changelog/`. Não edite o schema do banco manualmente — sempre adicione um novo changeset.
-- **CMake build directory:** O Arsenal usa build out-of-source em `ZombieKeeper-Arsenal/build/`. Nunca commite este diretório (já no `.gitignore`).
+- **CMake build directory:** O Arsenal usa build out-of-source em `Merum-Arsenal/build/`. Nunca commite este diretório (já no `.gitignore`).
 - **Caminhos de deploy do Arsenal:** A API busca os binários em `modules/linux/c++/code/localFingerPrint/` relativo ao diretório do JAR. Atualize `LocalNetworkFingerprintService.java` ao mudar o local de deploy do binário compilado.
 
 ---
@@ -279,13 +279,13 @@ ln -sf build/compile_commands.json compile_commands.json
 
 **Web exibe "Network Error" / "Failed to fetch"**
 - Confirme que a API está rodando em `http://localhost:8080`
-- Verifique `NEXT_PUBLIC_API_URL` em `ZombieKeeper-Web/.env.local`
+- Verifique `NEXT_PUBLIC_API_URL` em `Merum-Web/.env.local`
 - Verifique se `CORS_ALLOWED_ORIGINS` inclui `http://localhost:3000`
 
 **Scanner C++ falha com "Operation not permitted"**
 - Raw Sockets exigem privileges elevadas — aplique capabilities:
   ```bash
-  sudo cmake --build ZombieKeeper-Arsenal/build --target setcap
+  sudo cmake --build Merum-Arsenal/build --target setcap
   ```
 - Ou rode com sudo: `sudo ./LocalFingerPrint`
 
@@ -309,5 +309,5 @@ ln -sf build/compile_commands.json compile_commands.json
 - Execute: `npm install --legacy-peer-deps`
 
 **CLion não detecta targets do Arsenal**
-- Certifique-se de abrir a pasta `ZombieKeeper-Arsenal/` (que contém `CMakeLists.txt`), não uma subpasta
+- Certifique-se de abrir a pasta `Merum-Arsenal/` (que contém `CMakeLists.txt`), não uma subpasta
 - Caso o CMake não configure: `Tools → CMake → Reset Cache and Reload Project`
